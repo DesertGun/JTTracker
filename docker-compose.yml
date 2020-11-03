@@ -1,0 +1,58 @@
+version: '3'
+services:
+    database:
+        container_name: database
+        image: mariadb
+        command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci --innodb-flush-log-at-trx-commit=0
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: jttrackerdb
+            MYSQL_USER: test
+            MYSQL_PASSWORD: password
+        expose:
+            - 3306
+        ports:
+            - 3306:3306
+        volumes:  
+            - ./init:/docker-entrypoint-initdb.d
+        networks:
+            - backendNetwork
+    springboot:
+        container_name: springboot
+        working_dir: /application
+        depends_on:
+            - database
+        expose:
+            - 8080
+        ports:
+            - 8080:8080
+        build: 
+            context: ./
+            dockerfile: Dockerfile
+        command: ["java", "-jar", "application.jar"]
+        networks:
+            - backendNetwork
+            - frontendNetwork
+
+    nuxtjs:
+        container_name: nuxtjs
+        working_dir: /usr/src/jttracker
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+        command: ["npm", "run", "start"]
+        depends_on:
+            - springboot
+        expose:
+            - 3000
+        ports:
+            - 3000:3000
+        networks:
+            - frontendNetwork
+volumes:
+    jttrackerdb:
+networks:
+    backendNetwork:
+        driver: bridge
+    frontendNetwork:
+        driver: bridge
