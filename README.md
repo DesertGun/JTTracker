@@ -14,7 +14,7 @@ Once bug-free and save, this project will be launched for testing purposes for s
 # To run JTTracker in a dev env. you need to have
     - NodeJS 12.X
     - OpenJDK 11.X
-    - MariaDB:latest (optional)
+    - MariaDB:latest
 # Folder-structure
     - Frontend: ./frontend
     - Backend: ./
