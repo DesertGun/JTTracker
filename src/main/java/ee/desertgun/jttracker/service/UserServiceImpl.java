@@ -3,14 +3,16 @@ package ee.desertgun.jttracker.service;
 import ee.desertgun.jttracker.config.UserProfileGravatarHash;
 import ee.desertgun.jttracker.domain.PasswordResetToken;
 import ee.desertgun.jttracker.domain.User;
+import ee.desertgun.jttracker.dto.UserDTO;
 import ee.desertgun.jttracker.dto.UserProfileDTO;
-import ee.desertgun.jttracker.dto.UserResetDTO;
 import ee.desertgun.jttracker.repository.PasswordTokenRepository;
 import ee.desertgun.jttracker.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import javax.validation.Valid;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -46,8 +48,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void createPasswordResetTokenForUser(UserResetDTO userResetDTO, String token) {
-        User user = userRepository.findByUsername(userResetDTO.getUsername());
+    public void createPasswordResetTokenForUser(@Valid UserDTO userDTO, String token) {
+        User user = userRepository.findByUsername(userDTO.getUsername());
         PasswordResetToken myToken = new PasswordResetToken(token, user);
         passwordTokenRepository.save(myToken);
     }

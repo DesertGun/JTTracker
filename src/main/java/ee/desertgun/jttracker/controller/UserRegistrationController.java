@@ -55,7 +55,6 @@ public class UserRegistrationController {
     }
 
 
-    //TODO: Exception for failed User-creation
     private void createUserAccount(UserDTO userDTO) {
 
         String displayName = userDTO.getAccountName();

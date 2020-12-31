@@ -1,7 +1,6 @@
 package ee.desertgun.jttracker.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
@@ -9,8 +8,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.UUID;
 
-@Getter
-@Setter
+@Data
 public class TrackedTimeDTO {
     @NotNull
     private Instant startTime;

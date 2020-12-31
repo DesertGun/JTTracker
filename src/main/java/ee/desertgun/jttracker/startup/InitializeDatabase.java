@@ -3,6 +3,7 @@ package ee.desertgun.jttracker.startup;
 
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetup;
+import ee.desertgun.jttracker.domain.Mail;
 import ee.desertgun.jttracker.domain.User;
 import ee.desertgun.jttracker.dto.TrackedTimeDTO;
 import ee.desertgun.jttracker.dto.UserProjectDTO;
@@ -96,7 +97,11 @@ public class InitializeDatabase implements InitializingBean {
 
       emailService.sendEmail("test@domain.de", "Init-Confirmation-Test", "Test-Online!");
       emailService.sendEmail("admin@domain.de", "Init-Confirmation-Admin", "Admin-Online!");
-      // emailService.sendComplexMail("test@domain.de", "Init-Confirmation-Test", "Test-Online!");
+      Mail testMail = new Mail();
+      testMail.setFrom("admin@domain.de");
+      testMail.setMailTo("test@domain.de");
+      testMail.setSubject("Test-HTML-Sending of Emails");
+      emailService.sendComplexMail(testMail);
     }
   }
 }

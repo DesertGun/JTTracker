@@ -4,13 +4,11 @@ import ee.desertgun.jttracker.domain.User;
 import ee.desertgun.jttracker.dto.PasswordTokenDTO;
 import ee.desertgun.jttracker.dto.UserDTO;
 import ee.desertgun.jttracker.dto.UserProfileDTO;
-import ee.desertgun.jttracker.dto.UserResetDTO;
 import ee.desertgun.jttracker.service.EmailService;
 import ee.desertgun.jttracker.service.PasswordTokenValidationService;
 import ee.desertgun.jttracker.service.UserService;
 import ee.desertgun.jttracker.service.ValidationResponse;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
@@ -21,7 +19,6 @@ import java.net.InetAddress;
 import java.util.UUID;
 
 
-//TODO: Update Security according to logic! Implement Reading of the link!
 @RestController
 @CrossOrigin
 public class UserAccountController {
@@ -34,7 +31,7 @@ public class UserAccountController {
   @Value("${server.port}")
   private String port;
 
-  //TODO: Only fpr testing!!!
+  //TODO: Only for testing!!!
   private String frontendPort = "3000";
 
 
@@ -47,19 +44,18 @@ public class UserAccountController {
   }
 
 
-  @PreAuthorize("hasRole('ROLE_ANONYMOUS') or hasRole('ROLE_USER')")
   @PostMapping("/user/password/reset")
-  public ValidationResponse resetPassword(@RequestBody @Valid UserResetDTO userResetDTO, BindingResult bindingResult) {
+  public ValidationResponse resetPassword(@RequestBody @Valid UserDTO userDTO, BindingResult bindingResult) {
     ValidationResponse response = new ValidationResponse();
 
-    if (userService.userExists(userResetDTO.getUsername()) && !bindingResult.hasErrors()) {
+    if (userService.userExists(userDTO.getUsername()) && !bindingResult.hasErrors()) {
       response.setValidated(true);
       String token = UUID.randomUUID().toString();
-      userService.createPasswordResetTokenForUser(userResetDTO, token);
+      userService.createPasswordResetTokenForUser(userDTO, token);
 
-      String url = constructResetTokenLink(token, userResetDTO);
+      String url = constructResetTokenLink(token, userDTO);
       response.setSuccessMessage(url);
-      emailService.sendEmail(userResetDTO.getUsername(), "Password-Reset", url);
+      emailService.sendEmail(userDTO.getUsername(), "Password-Reset", url);
 
 
     } else if (bindingResult.hasErrors()) {
@@ -75,7 +71,6 @@ public class UserAccountController {
     return response;
   }
 
-  @PreAuthorize("hasRole('ROLE_ANONYMOUS')")
   @PostMapping("/user/password/reset/validate")
   public ValidationResponse checkToken(@RequestBody @Valid PasswordTokenDTO passwordTokenDTO) {
     ValidationResponse response = new ValidationResponse();
@@ -91,7 +86,7 @@ public class UserAccountController {
     return response;
   }
 
-  @PreAuthorize("hasRole('ROLE_ANONYMOUS')")
+
   @PostMapping("/user/password/reset/change")
   public ValidationResponse resetPassword(@RequestBody @Valid UserProfileDTO userProfileDTO){
     ValidationResponse response = new ValidationResponse();
@@ -104,7 +99,6 @@ public class UserAccountController {
     return response;
   }
 
-  @PreAuthorize("hasRole('ROLE_USER')")
   @PostMapping("/user/password/update")
   public ValidationResponse changeUserPasswordIfOldIsValid(@RequestBody @Valid UserDTO userDTO,
                                                            Authentication authentication) {
@@ -127,7 +121,7 @@ public class UserAccountController {
     return response;
   }
 
-  @PreAuthorize("hasRole('ROLE_USER')")
+
   @PutMapping("/user/update")
   public ValidationResponse updateUserProfile(@RequestBody @Valid UserProfileDTO userProfileDTO) {
     ValidationResponse response = new ValidationResponse();
@@ -139,13 +133,12 @@ public class UserAccountController {
   }
 
 
-  //TODO: To Service and remember to change to real port when finished and the real server protokol..!
-  @PreAuthorize("hasRole('ROLE_ANONYMOUS')")
-  private String constructResetTokenLink(String token, UserResetDTO userResetDTO){
+  //TODO: Remember to change to real port when finished and the real server protokol !
+  private String constructResetTokenLink(String token, @Valid UserDTO userResetDTO){
     return "http://"+InetAddress.getLoopbackAddress().getHostName() + ":" + frontendPort + "/reset?username=" + userResetDTO.getUsername() + "&token=" + token;
   }
 
-  @PreAuthorize("hasRole('ROLE_USER')")
+
   @GetMapping("/user")
   public User loadUser(Authentication authentication) {
     return userService.getUserByUsername(authentication.getName());

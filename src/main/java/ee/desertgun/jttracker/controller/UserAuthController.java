@@ -40,7 +40,7 @@ public class UserAuthController {
         return ResponseEntity.ok(new JWTResponse(token));
     }
 
-    //TODO: Better response for the user, instead of 401...
+    //TODO: Create better responses for the user, instead of 401's
     private void authenticate(String username, String password) throws Exception {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));

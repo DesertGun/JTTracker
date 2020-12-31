@@ -1,4 +1,4 @@
-FROM node:12.18.3-alpine
+FROM node:12.19.1-alpine
 
 RUN mkdir -p /src/jttracker
 WORKDIR /usr/src/jttracker

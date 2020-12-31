@@ -1,6 +1,7 @@
 package ee.desertgun.jttracker.service;
 
 
+import ee.desertgun.jttracker.domain.Mail;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.mail.SimpleMailMessage;
@@ -13,6 +14,7 @@ import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.nio.charset.StandardCharsets;
 
 
 @Service
@@ -44,25 +46,23 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Async
-    public void sendComplexMail(final String to, final String subject, final String text) throws MessagingException {
+    public void sendComplexMail(Mail mail) throws MessagingException {
 
         MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message,
+                MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+                StandardCharsets.UTF_8.name());
 
-        final MimeMessage mimeMessage = this.javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8"); // true = multipart
+        Context context = new Context();
+        context.setVariables(mail.getProps());
 
-        final Context ctx = new Context();
-        final String htmlContent = this.templateEngine.process("test.html", ctx);
-        helper.setText(htmlContent, true); // true = isHtml
+        String html = templateEngine.process("test", context);
 
-            helper.setFrom("admin@domain.de");
-            helper.setTo(to);
-            helper.setSubject(subject);
-            helper.setText(text,true);
+        helper.setTo(mail.getMailTo());
+        helper.setText(html, true);
+        helper.setSubject(mail.getSubject());
+        helper.setFrom(mail.getFrom());
 
-            javaMailSender.send(mimeMessage);
-
+        javaMailSender.send(message);
     }
-
-
 }
