@@ -32,7 +32,7 @@
         </b-col>
         <b-col cols="10">
           <div v-if="items.length===0">
-            <h4>There are no records currently avalible...</h4>
+            <h4>There are no records currently avalible!</h4>
           </div>
           <div v-else>
             <b-table :fields="fields" :items="items" hover responsive="sm" striped>
@@ -66,7 +66,7 @@
                   {{ data.item.duration.hours() }}h
                 </div>
                 <div v-else>
-                  What the fuck are you tracking?!
+                  Not a realistic track record!
                 </div>
               </template>
               <template v-slot:cell(showEdit)="data">

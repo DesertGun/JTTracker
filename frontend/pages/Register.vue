@@ -151,7 +151,6 @@ export default {
             this.responseSuccess = response.data.successMessage
           } else {
             this.responseError = response.data.errorMessage
-            // window.location.reload()
           }
         }
       } catch (e) {

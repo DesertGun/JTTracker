@@ -6,11 +6,11 @@
         <b-col cols="6">
           <h3>Help and FAQ</h3>
           <h5 class="desc">
-            Q: What does JTTracker mean? <br>
-            A: JavaTimeTracker...
+            Q: What does JTTracker stand for? <br>
+            A: JavaTimeTracker
           </h5>
           <b-button @click="clickButton()">
-            Go back to homepage
+            Return to homepage
           </b-button>
         </b-col>
         <b-col />

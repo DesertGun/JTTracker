@@ -6,10 +6,10 @@
         <b-col cols="6">
           <h3>About JTTracker</h3>
           <h5 class="desc">
-            JTTracker is a Timetracking-Web-Application
+           JTTracker is a Time tracking-Web-Application
             which is designed to help developers track
-            their spenned time, in order to
-            to mesure their efficency and to order their
+            their spend time, in order to
+            to measure their efficiency and to order their
             work-time for more productivity
           </h5>
           <b-button @click="clickButton()">
