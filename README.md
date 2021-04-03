@@ -15,26 +15,32 @@ Once bug-free and save, this project will be launched for testing purposes for s
 ***
 
 ### To run JTTracker in a dev env. you need to have
-    ⋅⋅* NodeJS 12.X
-    ⋅⋅* OpenJDK 11.X
-    ⋅⋅* MariaDB:latest
+    
+* NodeJS-Version: 12.X
+* OpenJDK-Version: 11.X
+* MariaDB-Version: latest
     
    
-    
+***  
     
 ### Folder-structure
-    ⋅⋅* Frontend: ./frontend
-    ⋅⋅* Backend: ./
+
+
+* Frontend: ./frontend
+* Backend: ./
     
-    
+***    
     
     
 ### How to start
-    1. Use the Terminal and type in "./mvnw spring-boot::run" to start the Sping-Server
-    2. Navigate with the Terminal to ./frontend and launch the frontend with "npm run dev"
+
+1. Use the Terminal and type in "./mvnw spring-boot::run" to start the Sping-Server
+2. Navigate with the Terminal to ./frontend and launch the frontend with "npm run dev"
     Additionaly: If you are using MariaDB, then you need to launch it before the Spring-Server. 
         For this project I use MariaDB from the XAMPP-Dist.
-    
+
+***
+   
 ### Docker
     I provided a docker-compose file for testing-purposes (still WIP).
     
