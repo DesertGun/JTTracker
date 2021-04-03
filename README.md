@@ -19,14 +19,14 @@ Once bug-free and save, this project will be launched for testing purposes for s
     ⋅⋅* OpenJDK 11.X
     ⋅⋅* MariaDB:latest
     
-    ***
+   
     
     
 ### Folder-structure
     ⋅⋅* Frontend: ./frontend
     ⋅⋅* Backend: ./
     
-    ***
+    
     
     
 ### How to start
