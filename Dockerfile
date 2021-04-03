@@ -1,5 +1,8 @@
 FROM adoptopenjdk:11-jdk-hotspot as builder
 
+RUN apk update && apk upgrade
+RUN apk add git
+
 RUN mkdir -p /opt/build/
 COPY mvnw /opt/build/mvnw
 COPY .mvn/ /opt/build/.mvn/

@@ -90,6 +90,7 @@
 <script>
 import moment from 'moment'
 import { mapGetters, mapActions } from 'vuex'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   middleware: 'authenticated',
@@ -146,9 +147,7 @@ export default {
     async stopRec () {
       this.endTime = moment()
       this.duration = this.countDuration(this.startTime, this.endTime)
-
-      const timeid = require('uuid/v4')
-      this.timeID = timeid()
+      this.timeID = uuidv4()
       if (this.endTime != null && this.startTime != null) {
         const timer = {
           startTime: this.startTime,

@@ -130,6 +130,8 @@
 <script>
 import moment from 'moment'
 import { mapGetters, mapActions } from 'vuex'
+import { v4 as uuidv4 } from 'uuid'
+
 export default {
   middleware: 'authenticated',
   computed: {
@@ -167,8 +169,7 @@ export default {
       return moment.duration(time)
     },
     async createProject () {
-      const projectID = require('uuid/v4')
-      this.projectID = projectID()
+      this.projectID = uuidv4()
       if (this.projectName != null && this.priority != null) {
         const project = {
           projectID: this.projectID,
