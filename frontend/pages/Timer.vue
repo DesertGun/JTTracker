@@ -11,7 +11,7 @@
           <h4>Tracking:</h4>
         </b-col>
         <b-col cols="8">
-          <h4 id="clock" />
+          <h3 id="timer" />
           <b-button v-if="isTracked === false" variant="success" @click="rec()">
             <b-icon icon="play-fill" />
             Record Time
@@ -118,13 +118,15 @@ export default {
 
   mounted () {
     this.currentDate = moment()
+    this.items = this.getTimers()
+  },
+  updated () {
     const update = function () {
-      document.getElementById('clock').innerHTML = moment().format(
+      this.document.getElementById('timer').innerHTML = moment().format(
         'LTS'
       )
     }
     setInterval(update, 1000)
-    this.items = this.getTimers()
   },
   methods: {
     ...mapGetters({ getTimers: 'timer/timers' }),

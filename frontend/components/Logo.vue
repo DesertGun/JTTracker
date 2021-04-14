@@ -1,6 +1,5 @@
 <template>
-  <img src="~/assets/JTTracker_logo.png"/>
-
+  <img src="~/assets/JTTracker_logo.png">
 </template>
 <style>
   .NuxtLogo {
