@@ -11,7 +11,9 @@
           <h4>Tracking:</h4>
         </b-col>
         <b-col cols="8">
-          <h3 id="timer" />
+          <h3>
+            <Clock />
+          </h3>
           <b-button v-if="isTracked === false" variant="success" @click="rec()">
             <b-icon icon="play-fill" />
             Record Time
@@ -91,8 +93,10 @@
 import moment from 'moment'
 import { mapGetters, mapActions } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
+import Clock from '@/components/Clock.vue'
 
 export default {
+  components: { Clock },
   middleware: 'authenticated',
   asyncData () {
     return {
@@ -119,14 +123,6 @@ export default {
   mounted () {
     this.currentDate = moment()
     this.items = this.getTimers()
-  },
-  updated () {
-    const update = function () {
-      this.document.getElementById('timer').innerHTML = moment().format(
-        'LTS'
-      )
-    }
-    setInterval(update, 1000)
   },
   methods: {
     ...mapGetters({ getTimers: 'timer/timers' }),

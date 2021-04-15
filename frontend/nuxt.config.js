@@ -43,7 +43,8 @@ export default {
     ['bootstrap-vue/nuxt', {
       icons: true
     }],
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/pwa'
   ],
   /*
    ** Build configuration
@@ -57,5 +58,19 @@ export default {
   },
   axios: {
     baseURL: 'http://localhost:8080'
+  },
+  pwa: {
+    manifest: {
+      name: 'JTTracker 0.9',
+      lang: 'en',
+      useWebmanifestExtension: false
+    },
+    meta: {
+      title: 'JTTracker',
+      author: 'DesertGun'
+    },
+    icon: {
+      fileName: 'icon.png'
+    }
   }
 }
