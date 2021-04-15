@@ -1,6 +1,5 @@
 package ee.desertgun.jttracker.domain;
 
-
 import ee.desertgun.jttracker.repository.ProjectRepository;
 import ee.desertgun.jttracker.repository.TrackedTimeRepository;
 import org.junit.Before;
@@ -15,18 +14,20 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 @DataJpaTest
-
-public class TrackedTimeTest {
+public class UserProjectTest {
 
     private User user;
     private TrackedTime trackedTime;
+    private TrackedTime secondTrackedTime;
     private UserProject userProject;
 
     @Autowired
@@ -66,6 +67,26 @@ public class TrackedTimeTest {
 
         this.trackedTime = trackedTime;
     }
+    @Before
+    public void createSecondTestTimeRecord() {
+        Instant start = Instant.parse("2019-12-03T10:20:30.00Z");
+        Instant end = Instant.parse("2019-12-03T13:25:30.00Z");
+        Duration duration = java.time.Duration.between(start, end);
+        String timeDesc = "Second-Test";
+        UUID timeID = UUID.randomUUID();
+
+        TrackedTime secondTrackedTime = new TrackedTime(user, timeID, start, end, timeDesc, duration);
+
+        ArrayList<UserProject> userProjects = new ArrayList<>();
+        secondTrackedTime.setProjectList(userProjects);
+
+        secondTrackedTime = entityManager.persistAndFlush(secondTrackedTime);
+
+        this.secondTrackedTime = secondTrackedTime;
+    }
+
+
+
 
     @Before
     public void createTestProjectRecord() {
@@ -82,7 +103,9 @@ public class TrackedTimeTest {
 
         userProject.setTrackedTimeList(trackedTimes);
 
+        Duration projectDuration =  Duration.parse("PT10M");
 
+        userProject.setProjectTime(projectDuration);
 
         userProject = entityManager.persistAndFlush(userProject);
 
@@ -91,81 +114,59 @@ public class TrackedTimeTest {
 
 
     @Test
-    public void createTime() {
+    public void createProject() {
 
-        assertSame(trackedTimeRepository.getTrackedTimeByTimeID(trackedTime.getTimeID()), (trackedTime));
+        assertSame(projectRepository.getByProjectID(userProject.getProjectID()), (userProject));
     }
 
-    @Test
-    public void updateTimeDesc() {
-        String origDesc = trackedTime.getTimeDesc();
-
-        trackedTime.setTimeDesc("Update");
-
-
-        assertNotSame(trackedTimeRepository.getTrackedTimeByTimeID(trackedTime.getTimeID()).getTimeDesc(), (origDesc));
-
-
-    }
 
     @Test
-    public void updateTimeStart() {
-        Instant origStart = trackedTime.getStartTime();
+    public void updateProjectDesc() {
+        String origDesc = userProject.getProjectDesc();
 
-        trackedTime.setStartTime(Instant.parse("2019-12-03T10:25:30.00Z"));
+        userProject.setProjectDesc("Test-Project");
 
-
-        assertNotSame(trackedTimeRepository.getTrackedTimeByTimeID(trackedTime.getTimeID()).getStartTime(), (origStart));
+        assertNotSame(projectRepository.getByProjectID(userProject.getProjectID()).getProjectDesc(), (origDesc));
 
 
     }
 
     @Test
-    public void updateTimeEnd() {
-        Instant origEnd = trackedTime.getEndTime();
+    public void countDuration() {
 
-        trackedTime.setEndTime(Instant.parse("2019-12-03T11:30:30.00Z"));
-
-
-        assertNotSame(trackedTimeRepository.getTrackedTimeByTimeID(trackedTime.getTimeID()).getEndTime(), (origEnd));
-
+        Duration origTime = userProject.getProjectTime();
+        assertSame(projectRepository.getByProjectID(userProject.getProjectID()).getProjectTime(), (origTime));
 
     }
 
     @Test
-    public void updateTimeDuration() {
-        Duration origDuration = trackedTime.getDuration();
+    public void addTime() {
 
-        trackedTime.setDuration(java.time.Duration.between(trackedTime.getStartTime(), trackedTime.getEndTime()));
+        List<TrackedTime> trackedTimeList = userProject.getTrackedTimeList();
 
-        assertNotSame(trackedTimeRepository.getTrackedTimeByTimeID(trackedTime.getTimeID()).getDuration(), (origDuration));
+        List<TrackedTime> trackedTimeListNew = new ArrayList<>();
+
+        trackedTimeListNew.add(trackedTime);
+        trackedTimeListNew.add(secondTrackedTime);
+
+        userProject.setTrackedTimeList(trackedTimeListNew);
+
+        assertNotSame(projectRepository.getByProjectID(userProject.getProjectID()).getTrackedTimeList(), (trackedTimeList));
     }
 
-    @Test
-    public void getByUser() {
-        assertSame(trackedTimeRepository.getTrackedTimeByTimeID(trackedTime.getTimeID()),
-                (trackedTimeRepository.getTrackedTimesByUser(user).get(0)));
-    }
 
     @Test
-    public void addProject() {
-        UUID projectID = userProject.getProjectID();
+    public void removeTime() {
+
+        List<TrackedTime> trackedTimeList = userProject.getTrackedTimeList();
+        trackedTimeList.remove(trackedTime);
+
+        userProject.setTrackedTimeList(trackedTimeList);
+
+        assertSame(projectRepository.getByProjectID(userProject.getProjectID()).getTrackedTimeList(), (trackedTimeList));
 
 
-        trackedTime.addProject(userProject);
 
-
-        assertSame(trackedTimeRepository.getTrackedTimeByTimeID(trackedTime.getTimeID()).getProjectList().get(0),
-                (projectRepository.getByProjectID(projectID)));
-    }
-
-    @Test
-    public void removeProject() {
-
-        trackedTime.removeProject(userProject);
-
-
-        assertTrue(trackedTimeRepository.getTrackedTimeByTimeID(trackedTime.getTimeID()).getProjectList().isEmpty());
     }
 
 }
