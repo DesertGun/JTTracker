@@ -107,8 +107,7 @@ public class UserAccountController {
     String userPassword = user.getPassword();
 
     if (passwordEncoder.matches(userDTO.getOldPassword(), userPassword)) {
-
-      userService.updateUserPassword(user, passwordEncoder.encode(userDTO.getPassword()));
+      userService.updateUserPassword(user, passwordEncoder.encode(userDTO.getNewPassword()));
 
       response.setValidated(true);
       response.setSuccessMessage("Password changed");
