@@ -1,6 +1,10 @@
 package ee.desertgun.jttracker.service;
 
-public interface EmailService {
-  void sendEmail(final String to, final String subject, final String message);
+import ee.desertgun.jttracker.domain.Mail;
 
+import javax.mail.MessagingException;
+
+public interface EmailService {
+
+    void sendComplexMail(Mail mail, String template) throws MessagingException;
 }

@@ -20,9 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @AutoConfigureBefore
@@ -95,13 +93,24 @@ public class InitializeDatabase implements InitializingBean {
       greenMail.start();
       // greenMail.stop();
 
-      emailService.sendEmail("test@domain.de", "Init-Confirmation-Test", "Test-Online!");
-      emailService.sendEmail("admin@domain.de", "Init-Confirmation-Admin", "Admin-Online!");
+      Mail adminMail = new Mail();
+      adminMail.setFrom("admin@domain.de");
+      adminMail.setMailTo("admin@domain.de");
+      adminMail.setSubject("Init-Confirmation-Admin");
+      Map<String, Object> propAdmin = new HashMap<>();
+      propAdmin.put("userName", adminMail.getMailTo());
+      adminMail.setProps(propAdmin);
+      emailService.sendComplexMail(adminMail, "init");
+
+
       Mail testMail = new Mail();
       testMail.setFrom("admin@domain.de");
       testMail.setMailTo("test@domain.de");
-      testMail.setSubject("Test-HTML-Sending of Emails");
-      emailService.sendComplexMail(testMail);
+      testMail.setSubject("Init-Confirmation-Test");
+      Map<String, Object> propTest = new HashMap<>();
+      propTest.put("userName", testMail.getMailTo());
+      testMail.setProps(propTest);
+      emailService.sendComplexMail(testMail, "init");
     }
   }
 }

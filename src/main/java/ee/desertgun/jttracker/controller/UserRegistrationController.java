@@ -1,5 +1,6 @@
 package ee.desertgun.jttracker.controller;
 
+import ee.desertgun.jttracker.domain.Mail;
 import ee.desertgun.jttracker.dto.UserDTO;
 import ee.desertgun.jttracker.service.EmailService;
 import ee.desertgun.jttracker.service.UserService;
@@ -14,7 +15,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @RestController
@@ -35,7 +39,7 @@ public class UserRegistrationController {
 
 
     @PostMapping("/register")
-    public ValidationResponse registerUser(@RequestBody @Valid UserDTO userDTO, BindingResult bindingResult) {
+    public ValidationResponse registerUser(@RequestBody @Valid UserDTO userDTO, BindingResult bindingResult) throws MessagingException {
         ValidationResponse response = new ValidationResponse();
         if (bindingResult.hasErrors()) {
           String error = bindingResult.getFieldErrors().toString();
@@ -49,7 +53,15 @@ public class UserRegistrationController {
         createUserAccount(userDTO);
         response.setValidated(true);
         response.setSuccessMessage("Thank you for the registration!");
-        emailService.sendEmail(userDTO.getUsername(), "Registration", "Thanks for Registration");
+
+            Mail registrationMail = new Mail();
+            registrationMail.setMailTo(userDTO.getUsername());
+            registrationMail.setSubject("Registration");
+            Map<String, Object> propRegistration = new HashMap<>();
+            propRegistration.put("userName", registrationMail.getMailTo());
+            propRegistration.put("displayName", userDTO.getAccountName());
+            registrationMail.setProps(propRegistration);
+            emailService.sendComplexMail(registrationMail, "register");
       }
         return response;
     }
