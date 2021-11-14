@@ -90,13 +90,9 @@
             </b-form-checkbox>
           </b-form-group>
 
-          <b-button variant="success" @click="register()">
-            Register
-          </b-button>
+          <b-button variant="success" @click="register()"> Register </b-button>
         </b-form>
-        <b-button class="mt-2" nuxt-link to="/">
-          Go back
-        </b-button>
+        <b-button class="mt-2" nuxt-link to="/"> Go back </b-button>
         <div v-if="responseSuccess" class="pt-2" style="text-align: center">
           <b-alert dismissible show variant="success">
             {{ responseMassage }}
@@ -118,15 +114,7 @@
 
 <script>
 export default {
-  computed: {
-    validationPassword () {
-      return this.pw1.length >= 8
-    },
-    validationPasswordEq () {
-      return this.pw1 === this.pw2
-    }
-  },
-  asyncData () {
+  asyncData() {
     return {
       email: '',
       dname: '',
@@ -135,17 +123,25 @@ export default {
       statusTerms: 'not_accepted',
       statusPrivacy: 'not_accepted',
       responseSuccess: '',
-      responseError: ''
+      responseError: '',
     }
   },
+  computed: {
+    validationPassword() {
+      return this.pw1.length >= 8
+    },
+    validationPasswordEq() {
+      return this.pw1 === this.pw2
+    },
+  },
   methods: {
-    async register () {
+    async register() {
       try {
         if (this.email && this.dname) {
           const response = await this.$axios.post('/register', {
             username: this.email,
             accountName: this.dname,
-            password: this.pw2
+            password: this.pw2,
           })
           if (response.data.validated === true) {
             this.responseSuccess = response.data.successMessage
@@ -157,7 +153,7 @@ export default {
         alert(e.toString())
         window.location.reload()
       }
-    }
-  }
+    },
+  },
 }
 </script>

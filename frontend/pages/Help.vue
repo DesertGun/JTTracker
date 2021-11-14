@@ -6,12 +6,10 @@
         <b-col cols="6">
           <h3>Help and FAQ</h3>
           <h5 class="desc">
-            Q: What does JTTracker stand for? <br>
+            Q: What does JTTracker stand for? <br />
             A: JavaTimeTracker
           </h5>
-          <b-button @click="clickButton()">
-            Return to homepage
-          </b-button>
+          <b-button @click="clickButton()"> Return to homepage </b-button>
         </b-col>
         <b-col />
       </b-row>
@@ -22,15 +20,15 @@
 <script>
 export default {
   methods: {
-    clickButton () {
+    clickButton() {
       this.$router.push('/')
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style>
-  .help {
-    text-align: center;
-  }
+.help {
+  text-align: center;
+}
 </style>

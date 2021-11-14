@@ -4,7 +4,6 @@ package ee.desertgun.jttracker.controller;
 import ee.desertgun.jttracker.domain.TrackedTime;
 import ee.desertgun.jttracker.dto.TrackedTimeDTO;
 import ee.desertgun.jttracker.service.TrackedTimeService;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +14,6 @@ import java.util.UUID;
 @RestController
 @CrossOrigin
 @RequestMapping(path = "/api")
-@PreAuthorize("hasRole('ROLE_USER')")
 public class TimerController {
 
 

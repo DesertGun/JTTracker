@@ -9,24 +9,22 @@ import moment from 'moment'
 
 export default {
   name: 'Clock',
-  data () {
+  data() {
     return {
-      currentTime: null
+      currentTime: null,
     }
   },
-  mounted () {
+  mounted() {
     window.setInterval(() => {
       this.time()
     }, 1000)
   },
   methods: {
-    time () {
+    time() {
       this.currentTime = moment().format('LTS')
-    }
-  }
+    },
+  },
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

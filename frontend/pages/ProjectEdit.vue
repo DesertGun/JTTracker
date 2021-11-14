@@ -55,9 +55,7 @@
                 id="projectStatus"
                 description="If a project is not active, it will not be followed in statistics and in the dashboard"
               >
-                <b-form-checkbox
-                  v-model="status"
-                >
+                <b-form-checkbox v-model="status">
                   This project is active
                 </b-form-checkbox>
               </b-form-group>
@@ -101,7 +99,9 @@
                           <b-row>
                             From: {{ formatTime(timeUser.startTime) }}
                           </b-row>
-                          <b-row> Until: {{ formatTime(timeUser.endTime) }}</b-row>
+                          <b-row>
+                            Until: {{ formatTime(timeUser.endTime) }}</b-row
+                          >
                           <b-row>
                             Duration:
                             {{ timeUser.duration.hours() }}h :
@@ -159,18 +159,19 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   middleware: 'authenticated',
   computed: {
-    validationPriority () {
+    validationPriority() {
       return this.priority != null
-    }
+    },
+    ...mapGetters({ getProjects: 'project/projects' }),
   },
-  asyncData () {
+  asyncData() {
     return {
       prioritySelect: [
         { text: 'Select priority', value: null },
         'Low',
         'Normal',
         'High',
-        'Urgent!'
+        'Urgent!',
       ],
       timesProject: [],
       timesUser: [],
@@ -180,10 +181,10 @@ export default {
       projectID: null,
       status: false,
       assigned: false,
-      projectTime: null
+      projectTime: null,
     }
   },
-  async mounted () {
+  async mounted() {
     try {
       const projectID = this.$route.query.projectID
       const response = await this.$axios.get('api/project/' + projectID)
@@ -200,7 +201,7 @@ export default {
         return {
           ...projectJSON,
           startTime,
-          endTime
+          endTime,
         }
       })
 
@@ -211,14 +212,16 @@ export default {
         const endTime = moment(timerJson.endTime)
         const duration = moment.duration(timerJson.duration)
 
-        const assigned = this.timesProject.some(item => item.timeID === timerJson.timeID)
+        const assigned = this.timesProject.some(
+          (item) => item.timeID === timerJson.timeID
+        )
 
         return {
           ...timerJson,
           startTime,
           endTime,
           duration,
-          assigned
+          assigned,
         }
       })
     } catch (e) {
@@ -226,31 +229,32 @@ export default {
     }
   },
   methods: {
-    ...mapGetters({ getProjects: 'project/projects' }),
-    ...mapActions({ updateProjects: 'project/setProjectsAction' }),
-    countDuration (startTime, endTime) {
+    countDuration(startTime, endTime) {
       const diffTime = endTime.diff(startTime)
       return moment.duration(diffTime)
     },
-    formatTime (time) {
+    ...mapActions({ updateProjects: 'project/setProjectsAction' }),
+    formatTime(time) {
       return time.format('LTS')
     },
-    formatDate (time) {
+    formatDate(time) {
       return time.format('ll')
     },
-    async editProject () {
+    async editProject() {
       await this.$axios.patch('/api/project/' + this.projectID, {
         projectID: this.projectID,
         projectDesc: this.projectDesc,
         projectName: this.projectName,
         status: this.status,
-        priority: this.priority
+        priority: this.priority,
       })
       await this.updateProjects()
       this.$router.push('/project')
     },
-    async addTimeToProject (time) {
-      const found = this.timesProject.some(item => item.timeID === time.timeID)
+    async addTimeToProject(time) {
+      const found = this.timesProject.some(
+        (item) => item.timeID === time.timeID
+      )
 
       if (found) {
         alert('Element is already added')
@@ -259,42 +263,44 @@ export default {
           startTime: time.startTime,
           endTime: time.endTime,
           timeID: time.timeID,
-          timeDesc: time.timeDesc
+          timeDesc: time.timeDesc,
         })
         this.projectTime.add(time.duration)
 
         await this.$axios.patch('/api/project/time/' + this.projectID, {
           projectID: this.projectID,
           trackedTimeList: this.timesProject,
-          projectTime: this.projectTime.toISOString()
+          projectTime: this.projectTime.toISOString(),
         })
         this.$store.dispatch('project/setProjectsAction')
         time.assigned = true
       }
     },
-    async removeTimeFromProject (time) {
+    async removeTimeFromProject(time) {
       this.projectTime.subtract(time.duration)
-      const index = this.timesProject.findIndex(item => item.timeID === time.timeID)
+      const index = this.timesProject.findIndex(
+        (item) => item.timeID === time.timeID
+      )
       this.timesProject.splice(index, 1)
       await this.$axios.patch('/api/project/time/' + this.projectID, {
         projectID: this.projectID,
         trackedTimeList: this.timesProject,
-        projectTime: this.projectTime.toISOString()
+        projectTime: this.projectTime.toISOString(),
       })
       this.$store.dispatch('project/setProjectsAction')
       time.assigned = false
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style>
-  .cards {
-    margin-top: 10vh;
-  }
+.cards {
+  margin-top: 10vh;
+}
 
-  .timeCardCol {
-    flex: content;
-    max-width: fit-content;
-  }
+.timeCardCol {
+  flex: content;
+  max-width: fit-content;
+}
 </style>

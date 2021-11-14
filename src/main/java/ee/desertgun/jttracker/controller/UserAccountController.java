@@ -35,7 +35,6 @@ public class UserAccountController {
     @Value("${server.port}")
     private String port;
 
-    //TODO: Only for testing!!!
     private static final String FRONTEND_PORT = "3000";
 
 
@@ -73,7 +72,7 @@ public class UserAccountController {
             response.setValidated(false);
             response.setErrorMessage(error);
         } else {
-            String error = "Following E-Mail-Adress does not exist! Please re-enter!";
+            String error = "Following E-Mail-Address does not exist! Please re-enter!";
             response.setValidated(false);
             response.setErrorMessage(error);
         }
@@ -88,7 +87,7 @@ public class UserAccountController {
         String result = passwordTokenValidationService.validatePasswordResetToken(passwordTokenDTO.getUsername(), passwordTokenDTO.getPasswordResetToken());
         if (result == null) {
             response.setValidated(true);
-            response.setSuccessMessage("Validation successfull");
+            response.setSuccessMessage("Validation successful");
         } else if (result.equals("invalidToken") || result.equals("expired")) {
             response.setValidated(false);
             response.setErrorMessage("Token is invalid");

@@ -11,9 +11,7 @@
       <div>
         <b-row>
           <b-col />
-          <b-col>
-            Add your needed content here!
-          </b-col>
+          <b-col> Add your needed content here! </b-col>
           <b-col />
         </b-row>
       </div>

@@ -29,8 +29,16 @@
             </b-col>
             <b-col>
               <b-input-group id="startTimeEdit" class="mb-2">
-                <b-form-datepicker v-model="startTimeDate" class="mr-2" size="sm" />
-                <b-form-timepicker v-model="startTimeTimer" show-seconds size="sm" />
+                <b-form-datepicker
+                  v-model="startTimeDate"
+                  class="mr-2"
+                  size="sm"
+                />
+                <b-form-timepicker
+                  v-model="startTimeTimer"
+                  show-seconds
+                  size="sm"
+                />
               </b-input-group>
             </b-col>
           </b-row>
@@ -43,18 +51,22 @@
             </b-col>
             <b-col>
               <b-input-group id="endTimeEdit" class="mb-2">
-                <b-form-datepicker v-model="endTimeDate" class="mr-2" size="sm" />
-                <b-form-timepicker v-model="endTimeTimer" show-seconds size="sm" />
+                <b-form-datepicker
+                  v-model="endTimeDate"
+                  class="mr-2"
+                  size="sm"
+                />
+                <b-form-timepicker
+                  v-model="endTimeTimer"
+                  show-seconds
+                  size="sm"
+                />
               </b-input-group>
             </b-col>
           </b-row>
         </div>
 
-        <b-button
-          type="submit"
-          variant="primary"
-          @click="onSubmit"
-        >
+        <b-button type="submit" variant="primary" @click="onSubmit">
           Submit
         </b-button>
       </b-col>
@@ -69,7 +81,7 @@ import { mapActions } from 'vuex'
 
 export default {
   middleware: 'authenticated',
-  asyncData () {
+  asyncData() {
     return {
       timeDesc: null,
       startTime: null,
@@ -79,10 +91,10 @@ export default {
       startTimeTimer: null,
       endTimeTimer: null,
       timeID: null,
-      duration: null
+      duration: null,
     }
   },
-  async mounted () {
+  async mounted() {
     try {
       const timeID = this.$route.query.timeID
       const response = await this.$axios.get('api/timer/' + timeID)
@@ -100,7 +112,7 @@ export default {
     }
   },
   methods: {
-    async onSubmit () {
+    async onSubmit() {
       const timeStart = this.startTimeDate + ' ' + this.startTimeTimer
       const timeEnd = this.endTimeDate + ' ' + this.endTimeTimer
       const startTime = moment(timeStart, 'YYYY-MM-DD hh:mm:ss')
@@ -111,17 +123,20 @@ export default {
         endTime,
         timeID: this.timeID,
         timeDesc: this.timeDesc,
-        duration
+        duration,
       })
       await this.updateProjects()
       await this.setUserTimers()
       this.$router.push('/timer')
     },
-    countDuration (startTime, endTime) {
+    ...mapActions({
+      setUserTimers: 'timer/setTimersAction',
+      updateProjects: 'project/setProjectsAction',
+    }),
+    countDuration(startTime, endTime) {
       const diffTime = endTime.diff(startTime)
       return moment.duration(diffTime)
     },
-    ...mapActions({ setUserTimers: 'timer/setTimersAction', updateProjects: 'project/setProjectsAction' })
-  }
+  },
 }
 </script>

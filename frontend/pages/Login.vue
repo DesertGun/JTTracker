@@ -32,9 +32,7 @@
           </b-form-group>
           <b-row>
             <b-col>
-              <b-button variant="primary" @click="submit()">
-                Login
-              </b-button>
+              <b-button variant="primary" @click="submit()"> Login </b-button>
             </b-col>
             <b-col>
               <b-button variant="danger" @click="submitRecovery()">
@@ -52,19 +50,25 @@
 <script>
 import { mapActions } from 'vuex'
 export default {
-  asyncData () {
+  asyncData() {
     return {
       password: null,
-      username: null
+      username: null,
     }
   },
   methods: {
-    async submit () {
+    async submit() {
       try {
-        const response = await this.$axios.post('/login', { username: this.username, password: this.password })
+        const response = await this.$axios.post('/login', {
+          username: this.username,
+          password: this.password,
+        })
         if (response.data.jwtToken) {
           const auth = { jwtToken: response.data.jwtToken }
           this.$store.dispatch('auth/setAuthAction', auth)
+          this.$store.dispatch('user/setProfileData')
+          this.$store.dispatch('user/setProfilePicture')
+          this.$store.dispatch('user/setProfileHash')
           this.setUserTimers()
           this.setUserProjects()
           this.$router.replace('/')
@@ -73,10 +77,13 @@ export default {
         alert(e.toString())
       }
     },
-    ...mapActions({ setUserTimers: 'timer/setTimersAction', setUserProjects: 'project/setProjectsAction' }),
-    submitRecovery () {
+    ...mapActions({
+      setUserTimers: 'timer/setTimersAction',
+      setUserProjects: 'project/setProjectsAction',
+    }),
+    submitRecovery() {
       this.$router.push('/recovery')
-    }
-  }
+    },
+  },
 }
 </script>

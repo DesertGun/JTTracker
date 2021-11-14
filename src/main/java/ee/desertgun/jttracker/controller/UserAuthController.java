@@ -5,7 +5,6 @@ import ee.desertgun.jttracker.model.JWTRequest;
 import ee.desertgun.jttracker.model.JWTResponse;
 import ee.desertgun.jttracker.service.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin
-@PreAuthorize("hasRole('ROLE_ANONYMOUS')")
 public class UserAuthController {
 
     private final AuthenticationManager authenticationManager;

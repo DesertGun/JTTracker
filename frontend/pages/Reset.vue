@@ -3,25 +3,28 @@
     <b-row>
       <b-col />
       <b-col>
-        <h3>
-          Test
-        </h3>
+        <h3>Test</h3>
         <div v-if="responseSuccess">
           <b-alert show variant="success">
             {{ responseSuccess }}
           </b-alert>
           <div v-if="changed">
-            <b-button variant="success" @click="login()">
-              LogIn
-            </b-button>
+            <b-button variant="success" @click="login()"> LogIn </b-button>
           </div>
           <div v-else>
-            <b-form-group id="resetFormGroup" description="Please type in your new password" label-for="resetpw">
-              <p>
-                Please enter your new password
-              </p>
+            <b-form-group
+              id="resetFormGroup"
+              description="Please type in your new password"
+              label-for="resetpw"
+            >
+              <p>Please enter your new password</p>
               <b-form-input id="resetpw" v-model="pw1" type="password" />
-              <b-form-input id="resetpwvalidation" v-model="pw2" type="password" />
+              <b-form-input
+                id="resetpwvalidation"
+                v-model="pw2"
+                type="password"
+                class="mt-3"
+              />
               <b-form-invalid-feedback :state="validationPasswordEq">
                 Your passwords dont match!
               </b-form-invalid-feedback>
@@ -35,9 +38,7 @@
                 Looks Good.
               </b-form-valid-feedback>
               <div v-if="validationPassword && validationPasswordEq">
-                <b-button variant="primary" @click="submit()">
-                  Reset
-                </b-button>
+                <b-button variant="primary" @click="submit()"> Reset </b-button>
               </div>
             </b-form-group>
           </div>
@@ -55,15 +56,7 @@
 
 <script>
 export default {
-  computed: {
-    validationPasswordEq () {
-      return this.pw1 === this.pw2
-    },
-    validationPassword () {
-      return this.pw1.length >= 8
-    }
-  },
-  asyncData () {
+  asyncData() {
     return {
       token: '',
       user: '',
@@ -71,16 +64,27 @@ export default {
       pw2: '',
       responseSuccess: '',
       responseError: '',
-      changed: false
+      changed: false,
     }
   },
-  async mounted () {
+  computed: {
+    validationPasswordEq() {
+      return this.pw1 === this.pw2
+    },
+    validationPassword() {
+      return this.pw1.length >= 8
+    },
+  },
+  async mounted() {
     try {
       const token = this.$route.query.token
       const user = this.$route.query.username
       this.user = user
       this.token = token
-      const response = await this.$axios.post('/user/password/reset/validate', { username: this.user, passwordResetToken: this.token })
+      const response = await this.$axios.post('/user/password/reset/validate', {
+        username: this.user,
+        passwordResetToken: this.token,
+      })
       if (response.data.validated === true) {
         this.responseSuccess = response.data.successMessage
       } else {
@@ -91,10 +95,13 @@ export default {
     }
   },
   methods: {
-    async submit () {
+    async submit() {
       // TODO: change API-Links in accordance to best-practise!
       try {
-        const response = await this.$axios.post('/user/password/reset/change', { username: this.user, newPassword: this.pw2 })
+        const response = await this.$axios.post('/user/password/reset/change', {
+          username: this.user,
+          newPassword: this.pw2,
+        })
         if (response.data.validated === true) {
           this.responseSuccess = response.data.successMessage
           this.changed = true
@@ -105,9 +112,9 @@ export default {
         alert(e.toString())
       }
     },
-    login () {
+    login() {
       this.$router.push('/login')
-    }
-  }
+    },
+  },
 }
 </script>

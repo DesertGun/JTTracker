@@ -4,9 +4,7 @@
       <b-row>
         <b-col />
         <b-col>
-          <h3>
-            Profile
-          </h3>
+          <h3>Profile</h3>
         </b-col>
         <b-col />
       </b-row>
@@ -22,7 +20,12 @@
               label="Username:"
               label-for="username"
             >
-              <b-form-input id="username" v-model="username" disabled="true" type="text" />
+              <b-form-input
+                id="username"
+                v-model="username"
+                disabled="true"
+                type="text"
+              />
             </b-form-group>
             <b-form-group
               id="accountNameFormGroup"
@@ -30,7 +33,12 @@
               label="Account name:"
               label-for="accountName"
             >
-              <b-form-input id="accountName" v-model="accountName" placeholder="None" type="text" />
+              <b-form-input
+                id="accountName"
+                v-model="accountName"
+                placeholder="None"
+                type="text"
+              />
               <b-form-invalid-feedback :state="validationaccountNameChange">
                 Your global name cannot be empty!
               </b-form-invalid-feedback>
@@ -45,7 +53,9 @@
               label="Avatar:"
               label-for="avatar"
             >
-              <img :src="'https://gravatar.com/avatar/${hash}?d=identicon'">
+              <b-img-lazy
+                :src="'https://gravatar.com/avatar/' + hash + '?d=identicon'"
+              />
             </b-form-group>
             <b-form-group
               id="passwordFormGroup"
@@ -53,13 +63,16 @@
               label="Password:"
               label-for="password"
             >
-              <b-form-input id="password" v-model="dummyPassword" disabled type="password" />
             </b-form-group>
             <b-button variant="secondary" @click="changePassword">
               Change current password
             </b-button>
             <div
-              v-if="validationaccountNameChange && this.accountName !== this.username && validationaccountNameNew"
+              v-if="
+                validationaccountNameChange &&
+                accountName !== username &&
+                validationaccountNameNew
+              "
               class="pt-2"
             >
               <b-button variant="success" @click="updateProfile">
@@ -80,17 +93,11 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   middleware: 'authenticated',
-  computed: {
-    validationaccountNameChange () {
-      return this.accountName.length > 0
-    },
-    validationaccountNameNew () {
-      return this.accountName !== this.initaccountName
-    }
-  },
-  asyncData () {
+  asyncData() {
     return {
       username: null,
       accountName: '',
@@ -98,42 +105,58 @@ export default {
       dummyPassword: 'placeHolderPasswordForRenderingPurposes',
       changed: false,
       updated: false,
-      hash: null
+      hash: null,
     }
   },
-  async mounted () {
+  computed: {
+    validationaccountNameChange() {
+      return this.accountName.length > 0
+    },
+    validationaccountNameNew() {
+      return this.accountName !== this.initaccountName
+    },
+    ...mapGetters({
+      getProfilePicture: 'user/getProfilePicture',
+      getHash: 'user/getHash',
+      hasProfilePicture: 'user/hasProfilePicture',
+      isLoggedIn: 'auth/isLoggedIn',
+      getUsername: 'user/getUsername',
+      getAccountname: 'user/getAccountname',
+    }),
+  },
+  mounted() {
     try {
-      const response = await this.$axios.get('/user')
-      this.username = response.data.username
-      if (response.data.accountName) {
-        this.accountName = response.data.accountName
+      this.username = this.getUsername
+      if (this.getAccountname) {
+        this.accountName = this.getAccountname
         this.initaccountName = this.accountName
-        this.hash = response.data.hash
       } else {
         this.accountName = this.username
         this.initaccountName = this.accountName
       }
+      this.hash = this.getHash
     } catch (e) {
       alert(e.toString())
     }
   },
   methods: {
-    async updateProfile () {
+    async updateProfile() {
       try {
         const response = await this.$axios.put('/user/update', {
           username: this.username,
-          accountName: this.accountName
+          accountName: this.accountName,
         })
         if (response.data.validated === true) {
           this.updated = true
         }
+        await this.$store.dispatch('user/setProfileData')
       } catch (e) {
         alert(e.toString())
       }
     },
-    changePassword () {
+    changePassword() {
       this.$router.push('/passwordChange')
-    }
-  }
+    },
+  },
 }
 </script>

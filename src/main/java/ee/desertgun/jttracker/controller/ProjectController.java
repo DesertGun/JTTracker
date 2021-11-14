@@ -1,12 +1,10 @@
 package ee.desertgun.jttracker.controller;
 
 
-
 import ee.desertgun.jttracker.domain.UserProject;
 import ee.desertgun.jttracker.dto.UserProjectDTO;
 import ee.desertgun.jttracker.dto.UserProjectTimeDTO;
 import ee.desertgun.jttracker.service.UserProjectService;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +15,6 @@ import java.util.UUID;
 @RestController
 @CrossOrigin
 @RequestMapping(path = "/api")
-@PreAuthorize("hasRole('ROLE_USER')")
 public class ProjectController {
 
     private final UserProjectService userProjectService;

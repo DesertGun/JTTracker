@@ -1,17 +1,17 @@
 <template>
-  <img src="~/assets/JTTracker_logo.png">
+  <img src="~/assets/JTTracker_logo.png" />
 </template>
 <style>
-  .NuxtLogo {
-    animation: 1s appear;
-  }
+.NuxtLogo {
+  animation: 1s appear;
+}
 
-  @keyframes appear {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
+@keyframes appear {
+  0% {
+    opacity: 0;
   }
+  100% {
+    opacity: 1;
+  }
+}
 </style>
