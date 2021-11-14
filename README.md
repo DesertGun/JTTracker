@@ -16,8 +16,8 @@ Once bug-free and save, this project will be launched for testing purposes for s
 
 ### To run JTTracker in a dev env. you need to have
     
-* NodeJS-Version: 12.X
-* OpenJDK-Version: 11.X
+* NodeJS-Version: 16.X
+* OpenJDK-Version: 17.X
 * MariaDB-Version: latest
     
    
