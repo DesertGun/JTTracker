@@ -47,16 +47,85 @@
               </b-form-invalid-feedback>
               <b-form-valid-feedback :state="validationaccountNameChange" />
             </b-form-group>
-            <b-form-group
-              id="avatarFormGroup"
-              description="Your personal Accout-Avatar"
-              label="Avatar:"
-              label-for="avatar"
-            >
-              <b-img-lazy
-                :src="'https://gravatar.com/avatar/' + hash + '?d=identicon'"
-              />
-            </b-form-group>
+            <b-row>
+              <b-col />
+              <b-col>
+                <b-form-group
+                  id="avatarFormGroup"
+                  description="Your personal Account-Avatar"
+                  label="Avatar:"
+                  label-for="avatar"
+                >
+                  <div v-if="!hasProfilePicture">
+                    <b-img-lazy
+                      :src="
+                        'https://gravatar.com/avatar/' +
+                        getHash +
+                        '?d=identicon'
+                      "
+                      rounded="circle"
+                    />
+                  </div>
+                  <div v-else>
+                    <b-img-lazy
+                      :src="getProfilePicture"
+                      height="150px"
+                      width="150px"
+                      rounded="circle"
+                    />
+                  </div>
+                </b-form-group>
+              </b-col>
+              <b-col />
+            </b-row>
+            <b-row>
+              <b-col />
+              <b-col cols="12">
+                <b-form-file
+                  v-model="profilePictureUpload"
+                  class="mb-2"
+                  accept=".jpg"
+                ></b-form-file>
+                <div v-if="uploadCurrent > 0">
+                  <b-progress
+                    :value="uploadCurrent"
+                    :max="uploadMax"
+                    show-progress
+                    animated
+                  ></b-progress>
+                </div>
+                <b-row>
+                  <b-col cols="3" />
+                  <b-col>
+                    <div v-if="profilePictureUpload">
+                      <b-button
+                        variant="secondary"
+                        class="mt-2"
+                        @click="uploadProfilePicture"
+                      >
+                        Upload my profile picture !
+                      </b-button>
+                    </div>
+                  </b-col>
+                  <b-col cols="3" />
+                </b-row>
+                <b-row>
+                  <b-col />
+                  <b-col cols="10">
+                    <div
+                      v-if="responseSuccess"
+                      class="pt-2"
+                      style="text-align: center"
+                    >
+                      <b-alert dismissible show variant="success">
+                        {{ responseSuccess }}
+                      </b-alert>
+                    </div>
+                  </b-col>
+                  <b-col />
+                </b-row>
+              </b-col>
+            </b-row>
             <b-form-group
               id="passwordFormGroup"
               description="You will receive a password-reset link to the adress (username) provided above"
@@ -105,7 +174,11 @@ export default {
       dummyPassword: 'placeHolderPasswordForRenderingPurposes',
       changed: false,
       updated: false,
-      hash: null,
+      profilePictureUpload: null,
+      responseError: null,
+      responseSuccess: null,
+      uploadCurrent: 0,
+      uploadMax: 100,
     }
   },
   computed: {
@@ -150,6 +223,34 @@ export default {
           this.updated = true
         }
         await this.$store.dispatch('user/setProfileData')
+      } catch (e) {
+        alert(e.toString())
+      }
+    },
+    async uploadProfilePicture() {
+      try {
+        const formData = new FormData()
+        formData.append('profilePicture', this.profilePictureUpload)
+
+        const response = await this.$axios.post('/user/picture', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          onUploadProgress: function (progressEvent) {
+            this.uploadCurrent = parseInt(
+              Math.round((progressEvent.loaded / progressEvent.total) * 100)
+            )
+          }.bind(this),
+        })
+        this.profilePictureUpload = null
+        if (response.data.validated === true) {
+          this.responseSuccess = response.data.successMessage
+          await this.$store.dispatch('user/setProfilePicture')
+          this.uploadCurrent = 0
+          this.profilePicture = this.getProfilePicture
+        } else {
+          this.responseError = response.data.errorMessage
+        }
       } catch (e) {
         alert(e.toString())
       }

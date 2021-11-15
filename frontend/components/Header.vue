@@ -27,13 +27,22 @@
               <b-row>
                 <b-col>
                   <b-avatar button @click="toProfile()">
-                    <b-img-lazy
-                      :src="
-                        'https://gravatar.com/avatar/' +
-                        getHash +
-                        '?d=identicon'
-                      "
-                    />
+                    <div v-if="hasProfilePicture">
+                      <b-img-lazy
+                        :src="getProfilePicture"
+                        height="150px"
+                        width="150px"
+                      />
+                    </div>
+                    <div v-else>
+                      <b-img-lazy
+                        :src="
+                          'https://gravatar.com/avatar/' +
+                          getHash +
+                          '?d=identicon'
+                        "
+                      />
+                    </div>
                   </b-avatar>
                 </b-col>
                 <b-col>
