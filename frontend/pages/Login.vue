@@ -40,6 +40,17 @@
               </b-button>
             </b-col>
           </b-row>
+          <b-row>
+            <b-col />
+            <b-col cols="10">
+              <div v-if="error" class="pt-2" style="text-align: center">
+                <b-alert dismissible show variant="danger">
+                  Wrong password or username !
+                </b-alert>
+              </div>
+            </b-col>
+            <b-col />
+          </b-row>
         </b-col>
         <b-col />
       </b-row>
@@ -54,6 +65,7 @@ export default {
     return {
       password: null,
       username: null,
+      error: null,
     }
   },
   methods: {
@@ -72,6 +84,8 @@ export default {
           this.setUserTimers()
           this.setUserProjects()
           this.$router.replace('/')
+        } else {
+          this.error = response.data.error
         }
       } catch (e) {
         alert(e.toString())

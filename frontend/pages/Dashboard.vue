@@ -219,10 +219,6 @@ export default {
       updateTimers: 'timer/setTimersAction',
     }),
   },
-  created() {
-    // this.updateProjects()
-    // this.updateTimers()
-  },
 }
 </script>
 

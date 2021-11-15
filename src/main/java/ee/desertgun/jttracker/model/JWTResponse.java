@@ -9,8 +9,10 @@ public class JWTResponse implements Serializable {
 
 
     private final String jwtToken;
+    private final String error;
 
-    public JWTResponse(String jwtToken) {
+    public JWTResponse(String jwtToken, String error) {
         this.jwtToken = jwtToken;
+        this.error = error;
     }
 }

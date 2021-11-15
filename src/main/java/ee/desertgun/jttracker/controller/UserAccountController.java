@@ -5,19 +5,27 @@ import ee.desertgun.jttracker.domain.User;
 import ee.desertgun.jttracker.dto.PasswordTokenDTO;
 import ee.desertgun.jttracker.dto.UserDTO;
 import ee.desertgun.jttracker.dto.UserProfileDTO;
-import ee.desertgun.jttracker.service.EmailService;
-import ee.desertgun.jttracker.service.PasswordTokenValidationService;
-import ee.desertgun.jttracker.service.UserService;
-import ee.desertgun.jttracker.service.ValidationResponse;
-import org.springframework.beans.factory.annotation.Value;
+import ee.desertgun.jttracker.service.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.net.InetAddress;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.Principal;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -31,19 +39,21 @@ public class UserAccountController {
     private final UserService userService;
     private final EmailService emailService;
     private final PasswordTokenValidationService passwordTokenValidationService;
+    private final FileLocationService fileLocationService;
 
-    @Value("${server.port}")
-    private String port;
-
+    private static final String BACKEND_PORT = "8080";
     private static final String FRONTEND_PORT = "3000";
+
+    Logger logger = LoggerFactory.getLogger(UserAccountController.class);
 
 
     public UserAccountController(PasswordEncoder passwordEncoder, UserService userService, EmailService emailService,
-                                 PasswordTokenValidationService passwordTokenValidationService) {
+                                 PasswordTokenValidationService passwordTokenValidationService, FileLocationService fileLocationService) {
         this.passwordEncoder = passwordEncoder;
         this.userService = userService;
         this.emailService = emailService;
         this.passwordTokenValidationService = passwordTokenValidationService;
+        this.fileLocationService = fileLocationService;
     }
 
 
@@ -163,6 +173,31 @@ public class UserAccountController {
         emailService.sendComplexMail(profileUpdateMail, "profile_updated");
 
         return response;
+    }
+
+    @PostMapping("/user/picture")
+    ValidationResponse uploadImage(@RequestParam MultipartFile profilePicture, Principal principal) throws Exception {
+        ValidationResponse validationResponse = new ValidationResponse();
+        fileLocationService.save(profilePicture.getBytes(), profilePicture.getOriginalFilename(), principal.getName());
+        validationResponse.setValidated(true);
+        validationResponse.setSuccessMessage("Your profile picture was successfully uploaded!");
+        return validationResponse;
+    }
+
+    @GetMapping(value = "/user/picture/")
+    private ResponseEntity<?> downloadImage(Authentication authentication) throws IOException {
+        User user = loadUser(authentication);
+        logger.warn(fileLocationService.find(user.getProfilePictureID()).toString());
+
+        Path fileSystemResourcePath = Path.of(fileLocationService.find(user.getProfilePictureID()).getPath());
+        ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(fileSystemResourcePath));
+        byte[] encode = Base64.getEncoder().encode(resource.getByteArray());
+        String result = new String(encode, StandardCharsets.UTF_8);
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(result);
     }
 
 

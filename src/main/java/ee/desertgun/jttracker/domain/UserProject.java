@@ -1,7 +1,8 @@
 package ee.desertgun.jttracker.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.Duration;
@@ -9,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Data
+@Setter
+@Getter
 @Entity
 public class UserProject {
 
