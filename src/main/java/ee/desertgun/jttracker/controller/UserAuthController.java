@@ -1,9 +1,9 @@
 package ee.desertgun.jttracker.controller;
 
 import ee.desertgun.jttracker.config.JWTToken;
-import ee.desertgun.jttracker.model.JWTRequest;
-import ee.desertgun.jttracker.model.JWTResponse;
-import ee.desertgun.jttracker.service.UserService;
+import ee.desertgun.jttracker.request.JWTRequest;
+import ee.desertgun.jttracker.response.JWTResponse;
+import ee.desertgun.jttracker.service.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

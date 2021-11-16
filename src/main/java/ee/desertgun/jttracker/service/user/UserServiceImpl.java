@@ -1,4 +1,4 @@
-package ee.desertgun.jttracker.service;
+package ee.desertgun.jttracker.service.user;
 
 import ee.desertgun.jttracker.config.UserProfileGravatarHash;
 import ee.desertgun.jttracker.domain.PasswordResetToken;
@@ -7,6 +7,7 @@ import ee.desertgun.jttracker.dto.UserDTO;
 import ee.desertgun.jttracker.dto.UserProfileDTO;
 import ee.desertgun.jttracker.repository.PasswordTokenRepository;
 import ee.desertgun.jttracker.repository.UserRepository;
+import ee.desertgun.jttracker.response.ValidationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

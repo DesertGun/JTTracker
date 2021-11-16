@@ -19,7 +19,7 @@ export const mutations = {
 export const actions = {
   async setProjectsAction({ commit }) {
     try {
-      const response = await this.$axios.get('api/project')
+      const response = await this.$axios.get('/project')
       const projects = response.data.map((projectJSON) => {
         const projectName = projectJSON.projectName
         const projectDesc = projectJSON.projectDesc

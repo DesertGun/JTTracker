@@ -97,7 +97,7 @@ export default {
   async mounted() {
     try {
       const timeID = this.$route.query.timeID
-      const response = await this.$axios.get('api/timer/' + timeID)
+      const response = await this.$axios.get('/timer/' + timeID)
       this.timeDesc = response.data.timeDesc
       this.duration = moment.duration(response.data.duration)
       this.startTime = moment(response.data.startTime)
@@ -118,7 +118,7 @@ export default {
       const startTime = moment(timeStart, 'YYYY-MM-DD hh:mm:ss')
       const endTime = moment(timeEnd, 'YYYY-MM-DD hh:mm:ss')
       const duration = this.countDuration(startTime, endTime)
-      await this.$axios.put('/api/timer/' + this.timeID, {
+      await this.$axios.put('/timer/' + this.timeID, {
         startTime,
         endTime,
         timeID: this.timeID,

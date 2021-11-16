@@ -169,7 +169,7 @@ export default {
           timeDesc: this.timeDesc,
           duration: this.duration,
         }
-        await this.$axios.post('api/timer', timer)
+        await this.$axios.post('/timer', timer)
         this.$store.commit('timer/addTimer', timer)
       } else {
         alert('Invalid time-records?!')
@@ -182,7 +182,7 @@ export default {
     },
     async deleteRecord(index) {
       await this.$axios.delete(
-        '/api/timer/' + this.$store.state.timer.timers[index].timeID
+        '/timer/' + this.$store.state.timer.timers[index].timeID
       )
       this.$store.dispatch('timer/deleteTimerAction', index)
       this.updateProjects()

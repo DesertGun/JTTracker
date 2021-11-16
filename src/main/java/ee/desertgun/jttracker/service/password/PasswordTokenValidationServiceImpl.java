@@ -1,4 +1,4 @@
-package ee.desertgun.jttracker.service;
+package ee.desertgun.jttracker.service.password;
 
 import ee.desertgun.jttracker.domain.PasswordResetToken;
 import ee.desertgun.jttracker.domain.User;

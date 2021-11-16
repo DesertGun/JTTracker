@@ -187,7 +187,7 @@ export default {
   async mounted() {
     try {
       const projectID = this.$route.query.projectID
-      const response = await this.$axios.get('api/project/' + projectID)
+      const response = await this.$axios.get('/project/' + projectID)
       this.projectName = response.data.projectName
       this.projectDesc = response.data.projectDesc
       this.status = response.data.status
@@ -205,7 +205,7 @@ export default {
         }
       })
 
-      const userTimeresponse = await this.$axios.get('api/timer/')
+      const userTimeresponse = await this.$axios.get('/timer/')
 
       this.timesUser = userTimeresponse.data.map((timerJson) => {
         const startTime = moment(timerJson.startTime)
@@ -241,7 +241,7 @@ export default {
       return time.format('ll')
     },
     async editProject() {
-      await this.$axios.patch('/api/project/' + this.projectID, {
+      await this.$axios.patch('/project/' + this.projectID, {
         projectID: this.projectID,
         projectDesc: this.projectDesc,
         projectName: this.projectName,
@@ -267,7 +267,7 @@ export default {
         })
         this.projectTime.add(time.duration)
 
-        await this.$axios.patch('/api/project/time/' + this.projectID, {
+        await this.$axios.patch('/project/time/' + this.projectID, {
           projectID: this.projectID,
           trackedTimeList: this.timesProject,
           projectTime: this.projectTime.toISOString(),
@@ -282,7 +282,7 @@ export default {
         (item) => item.timeID === time.timeID
       )
       this.timesProject.splice(index, 1)
-      await this.$axios.patch('/api/project/time/' + this.projectID, {
+      await this.$axios.patch('/project/time/' + this.projectID, {
         projectID: this.projectID,
         trackedTimeList: this.timesProject,
         projectTime: this.projectTime.toISOString(),

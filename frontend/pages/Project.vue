@@ -165,7 +165,7 @@ export default {
           projectDesc: this.projectDesc,
           status: this.status,
         }
-        await this.$axios.post('api/project', project)
+        await this.$axios.post('/project', project)
         this.$store.commit('project/addProject', project)
       } else {
         alert('Invalid-Data')
@@ -178,7 +178,7 @@ export default {
     },
     async deleteProject(index) {
       await this.$axios.delete(
-        '/api/project/' + this.$store.state.project.projects[index].projectID
+        '/project/' + this.$store.state.project.projects[index].projectID
       )
       this.$store.dispatch('project/deleteProjectAction', index)
     },

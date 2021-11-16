@@ -1,6 +1,6 @@
 package ee.desertgun.jttracker.config;
 
-import ee.desertgun.jttracker.service.UserService;
+import ee.desertgun.jttracker.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

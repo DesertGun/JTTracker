@@ -1,4 +1,4 @@
-package ee.desertgun.jttracker.service;
+package ee.desertgun.jttracker.service.userproject;
 
 import ee.desertgun.jttracker.domain.TrackedTime;
 import ee.desertgun.jttracker.domain.User;

@@ -90,7 +90,7 @@
                 </b-card-group>
               </div>
               <div v-else>
-                <h5>No Projects avalible !</h5>
+                <h5>No timers avalible !</h5>
               </div>
             </b-col>
           </b-row>

@@ -5,7 +5,11 @@ import ee.desertgun.jttracker.domain.User;
 import ee.desertgun.jttracker.dto.PasswordTokenDTO;
 import ee.desertgun.jttracker.dto.UserDTO;
 import ee.desertgun.jttracker.dto.UserProfileDTO;
-import ee.desertgun.jttracker.service.*;
+import ee.desertgun.jttracker.response.ValidationResponse;
+import ee.desertgun.jttracker.service.email.EmailService;
+import ee.desertgun.jttracker.service.password.PasswordTokenValidationService;
+import ee.desertgun.jttracker.service.profilepicture.FileLocationService;
+import ee.desertgun.jttracker.service.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
@@ -128,9 +132,9 @@ public class UserAccountController {
 
     @PostMapping("/user/password/update")
     public ValidationResponse changeUserPasswordIfOldIsValid(@RequestBody @Valid UserDTO userDTO,
-                                                             Authentication authentication) throws MessagingException {
+                                                             Principal principal) throws MessagingException {
         ValidationResponse response = new ValidationResponse();
-        User user = userService.getUserByUsername(authentication.getName());
+        User user = userService.getUserByUsername(principal.getName());
         String userPassword = user.getPassword();
 
         if (passwordEncoder.matches(userDTO.getOldPassword(), userPassword)) {
@@ -185,8 +189,8 @@ public class UserAccountController {
     }
 
     @GetMapping(value = "/user/picture/")
-    private ResponseEntity<?> downloadImage(Authentication authentication) throws IOException {
-        User user = loadUser(authentication);
+    private ResponseEntity<?> downloadImage(Principal principal) throws IOException {
+        User user = userService.getUserByUsername(principal.getName());
         logger.warn(fileLocationService.find(user.getProfilePictureID()).toString());
 
         Path fileSystemResourcePath = Path.of(fileLocationService.find(user.getProfilePictureID()).getPath());

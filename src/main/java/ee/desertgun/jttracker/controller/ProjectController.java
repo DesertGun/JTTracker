@@ -4,17 +4,16 @@ package ee.desertgun.jttracker.controller;
 import ee.desertgun.jttracker.domain.UserProject;
 import ee.desertgun.jttracker.dto.UserProjectDTO;
 import ee.desertgun.jttracker.dto.UserProjectTimeDTO;
-import ee.desertgun.jttracker.service.UserProjectService;
-import org.springframework.security.core.Authentication;
+import ee.desertgun.jttracker.service.userproject.UserProjectService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
 @RestController
 @CrossOrigin
-@RequestMapping(path = "/api")
 public class ProjectController {
 
     private final UserProjectService userProjectService;
@@ -24,8 +23,8 @@ public class ProjectController {
     }
 
     @GetMapping("/project")
-    public List<UserProject> getUserProjects(Authentication authentication) {
-        return userProjectService.getUserProjects(authentication.getName());
+    public List<UserProject> getUserProjects(Principal principal) {
+        return userProjectService.getUserProjects(principal.getName());
     }
 
     @GetMapping("/project/{projectID}")
@@ -50,7 +49,7 @@ public class ProjectController {
     }
 
     @PostMapping("/project")
-    public void addProject(@RequestBody @Valid UserProjectDTO userProjectDTO, Authentication authentication) {
-        userProjectService.createUserProject(userProjectDTO, authentication.getName());
+    public void addProject(@RequestBody @Valid UserProjectDTO userProjectDTO, Principal principal) {
+        userProjectService.createUserProject(userProjectDTO, principal.getName());
     }
 }

@@ -1,4 +1,4 @@
-package ee.desertgun.jttracker.model;
+package ee.desertgun.jttracker.response;
 
 import lombok.Data;
 

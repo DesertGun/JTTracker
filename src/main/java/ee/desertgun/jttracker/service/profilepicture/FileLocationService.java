@@ -1,4 +1,4 @@
-package ee.desertgun.jttracker.service;
+package ee.desertgun.jttracker.service.profilepicture;
 
 import org.springframework.core.io.FileSystemResource;
 
