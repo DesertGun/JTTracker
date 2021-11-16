@@ -1,4 +1,4 @@
-package ee.desertgun.jttracker.service;
+package ee.desertgun.jttracker.response;
 
 import lombok.Data;
 import org.springframework.stereotype.Service;

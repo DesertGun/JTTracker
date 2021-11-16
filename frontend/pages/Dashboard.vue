@@ -4,9 +4,7 @@
       <b-row class="infoRow">
         <b-col />
         <b-col cols="10">
-          <h4>
-            Modules:
-          </h4>
+          <h4>Modules:</h4>
           <b-row class="moduleCardRow">
             <b-card-group deck>
               <b-card>
@@ -18,10 +16,7 @@
                     </b-col>
                   </b-row>
                 </b-card-text>
-                <b-button
-                  variant="primary"
-                  @click="timer()"
-                >
+                <b-button variant="primary" @click="timer()">
                   Go To Timer
                 </b-button>
               </b-card>
@@ -35,10 +30,7 @@
                     </b-col>
                   </b-row>
                 </b-card-text>
-                <b-button
-                  variant="primary"
-                  @click="project()"
-                >
+                <b-button variant="primary" @click="project()">
                   Go To Project
                 </b-button>
               </b-card>
@@ -51,9 +43,7 @@
                     </b-col>
                   </b-row>
                 </b-card-text>
-                <b-button variant="primary">
-                  Go To Stats
-                </b-button>
+                <b-button variant="primary"> Go To Stats </b-button>
               </b-card>
             </b-card-group>
           </b-row>
@@ -68,17 +58,11 @@
           <h3>Your latest Times and Projects!</h3>
           <b-row>
             <b-col>
-              <h4>
-                Last-Times:
-              </h4>
-              <div v-if="timesUser.length!==0">
+              <h4>Last-Times:</h4>
+              <div v-if="timesUser.length !== 0">
                 <b-card-group deck>
                   <b-row cols="3">
-                    <b-card
-                      v-for="time in timesUser"
-                      :key="time.timeID"
-                      md="4"
-                    >
+                    <b-card v-for="time in timesUser" :key="time.timeID" md="4">
                       <b-card-text>
                         <b-row>
                           <b-col>
@@ -94,8 +78,8 @@
                             Recorded on: {{ formatDate(time.startTime) }} at
                             {{ formatTime(time.startTime) }}, recording ended on
                             {{ formatDate(time.endTime) }} at
-                            {{ formatTime(time.endTime) }}. With total duration of
-                            {{ time.duration.hours() }}h :
+                            {{ formatTime(time.endTime) }}. With total duration
+                            of {{ time.duration.hours() }}h :
                             {{ time.duration.minutes() }}m :
                             {{ time.duration.seconds() }}s
                           </b-col>
@@ -106,18 +90,14 @@
                 </b-card-group>
               </div>
               <div v-else>
-                <h5>
-                  No Projects avalible !
-                </h5>
+                <h5>No timers avalible !</h5>
               </div>
             </b-col>
           </b-row>
           <b-row>
             <b-col>
-              <h4>
-                Last-Projects:
-              </h4>
-              <div v-if="projectsUser.length!==0">
+              <h4>Last-Projects:</h4>
+              <div v-if="projectsUser.length !== 0">
                 <b-card-group deck>
                   <b-row cols="3">
                     <b-card
@@ -141,8 +121,12 @@
                             {{ project.trackedTimeList.length }} time-records
                             allocated. Time allocated in total:
                             {{ formatTotalTime(project.projectTime).hours() }}h:
-                            {{ formatTotalTime(project.projectTime).minutes() }}m:
-                            {{ formatTotalTime(project.projectTime).seconds() }}s
+                            {{
+                              formatTotalTime(project.projectTime).minutes()
+                            }}m:
+                            {{
+                              formatTotalTime(project.projectTime).seconds()
+                            }}s
                           </b-col>
                         </b-row>
                       </b-card-text>
@@ -151,9 +135,7 @@
                 </b-card-group>
               </div>
               <div v-else>
-                <h5>
-                  No Projects avalible !
-                </h5>
+                <h5>No Projects avalible !</h5>
               </div>
             </b-col>
           </b-row>
@@ -170,25 +152,31 @@ import moment from 'moment'
 
 export default {
   middleware: 'authenticated',
-  asyncData () {
+  computed: {
+    ...mapGetters({
+      getUserTimers: 'timer/timers',
+      getUserProjects: 'project/projects',
+    }),
+  },
+  asyncData() {
     return {
       timesUser: [],
-      projectsUser: []
+      projectsUser: [],
     }
   },
-  mounted () {
+  mounted() {
     try {
-      this.projectsUser = this.getUserProjects()
+      this.projectsUser = this.getUserProjects
         .map((projectJSON) => {
           const projectTime = projectJSON.projectTime
           return {
             ...projectJSON,
-            projectTime
+            projectTime,
           }
         })
         .splice(this.projectsUser.length - 3, 3)
 
-      this.timesUser = this.getUserTimers()
+      this.timesUser = this.getUserTimers
         .map((timerJson) => {
           const startTime = moment(timerJson.startTime)
           const endTime = moment(timerJson.endTime)
@@ -198,7 +186,7 @@ export default {
             ...timerJson,
             startTime,
             endTime,
-            duration
+            duration,
           }
         })
         .splice(this.timesUser.length - 3, 3)
@@ -207,42 +195,39 @@ export default {
     }
   },
   methods: {
-    timer () {
+    timer() {
       this.$router.push('/timer')
     },
-    project () {
+    project() {
       this.$router.push('/project')
     },
-    countDuration (startTime, endTime) {
+    countDuration(startTime, endTime) {
       const diffTime = endTime.diff(startTime)
       return moment.duration(diffTime)
     },
-    formatTime (time) {
+    formatTime(time) {
       return time.format('LTS')
     },
-    formatDate (time) {
+    formatDate(time) {
       return time.format('ll')
     },
-    formatTotalTime (time) {
+    formatTotalTime(time) {
       return moment.duration(time)
     },
-    ...mapGetters({ getUserTimers: 'timer/timers', getUserProjects: 'project/projects' }),
-    ...mapActions({ updateProjects: 'project/setProjectsAction', updateTimers: 'timer/setTimersAction' })
+    ...mapActions({
+      updateProjects: 'project/setProjectsAction',
+      updateTimers: 'timer/setTimersAction',
+    }),
   },
-  created () {
-    this.updateProjects()
-    this.updateTimers()
-  }
 }
 </script>
 
 <style>
-  .dashboardContainer {
-    padding: 30px;
-  }
+.dashboardContainer {
+  padding: 30px;
+}
 
-  .dataDisplayContainer {
-    padding-top: 30px;
-  }
-
+.dataDisplayContainer {
+  padding-top: 30px;
+}
 </style>

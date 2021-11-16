@@ -32,15 +32,24 @@
           </b-form-group>
           <b-row>
             <b-col>
-              <b-button variant="primary" @click="submit()">
-                Login
-              </b-button>
+              <b-button variant="primary" @click="submit()"> Login </b-button>
             </b-col>
             <b-col>
               <b-button variant="danger" @click="submitRecovery()">
                 I forgot my Password!
               </b-button>
             </b-col>
+          </b-row>
+          <b-row>
+            <b-col />
+            <b-col cols="10">
+              <div v-if="error" class="pt-2" style="text-align: center">
+                <b-alert dismissible show variant="danger">
+                  Wrong password or username !
+                </b-alert>
+              </div>
+            </b-col>
+            <b-col />
           </b-row>
         </b-col>
         <b-col />
@@ -52,31 +61,43 @@
 <script>
 import { mapActions } from 'vuex'
 export default {
-  asyncData () {
+  asyncData() {
     return {
       password: null,
-      username: null
+      username: null,
+      error: null,
     }
   },
   methods: {
-    async submit () {
+    async submit() {
       try {
-        const response = await this.$axios.post('/login', { username: this.username, password: this.password })
+        const response = await this.$axios.post('/login', {
+          username: this.username,
+          password: this.password,
+        })
         if (response.data.jwtToken) {
           const auth = { jwtToken: response.data.jwtToken }
           this.$store.dispatch('auth/setAuthAction', auth)
+          this.$store.dispatch('user/setProfileData')
+          this.$store.dispatch('user/setProfilePicture')
+          this.$store.dispatch('user/setProfileHash')
           this.setUserTimers()
           this.setUserProjects()
           this.$router.replace('/')
+        } else {
+          this.error = response.data.error
         }
       } catch (e) {
         alert(e.toString())
       }
     },
-    ...mapActions({ setUserTimers: 'timer/setTimersAction', setUserProjects: 'project/setProjectsAction' }),
-    submitRecovery () {
+    ...mapActions({
+      setUserTimers: 'timer/setTimersAction',
+      setUserProjects: 'project/setProjectsAction',
+    }),
+    submitRecovery() {
       this.$router.push('/recovery')
-    }
-  }
+    },
+  },
 }
 </script>

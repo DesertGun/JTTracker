@@ -13,9 +13,7 @@
       <div>
         <b-row>
           <b-col />
-          <b-col>
-            This Site in WIP and will be avalible later! :)
-          </b-col>
+          <b-col> This Site in WIP and will be avalible later! :) </b-col>
           <b-col />
         </b-row>
       </div>

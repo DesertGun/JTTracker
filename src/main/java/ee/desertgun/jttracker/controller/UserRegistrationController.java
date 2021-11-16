@@ -2,12 +2,11 @@ package ee.desertgun.jttracker.controller;
 
 import ee.desertgun.jttracker.domain.Mail;
 import ee.desertgun.jttracker.dto.UserDTO;
-import ee.desertgun.jttracker.service.EmailService;
-import ee.desertgun.jttracker.service.UserService;
-import ee.desertgun.jttracker.service.ValidationResponse;
+import ee.desertgun.jttracker.response.ValidationResponse;
+import ee.desertgun.jttracker.service.email.EmailService;
+import ee.desertgun.jttracker.service.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,7 +22,6 @@ import java.util.Map;
 
 @RestController
 @CrossOrigin
-@PreAuthorize("hasRole('ROLE_ANONYMOUS')")
 public class UserRegistrationController {
 
     private final PasswordEncoder passwordEncoder;

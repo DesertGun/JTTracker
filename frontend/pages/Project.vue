@@ -55,16 +55,11 @@
               id="projectStatus"
               description="If a project is not active, it will not be followed in statistics and in the dashboard"
             >
-              <b-form-checkbox
-                v-model="status"
-              >
+              <b-form-checkbox v-model="status">
                 This project is active
               </b-form-checkbox>
             </b-form-group>
-            <b-button
-              variant="primary"
-              @click="createProject()"
-            >
+            <b-button variant="primary" @click="createProject()">
               Submit
             </b-button>
           </b-form>
@@ -97,9 +92,7 @@
             <b-td>{{ item.projectName }}</b-td>
             <b-td>{{ item.priority }}</b-td>
             <b-td>
-              <div v-if="item.projectTime === 0">
-                None
-              </div>
+              <div v-if="item.projectTime === 0">None</div>
               <div v-else>
                 {{ formatTime(item.projectTime).hours() }}h:
                 {{ formatTime(item.projectTime).minutes() }}m:
@@ -107,16 +100,10 @@
               </div>
             </b-td>
             <b-td>
-              <b-button
-                variant="danger"
-                @click="deleteProject(index)"
-              >
+              <b-button variant="danger" @click="deleteProject(index)">
                 X
               </b-button>
-              <b-button
-                variant="secondary"
-                @click="editRecord(item.projectID)"
-              >
+              <b-button variant="secondary" @click="editRecord(item.projectID)">
                 Edit
               </b-button>
             </b-td>
@@ -135,40 +122,40 @@ import { v4 as uuidv4 } from 'uuid'
 export default {
   middleware: 'authenticated',
   computed: {
-    validationPriority () {
+    validationPriority() {
       return this.priority != null
-    }
+    },
+    ...mapGetters({ getProjects: 'project/projects' }),
   },
-  asyncData () {
+  asyncData() {
     return {
       prioritySelect: [
         { text: 'Select priority', value: null },
         'Low',
         'Normal',
         'High',
-        'Urgent!'
+        'Urgent!',
       ],
       items: [],
       priority: null,
       projectName: null,
       projectDesc: null,
       projectID: null,
-      status: false
+      status: false,
     }
   },
-  mounted () {
-    this.items = this.getProjects()
+  mounted() {
+    this.items = this.getProjects
   },
   methods: {
-    ...mapGetters({ getProjects: 'project/projects' }),
-    ...mapActions({ updateProjects: 'project/setProjectsAction' }),
-    editRecord (projectID) {
+    editRecord(projectID) {
       this.$router.push(`projectEdit?projectID=${projectID}`)
     },
-    formatTime (time) {
+    ...mapActions({ updateProjects: 'project/setProjectsAction' }),
+    formatTime(time) {
       return moment.duration(time)
     },
-    async createProject () {
+    async createProject() {
       this.projectID = uuidv4()
       if (this.projectName != null && this.priority != null) {
         const project = {
@@ -176,9 +163,9 @@ export default {
           projectName: this.projectName,
           priority: this.priority,
           projectDesc: this.projectDesc,
-          status: this.status
+          status: this.status,
         }
-        await this.$axios.post('api/project', project)
+        await this.$axios.post('/project', project)
         this.$store.commit('project/addProject', project)
       } else {
         alert('Invalid-Data')
@@ -189,10 +176,12 @@ export default {
       this.status = false
       this.priority = null
     },
-    async deleteProject (index) {
-      await this.$axios.delete('/api/project/' + this.$store.state.project.projects[index].projectID)
+    async deleteProject(index) {
+      await this.$axios.delete(
+        '/project/' + this.$store.state.project.projects[index].projectID
+      )
       this.$store.dispatch('project/deleteProjectAction', index)
-    }
-  }
+    },
+  },
 }
 </script>

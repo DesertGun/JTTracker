@@ -1,6 +1,6 @@
 package ee.desertgun.jttracker.config;
 
-import ee.desertgun.jttracker.service.UserService;
+import ee.desertgun.jttracker.service.user.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

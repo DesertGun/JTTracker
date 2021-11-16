@@ -3,19 +3,16 @@ package ee.desertgun.jttracker.controller;
 
 import ee.desertgun.jttracker.domain.TrackedTime;
 import ee.desertgun.jttracker.dto.TrackedTimeDTO;
-import ee.desertgun.jttracker.service.TrackedTimeService;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
+import ee.desertgun.jttracker.service.timer.TrackedTimeService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
 @RestController
 @CrossOrigin
-@RequestMapping(path = "/api")
-@PreAuthorize("hasRole('ROLE_USER')")
 public class TimerController {
 
 
@@ -26,8 +23,8 @@ public class TimerController {
     }
 
     @GetMapping("/timer")
-    public List<TrackedTime> getTimesOfUser(Authentication authentication) {
-        return trackedTimeService.getTimesForUser(authentication.getName());
+    public List<TrackedTime> getTimesOfUser(Principal principal) {
+        return trackedTimeService.getTimesForUser(principal.getName());
     }
 
     @GetMapping("/timer/{timeID}")
@@ -46,7 +43,7 @@ public class TimerController {
     }
 
     @PostMapping("/timer")
-    public void addTimes(@RequestBody @Valid TrackedTimeDTO trackedTimeDTO, Authentication authentication) {
-        trackedTimeService.createTime(trackedTimeDTO, authentication.getName());
+    public void addTimes(@RequestBody @Valid TrackedTimeDTO trackedTimeDTO, Principal principal) {
+        trackedTimeService.createTime(trackedTimeDTO, principal.getName());
     }
 }

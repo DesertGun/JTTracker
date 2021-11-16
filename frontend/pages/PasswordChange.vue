@@ -4,9 +4,7 @@
       <b-row>
         <b-col />
         <b-col>
-          <h3>
-            Update your password
-          </h3>
+          <h3>Update your password</h3>
         </b-col>
         <b-col />
       </b-row>
@@ -18,28 +16,55 @@
           Please enter your current-password for varification!
           <b-form-group id="passwordFormGroup" label-for="password">
             <div v-if="responseMassage">
-              <b-form-input id="password" v-model="passwordCurrent" disabled type="password" />
+              <b-form-input
+                id="password"
+                v-model="passwordCurrent"
+                disabled
+                type="password"
+              />
             </div>
             <div v-else>
-              <b-form-input id="password" v-model="passwordCurrent" type="password" />
+              <b-form-input
+                id="password"
+                v-model="passwordCurrent"
+                type="password"
+              />
             </div>
           </b-form-group>
           Please enter your new password:
           <b-form-group id="passwordNewFormGroup1" label-for="change1">
             <div v-if="responseMassage">
-              <b-form-input id="change1" v-model="passwordNew" disabled type="password" />
+              <b-form-input
+                id="change1"
+                v-model="passwordNew"
+                disabled
+                type="password"
+              />
             </div>
             <div v-else>
-              <b-form-input id="change1" v-model="passwordNew" type="password" />
+              <b-form-input
+                id="change1"
+                v-model="passwordNew"
+                type="password"
+              />
             </div>
           </b-form-group>
           Please enter it again:
           <b-form-group id="passwordNewFormGroup2" label-for="change2">
             <div v-if="responseMassage">
-              <b-form-input id="change2" v-model="passwordCheck" disabled type="password" />
+              <b-form-input
+                id="change2"
+                v-model="passwordCheck"
+                disabled
+                type="password"
+              />
             </div>
             <div v-else>
-              <b-form-input id="change2" v-model="passwordCheck" type="password" />
+              <b-form-input
+                id="change2"
+                v-model="passwordCheck"
+                type="password"
+              />
             </div>
             <b-form-invalid-feedback :state="validationPassword">
               Both password don't match or are too short (minimum length is 8)!
@@ -68,26 +93,28 @@
 <script>
 export default {
   middleware: 'authenticated',
-  computed: {
-    validationPassword () {
-      return this.passwordCheck === this.passwordNew && this.passwordNew.length >= 8
-    }
-  },
-  asyncData () {
+  asyncData() {
     return {
       passwordCurrent: '',
       passwordNew: '',
       passwordCheck: '',
       responseSuccess: '',
-      responseError: ''
+      responseError: '',
     }
   },
+  computed: {
+    validationPassword() {
+      return (
+        this.passwordCheck === this.passwordNew && this.passwordNew.length >= 8
+      )
+    },
+  },
   methods: {
-    async changeReq () {
+    async changeReq() {
       try {
         const response = await this.$axios.post('/user/password/update', {
           newPassword: this.passwordNew,
-          oldPassword: this.passwordCurrent
+          oldPassword: this.passwordCurrent,
         })
         if (response.data.validated === true) {
           this.responseSuccess = response.data.successMessage
@@ -97,7 +124,7 @@ export default {
       } catch (e) {
         alert(e.toString())
       }
-    }
-  }
+    },
+  },
 }
 </script>

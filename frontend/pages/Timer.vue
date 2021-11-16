@@ -18,7 +18,11 @@
             <b-icon icon="play-fill" />
             Record Time
           </b-button>
-          <b-button v-if="isTracked === true" variant="danger" @click="stopRec()">
+          <b-button
+            v-if="isTracked === true"
+            variant="danger"
+            @click="stopRec()"
+          >
             <b-icon icon="stop-fill" />
             Save Time
           </b-button>
@@ -33,12 +37,18 @@
           <h4>Saved recording/s:</h4>
         </b-col>
         <b-col cols="10">
-          <div v-if="items.length===0">
+          <div v-if="items.length === 0">
             <h4>There are no records currently avalible!</h4>
           </div>
           <div v-else>
-            <b-table :fields="fields" :items="items" hover responsive="sm" striped>
-              <col v-for="field in fields" :key="field.key">
+            <b-table
+              :fields="fields"
+              :items="items"
+              hover
+              responsive="sm"
+              striped
+            >
+              <col v-for="field in fields" :key="field.key" />
               <template v-slot:cell(index)="data">
                 {{ data.index + 1 }}
               </template>
@@ -52,30 +62,31 @@
                 {{ formatTime(data.item.endTime) }}
               </template>
               <template v-slot:cell(duration)="data">
-                <div v-if="data.item.duration.asHours()<24">
+                <div v-if="data.item.duration.asHours() < 24">
                   {{ data.item.duration.hours() }}h :
                   {{ data.item.duration.minutes() }}m :
                   {{ data.item.duration.seconds() }}s
                 </div>
-                <div v-else-if="data.item.duration.asDays()<30">
+                <div v-else-if="data.item.duration.asDays() < 30">
                   {{ data.item.duration.days() }}D :
                   {{ data.item.duration.hours() }}h :
                   {{ data.item.duration.minutes() }}m
                 </div>
-                <div v-else-if="data.item.duration.asMonths()<12">
+                <div v-else-if="data.item.duration.asMonths() < 12">
                   {{ data.item.duration.months() }}M :
                   {{ data.item.duration.days() }}D :
                   {{ data.item.duration.hours() }}h
                 </div>
-                <div v-else>
-                  Not a realistic track record!
-                </div>
+                <div v-else>Not a realistic track record!</div>
               </template>
               <template v-slot:cell(showEdit)="data">
                 <b-button variant="danger" @click="deleteRecord(data.index)">
                   <b-icon icon="trash-fill" />
                 </b-button>
-                <b-button variant="secondary" @click="editRecord(data.item.timeID)">
+                <b-button
+                  variant="secondary"
+                  @click="editRecord(data.item.timeID)"
+                >
                   <b-icon icon="gear-fill" />
                   Edit
                 </b-button>
@@ -98,7 +109,10 @@ import Clock from '@/components/Clock.vue'
 export default {
   components: { Clock },
   middleware: 'authenticated',
-  asyncData () {
+  computed: {
+    ...mapGetters({ getTimers: 'timer/timers' }),
+  },
+  asyncData() {
     return {
       fields: [
         'index',
@@ -106,7 +120,7 @@ export default {
         { key: 'startTime', label: 'Start' },
         { key: 'endTime', label: 'End' },
         { key: 'duration', label: 'Duration' },
-        { key: 'showEdit', label: 'Options' }
+        { key: 'showEdit', label: 'Options' },
       ],
 
       items: [],
@@ -116,33 +130,34 @@ export default {
       timeDesc: null,
       timeID: null,
       duration: null,
-      isTracked: false
+      isTracked: false,
     }
   },
-
-  mounted () {
+  mounted() {
     this.currentDate = moment()
-    this.items = this.getTimers()
+    this.items = this.getTimers
   },
   methods: {
-    ...mapGetters({ getTimers: 'timer/timers' }),
-    ...mapActions({ updateTimers: 'timer/setTimersAction', updateProjects: 'project/setProjectsAction' }),
-    editRecord (timeID) {
+    editRecord(timeID) {
       this.$router.push(`timeEdit?timeID=${timeID}`)
     },
-    rec () {
+    ...mapActions({
+      updateTimers: 'timer/setTimersAction',
+      updateProjects: 'project/setProjectsAction',
+    }),
+    rec() {
       this.isTracked = true
       this.startTime = moment()
       this.endTime = null
     },
-    formatTime (time) {
+    formatTime(time) {
       return time.format('LTS')
     },
-    countDuration (startTime, endTime) {
+    countDuration(startTime, endTime) {
       const diffTime = endTime.diff(startTime)
       return moment.duration(diffTime)
     },
-    async stopRec () {
+    async stopRec() {
       this.endTime = moment()
       this.duration = this.countDuration(this.startTime, this.endTime)
       this.timeID = uuidv4()
@@ -152,9 +167,9 @@ export default {
           endTime: this.endTime,
           timeID: this.timeID,
           timeDesc: this.timeDesc,
-          duration: this.duration
+          duration: this.duration,
         }
-        await this.$axios.post('api/timer', timer)
+        await this.$axios.post('/timer', timer)
         this.$store.commit('timer/addTimer', timer)
       } else {
         alert('Invalid time-records?!')
@@ -165,21 +180,23 @@ export default {
       this.isTracked = false
       this.duration = null
     },
-    async deleteRecord (index) {
-      await this.$axios.delete('/api/timer/' + this.$store.state.timer.timers[index].timeID)
+    async deleteRecord(index) {
+      await this.$axios.delete(
+        '/timer/' + this.$store.state.timer.timers[index].timeID
+      )
       this.$store.dispatch('timer/deleteTimerAction', index)
       this.updateProjects()
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style>
-  .timerContainer {
-    padding-top: 30px;
-  }
+.timerContainer {
+  padding-top: 30px;
+}
 
-  .timeTableContainer {
-    padding-top: 30px;
-  }
+.timeTableContainer {
+  padding-top: 30px;
+}
 </style>

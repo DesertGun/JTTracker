@@ -4,32 +4,39 @@
       <b-row>
         <b-col />
         <b-col>
-          <h3>
-            Recover your password
-          </h3>
+          <h3>Recover your password</h3>
           <div v-if="responseSuccess" />
           <div v-else>
-            <b-form-group id="recoveryFormGroup" description="Please enter your email" label-for="recoverymail">
+            <b-form-group
+              id="recoveryFormGroup"
+              description="Please enter your email"
+              label-for="recoverymail"
+            >
               <p>
-                Please enter your E-Mail-Adress, with which you registered in order
-                to receive a link with which you can reset your password!
+                Please enter your E-Mail-Adress, with which you registered in
+                order to receive a link with which you can reset your password!
               </p>
-              <b-form-input id="recoverymail" v-model="recoveryEmail" type="email" />
-              <br>
+              <b-form-input
+                id="recoverymail"
+                v-model="recoveryEmail"
+                type="email"
+              />
+              <br />
               <b-button variant="danger" @click="recoverPassword()">
                 Please send me a password-reset-link !
               </b-button>
             </b-form-group>
           </div>
           <p>
-            Please keep in mind, that the reset-token remains valid for 1 hour max.!
+            Please keep in mind, that the reset-token remains valid for 1 hour
+            max.!
           </p>
           <div v-if="responseSuccess" class="pt-2" style="text-align: center">
             <b-alert show variant="success">
               {{ responseMassage }}
               <p>
-                A recovery-link was send to your E-mail-Adress. Just open the link in your Browser and you can
-                reset your password!
+                A recovery-link was send to your E-mail-Adress. Just open the
+                link in your Browser and you can reset your password!
               </p>
             </b-alert>
           </div>
@@ -47,18 +54,19 @@
 
 <script>
 export default {
-  asyncData () {
+  asyncData() {
     return {
       recoveryEmail: '',
       responseSuccess: '',
-      responseError: ''
+      responseError: '',
     }
   },
   methods: {
-    async recoverPassword () {
+    async recoverPassword() {
       try {
         const response = await this.$axios.post('/user/password/reset', {
-          username: this.recoveryEmail })
+          username: this.recoveryEmail,
+        })
 
         if (response.data.validated === true) {
           this.responseSuccess = response.data.successMessage
@@ -68,7 +76,7 @@ export default {
       } catch (e) {
         alert(e.toString())
       }
-    }
-  }
+    },
+  },
 }
 </script>

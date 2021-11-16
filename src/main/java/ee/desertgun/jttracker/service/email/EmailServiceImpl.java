@@ -1,4 +1,4 @@
-package ee.desertgun.jttracker.service;
+package ee.desertgun.jttracker.service.email;
 
 
 import ee.desertgun.jttracker.domain.Mail;

@@ -1,8 +1,9 @@
-package ee.desertgun.jttracker.service;
+package ee.desertgun.jttracker.service.user;
 
 import ee.desertgun.jttracker.domain.User;
 import ee.desertgun.jttracker.dto.UserDTO;
 import ee.desertgun.jttracker.dto.UserProfileDTO;
+import ee.desertgun.jttracker.response.ValidationResponse;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import javax.validation.Valid;

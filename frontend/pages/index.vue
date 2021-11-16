@@ -2,9 +2,7 @@
   <div class="container">
     <div>
       <logo />
-      <h1 class="title">
-        JTTracker
-      </h1>
+      <h1 class="title">JTTracker</h1>
       <h2 class="subtitle">
         Welcome and thank you for your interest in my App!
       </h2>
@@ -13,9 +11,7 @@
           <b-button nuxt-link to="/register" variant="primary">
             Register
           </b-button>
-          <b-button nuxt-link to="/login" variant="secondary">
-            Login
-          </b-button>
+          <b-button nuxt-link to="/login" variant="secondary"> Login </b-button>
         </div>
       </div>
     </div>
@@ -28,47 +24,39 @@ import Logo from '~/components/Logo.vue'
 
 export default {
   components: {
-    Logo
+    Logo,
   },
-  asyncData () {
-    return {
-      isLoggedIn: false
-    }
+  computed: {
+    ...mapGetters({ isLoggedIn: 'auth/isLoggedIn' }),
   },
-  mounted () {
-    if (this.getAccountStatus()) {
-      this.isLoggedIn = true
-    }
-  },
-  methods: {
-    ...mapGetters({ getAccountStatus: 'auth/isLoggedIn' })
-  }
+  asyncData() {},
+  mounted() {},
 }
 </script>
 
 <style>
-  .container {
-    margin: 0 auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-  }
+.container {
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
 
-  .title {
-    font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
+.title {
+  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
     'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    display: block;
-    font-weight: 300;
-    font-size: 100px;
-    color: #35495e;
-    letter-spacing: 1px;
-  }
+  display: block;
+  font-weight: 300;
+  font-size: 100px;
+  color: #35495e;
+  letter-spacing: 1px;
+}
 
-  .subtitle {
-    font-weight: 300;
-    font-size: 42px;
-    color: #526488;
-    word-spacing: 5px;
-  }
+.subtitle {
+  font-weight: 300;
+  font-size: 42px;
+  color: #526488;
+  word-spacing: 5px;
+}
 </style>

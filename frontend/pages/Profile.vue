@@ -4,9 +4,7 @@
       <b-row>
         <b-col />
         <b-col>
-          <h3>
-            Profile
-          </h3>
+          <h3>Profile</h3>
         </b-col>
         <b-col />
       </b-row>
@@ -22,7 +20,12 @@
               label="Username:"
               label-for="username"
             >
-              <b-form-input id="username" v-model="username" disabled="true" type="text" />
+              <b-form-input
+                id="username"
+                v-model="username"
+                disabled="true"
+                type="text"
+              />
             </b-form-group>
             <b-form-group
               id="accountNameFormGroup"
@@ -30,7 +33,12 @@
               label="Account name:"
               label-for="accountName"
             >
-              <b-form-input id="accountName" v-model="accountName" placeholder="None" type="text" />
+              <b-form-input
+                id="accountName"
+                v-model="accountName"
+                placeholder="None"
+                type="text"
+              />
               <b-form-invalid-feedback :state="validationaccountNameChange">
                 Your global name cannot be empty!
               </b-form-invalid-feedback>
@@ -39,27 +47,101 @@
               </b-form-invalid-feedback>
               <b-form-valid-feedback :state="validationaccountNameChange" />
             </b-form-group>
-            <b-form-group
-              id="avatarFormGroup"
-              description="Your personal Accout-Avatar"
-              label="Avatar:"
-              label-for="avatar"
-            >
-              <img :src="'https://gravatar.com/avatar/${hash}?d=identicon'">
-            </b-form-group>
+            <b-row>
+              <b-col />
+              <b-col>
+                <b-form-group
+                  id="avatarFormGroup"
+                  description="Your personal Account-Avatar"
+                  label="Avatar:"
+                  label-for="avatar"
+                >
+                  <div v-if="!hasProfilePicture">
+                    <b-img-lazy
+                      :src="
+                        'https://gravatar.com/avatar/' +
+                        getHash +
+                        '?d=identicon'
+                      "
+                      rounded="circle"
+                    />
+                  </div>
+                  <div v-else>
+                    <b-img-lazy
+                      :src="getProfilePicture"
+                      height="150px"
+                      width="150px"
+                      rounded="circle"
+                    />
+                  </div>
+                </b-form-group>
+              </b-col>
+              <b-col />
+            </b-row>
+            <b-row>
+              <b-col />
+              <b-col cols="12">
+                <b-form-file
+                  v-model="profilePictureUpload"
+                  class="mb-2"
+                  accept=".jpg"
+                ></b-form-file>
+                <div v-if="uploadCurrent > 0">
+                  <b-progress
+                    :value="uploadCurrent"
+                    :max="uploadMax"
+                    show-progress
+                    animated
+                  ></b-progress>
+                </div>
+                <b-row>
+                  <b-col cols="3" />
+                  <b-col>
+                    <div v-if="profilePictureUpload">
+                      <b-button
+                        variant="secondary"
+                        class="mt-2"
+                        @click="uploadProfilePicture"
+                      >
+                        Upload my profile picture !
+                      </b-button>
+                    </div>
+                  </b-col>
+                  <b-col cols="3" />
+                </b-row>
+                <b-row>
+                  <b-col />
+                  <b-col cols="10">
+                    <div
+                      v-if="responseSuccess"
+                      class="pt-2"
+                      style="text-align: center"
+                    >
+                      <b-alert dismissible show variant="success">
+                        {{ responseSuccess }}
+                      </b-alert>
+                    </div>
+                  </b-col>
+                  <b-col />
+                </b-row>
+              </b-col>
+            </b-row>
             <b-form-group
               id="passwordFormGroup"
               description="You will receive a password-reset link to the adress (username) provided above"
               label="Password:"
               label-for="password"
             >
-              <b-form-input id="password" v-model="dummyPassword" disabled type="password" />
             </b-form-group>
             <b-button variant="secondary" @click="changePassword">
               Change current password
             </b-button>
             <div
-              v-if="validationaccountNameChange && this.accountName !== this.username && validationaccountNameNew"
+              v-if="
+                validationaccountNameChange &&
+                accountName !== username &&
+                validationaccountNameNew
+              "
               class="pt-2"
             >
               <b-button variant="success" @click="updateProfile">
@@ -80,17 +162,11 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   middleware: 'authenticated',
-  computed: {
-    validationaccountNameChange () {
-      return this.accountName.length > 0
-    },
-    validationaccountNameNew () {
-      return this.accountName !== this.initaccountName
-    }
-  },
-  asyncData () {
+  asyncData() {
     return {
       username: null,
       accountName: '',
@@ -98,42 +174,90 @@ export default {
       dummyPassword: 'placeHolderPasswordForRenderingPurposes',
       changed: false,
       updated: false,
-      hash: null
+      profilePictureUpload: null,
+      responseError: null,
+      responseSuccess: null,
+      uploadCurrent: 0,
+      uploadMax: 100,
     }
   },
-  async mounted () {
+  computed: {
+    validationaccountNameChange() {
+      return this.accountName.length > 0
+    },
+    validationaccountNameNew() {
+      return this.accountName !== this.initaccountName
+    },
+    ...mapGetters({
+      getProfilePicture: 'user/getProfilePicture',
+      getHash: 'user/getHash',
+      hasProfilePicture: 'user/hasProfilePicture',
+      isLoggedIn: 'auth/isLoggedIn',
+      getUsername: 'user/getUsername',
+      getAccountname: 'user/getAccountname',
+    }),
+  },
+  mounted() {
     try {
-      const response = await this.$axios.get('/user')
-      this.username = response.data.username
-      if (response.data.accountName) {
-        this.accountName = response.data.accountName
+      this.username = this.getUsername
+      if (this.getAccountname) {
+        this.accountName = this.getAccountname
         this.initaccountName = this.accountName
-        this.hash = response.data.hash
       } else {
         this.accountName = this.username
         this.initaccountName = this.accountName
       }
+      this.hash = this.getHash
     } catch (e) {
       alert(e.toString())
     }
   },
   methods: {
-    async updateProfile () {
+    async updateProfile() {
       try {
         const response = await this.$axios.put('/user/update', {
           username: this.username,
-          accountName: this.accountName
+          accountName: this.accountName,
         })
         if (response.data.validated === true) {
           this.updated = true
+        }
+        await this.$store.dispatch('user/setProfileData')
+      } catch (e) {
+        alert(e.toString())
+      }
+    },
+    async uploadProfilePicture() {
+      try {
+        const formData = new FormData()
+        formData.append('profilePicture', this.profilePictureUpload)
+
+        const response = await this.$axios.post('/user/picture', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          onUploadProgress: function (progressEvent) {
+            this.uploadCurrent = parseInt(
+              Math.round((progressEvent.loaded / progressEvent.total) * 100)
+            )
+          }.bind(this),
+        })
+        this.profilePictureUpload = null
+        if (response.data.validated === true) {
+          this.responseSuccess = response.data.successMessage
+          await this.$store.dispatch('user/setProfilePicture')
+          this.uploadCurrent = 0
+          this.profilePicture = this.getProfilePicture
+        } else {
+          this.responseError = response.data.errorMessage
         }
       } catch (e) {
         alert(e.toString())
       }
     },
-    changePassword () {
+    changePassword() {
       this.$router.push('/passwordChange')
-    }
-  }
+    },
+  },
 }
 </script>

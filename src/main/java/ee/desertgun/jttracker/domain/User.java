@@ -1,7 +1,8 @@
 package ee.desertgun.jttracker.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,8 +11,10 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
-@Data
+@Setter
+@Getter
 @Entity
 public class User implements UserDetails {
 
@@ -25,6 +28,8 @@ public class User implements UserDetails {
     private String password;
 
     private String hash;
+
+    private UUID profilePictureID;
 
     @JsonIgnore
     @ElementCollection(fetch = FetchType.EAGER)
