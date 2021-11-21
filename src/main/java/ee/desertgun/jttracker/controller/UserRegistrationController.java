@@ -71,7 +71,13 @@ public class UserRegistrationController {
         String username = userDTO.getUsername();
         String password = passwordEncoder.encode(userDTO.getPassword());
         try {
-            userService.createUser(username, displayName, password, "ROLE_USER");
+            if (userDTO.getSecurityQuestions() != null) {
+                userService.createUser(username, displayName, password, true,"ROLE_USER");
+                userService.addSecurityQuestions(userDTO.getUsername(), userDTO.getSecurityQuestions());
+            } else {
+                userService.createUser(username, displayName, password, false,"ROLE_USER");
+            }
+
         } catch (Exception e) {
             logger.warn("Not possible to create new User");
         }

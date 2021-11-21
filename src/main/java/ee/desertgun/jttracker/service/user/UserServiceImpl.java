@@ -33,9 +33,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createUser(String username, String displayName, String password, String... roles) {
+    public User createUser(String username, String displayName, String password, Boolean securityEnabled, String... roles) {
         String hash = UserProfileGravatarHash.md5Hex(username);
-        final User user = new User(username, displayName, password, hash);
+        final User user = new User(username, displayName, password, hash, securityEnabled);
         for (final String role : roles) {
             user.addRole(role);
         }
@@ -82,5 +82,12 @@ public class UserServiceImpl implements UserService {
             validationResponse.setValidated(false);
         }
         return validationResponse;
+    }
+
+    @Override
+    public void addSecurityQuestions(String username, String securityQuestions) {
+        User user = userRepository.findByUsername(username);
+        user.setSecurityQuestions(securityQuestions);
+        userRepository.save(user);
     }
 }

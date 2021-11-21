@@ -13,9 +13,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+@Entity
 @Setter
 @Getter
-@Entity
 public class User implements UserDetails {
 
     @Id
@@ -30,6 +30,10 @@ public class User implements UserDetails {
     private String hash;
 
     private UUID profilePictureID;
+
+    private String securityQuestions;
+
+    private Boolean securityEnabled;
 
     @JsonIgnore
     @ElementCollection(fetch = FetchType.EAGER)
@@ -73,11 +77,12 @@ public class User implements UserDetails {
         return true;
     }
 
-    public User(final String username, final String accountName, final String password, final String hash) {
+    public User(final String username, final String accountName, final String password, final String hash, final Boolean securityEnabled) {
         this.username = username;
         this.accountName = accountName;
         this.password = password;
         this.hash = hash;
+        this.securityEnabled = securityEnabled;
     }
 
     public void addRole(String role) {

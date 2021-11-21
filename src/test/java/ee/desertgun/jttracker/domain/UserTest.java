@@ -34,7 +34,7 @@ class UserTest {
 
         User user = new User(username,
                 "Bob",
-                "$2a$10$WoG5Z4YN9Z37EWyNCkltyeFr6PtrSXSLMeFWOeDUwcanht5CIJgPa", hash);
+                "$2a$10$WoG5Z4YN9Z37EWyNCkltyeFr6PtrSXSLMeFWOeDUwcanht5CIJgPa", hash, false);
         user.addRole("ROLE_USER");
         user = entityManager.persistAndFlush(user);
 

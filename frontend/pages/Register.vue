@@ -69,6 +69,54 @@
               Passwords match!
             </b-form-valid-feedback>
           </b-form-group>
+          <b-form-group
+            id="input-group-2fa"
+            label="2FA - Selection:"
+            label-for="choice-2fa"
+          >
+            <b-form-checkbox
+              id="choice-2fa"
+              v-model="enableSecurity"
+              name="checkbox-1"
+              value="true"
+              unchecked-value="false"
+            >
+              Yes I want to enable enchanced Security for my Account !
+            </b-form-checkbox>
+            <div v-if="enableSecurity === 'true'">
+              <b-form-select
+                v-model="firstQuestion"
+                :options="questions"
+                class="mt-2"
+              ></b-form-select>
+              <div v-if="firstQuestion">
+                <b-form-input v-model="firstAnswer" class="mt-2"></b-form-input>
+              </div>
+              <div v-if="firstAnswer">
+                <b-form-select
+                  v-model="secondQuestion"
+                  :options="questions"
+                  class="mt-2"
+                ></b-form-select>
+              </div>
+              <div v-if="secondQuestion">
+                <b-form-input
+                  v-model="secondAnswer"
+                  class="mt-2"
+                ></b-form-input>
+              </div>
+              <div v-if="secondAnswer">
+                <b-form-select
+                  v-model="thirdQuestion"
+                  :options="questions"
+                  class="mt-2"
+                ></b-form-select>
+              </div>
+              <div v-if="thirdQuestion">
+                <b-form-input v-model="thirdAnswer" class="mt-2"></b-form-input>
+              </div>
+            </div>
+          </b-form-group>
           <b-form-group>
             <b-form-checkbox
               id="checkBoxTerms"
@@ -124,6 +172,33 @@ export default {
       statusPrivacy: 'not_accepted',
       responseSuccess: '',
       responseError: '',
+      enableSecurity: 'false',
+      firstQuestion: null,
+      secondQuestion: null,
+      thirdQuestion: null,
+      firstAnswer: null,
+      secondAnswer: null,
+      thirdAnswer: null,
+      questions: [
+        { value: null, text: 'Select a question !' },
+        {
+          value: 'What is the name of your first pet?',
+          text: 'What is the name of your first pet?',
+        },
+        {
+          value: 'What is the name of your first school?',
+          text: 'What is the name of your first school?',
+        },
+        { value: 'What was your first job?', text: 'What was your first job?' },
+        {
+          value: 'What is your favorite color?',
+          text: 'What is your favorite color?',
+        },
+        {
+          value: 'What is your favorite date in history?',
+          text: 'What is your favorite date in history?',
+        },
+      ],
     }
   },
   computed: {

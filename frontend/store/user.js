@@ -4,6 +4,7 @@ export const state = () => ({
   hasProfilePicture: false,
   username: null,
   accountname: null,
+  securityenabled: null,
 })
 
 export const mutations = {
@@ -21,6 +22,7 @@ export const mutations = {
   setProfileData(state, userdata) {
     state.username = userdata.username
     state.accountname = userdata.accountname
+    state.securityenabled = userdata.securityenabled
   },
 }
 
@@ -30,8 +32,9 @@ export const actions = {
       const response = await this.$axios.get('/user')
       const username = response.data.username
       const accountname = response.data.accountName
+      const securityenabled = response.data.securityEnabled
 
-      const userdata = { username, accountname }
+      const userdata = { username, accountname, securityenabled }
       await commit('setProfileData', userdata)
     } catch (e) {
       alert(e.toString())
@@ -72,6 +75,7 @@ export const getters = {
   getAccountname: (state) => state.accountname,
   getProfilePicture: (state) => state.profilePicture,
   hasProfilePicture: (state) => state.hasProfilePicture,
+  hasSecurityEnabled: (state) => state.securityenabled,
 }
 
 export const setters = {}

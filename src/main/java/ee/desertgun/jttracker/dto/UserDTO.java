@@ -17,4 +17,8 @@ public class UserDTO {
 
     private String username;
 
+    private String securityQuestions;
+
+    private Boolean securityEnabled;
+
 }
