@@ -55,11 +55,12 @@ public class InitializeDatabase implements InitializingBean {
                     "Bob",
                     "$2a$10$WoG5Z4YN9Z37EWyNCkltyeFr6PtrSXSLMeFWOeDUwcanht5CIJgPa", true, "ROLE_USER");
 
-            final String securityQuestions = "What is the name of your first pet?, " +
-                    "What is the name of your first school?, " +
-                    "What was your first job?; Test, Test, Test";
+            final String securityQuestions = "What is the name of your first pet?," +
+                    "What is the name of your first school?," +
+                    "What was your first job?";
+            final String securityAnswers = "Test,Test,Test";
 
-            userService.addSecurityQuestions("admin@domain.de", securityQuestions);
+            userService.addSecurityQuestions("admin@domain.de", securityQuestions, securityAnswers);
 
 
             final TrackedTimeDTO trackedTimeDTO = new TrackedTimeDTO();

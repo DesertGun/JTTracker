@@ -23,5 +23,5 @@ public interface UserService extends UserDetailsService {
 
     ValidationResponse validateOldUserPassword(String user, String oldPassword);
 
-    void addSecurityQuestions(String username, String securityQuestions);
+    void addSecurityQuestions(String username, String securityQuestions, String securityAnswers);
 }

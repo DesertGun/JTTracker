@@ -85,9 +85,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addSecurityQuestions(String username, String securityQuestions) {
+    public void addSecurityQuestions(String username, String securityQuestions, String securityAnswers) {
         User user = userRepository.findByUsername(username);
         user.setSecurityQuestions(securityQuestions);
+        user.setSecurityAnswers(securityAnswers);
         userRepository.save(user);
     }
 }

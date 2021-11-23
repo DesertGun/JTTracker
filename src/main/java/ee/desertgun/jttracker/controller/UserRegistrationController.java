@@ -73,7 +73,7 @@ public class UserRegistrationController {
         try {
             if (userDTO.getSecurityQuestions() != null) {
                 userService.createUser(username, displayName, password, true,"ROLE_USER");
-                userService.addSecurityQuestions(userDTO.getUsername(), userDTO.getSecurityQuestions());
+                userService.addSecurityQuestions(userDTO.getUsername(), userDTO.getSecurityQuestions(), userDTO.getSecurityAnswers());
             } else {
                 userService.createUser(username, displayName, password, false,"ROLE_USER");
             }

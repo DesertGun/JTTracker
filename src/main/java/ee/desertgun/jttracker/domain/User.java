@@ -33,6 +33,8 @@ public class User implements UserDetails {
 
     private String securityQuestions;
 
+    private String securityAnswers;
+
     private Boolean securityEnabled;
 
     @JsonIgnore
