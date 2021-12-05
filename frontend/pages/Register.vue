@@ -71,7 +71,7 @@
           </b-form-group>
           <b-form-group
             id="input-group-2fa"
-            label="2FA - Selection:"
+            label="Security-Question-Selection:"
             label-for="choice-2fa"
           >
             <b-form-checkbox

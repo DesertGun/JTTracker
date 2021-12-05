@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +33,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-
 @RestController
 @CrossOrigin
 public class UserAccountController {
@@ -50,7 +48,6 @@ public class UserAccountController {
 
     Logger logger = LoggerFactory.getLogger(UserAccountController.class);
 
-
     public UserAccountController(PasswordEncoder passwordEncoder, UserService userService, EmailService emailService,
                                  PasswordTokenValidationService passwordTokenValidationService, FileLocationService fileLocationService) {
         this.passwordEncoder = passwordEncoder;
@@ -60,27 +57,23 @@ public class UserAccountController {
         this.fileLocationService = fileLocationService;
     }
 
-
+    //TODO: Catch and display the correct validation responses in frontend
     @PostMapping("/user/password/reset")
     public ValidationResponse resetPassword(@RequestBody @Valid UserDTO userDTO, BindingResult bindingResult) throws MessagingException {
         ValidationResponse response = new ValidationResponse();
 
         if (userService.userExists(userDTO.getUsername()) && !bindingResult.hasErrors()) {
             response.setValidated(true);
-            String token = UUID.randomUUID().toString();
-            userService.createPasswordResetTokenForUser(userDTO, token);
 
-            String url = constructResetTokenLink(token, userDTO);
-            response.setSuccessMessage(url);
-
-            Mail passwordResetMail = new Mail();
-            passwordResetMail.setMailTo(userDTO.getUsername());
-            passwordResetMail.setSubject("Password-Reset");
-            Map<String, Object> propPasswordReset = new HashMap<>();
-            propPasswordReset.put("passwordResetLink", url);
-            passwordResetMail.setProps(propPasswordReset);
-            emailService.sendComplexMail(passwordResetMail, "password_reset");
-
+            if (userService.getUserByUsername(userDTO.getUsername()).getSecurityEnabled()) {
+                response.setValidated(false);
+                final String validationMessage = "Security Authentication required!";
+                response.setValidationMessage(validationMessage);
+            } else {
+                response.setValidated(true);
+                response.setSuccessMessage("Reset links was sent!");
+                createAndSendPasswordResetToken(userDTO);
+            }
         } else if (bindingResult.hasErrors()) {
             String error = bindingResult.getFieldErrors().toString();
             response.setValidated(false);
@@ -108,7 +101,6 @@ public class UserAccountController {
         }
         return response;
     }
-
 
     @PostMapping("/user/password/reset/change")
     public ValidationResponse resetPassword(@RequestBody @Valid UserProfileDTO userProfileDTO) throws MessagingException {
@@ -159,7 +151,6 @@ public class UserAccountController {
         return response;
     }
 
-
     @PutMapping("/user/update")
     public ValidationResponse updateUserProfile(@RequestBody @Valid UserProfileDTO userProfileDTO) throws MessagingException {
         ValidationResponse response = new ValidationResponse();
@@ -204,15 +195,60 @@ public class UserAccountController {
                 .body(result);
     }
 
+    private void createAndSendPasswordResetToken(UserDTO userDTO) throws MessagingException {
+        String token = UUID.randomUUID().toString();
+        userService.createPasswordResetTokenForUser(userDTO, token);
 
-    //TODO: Remember to change to real port when finished and the real server protocol !
-    private String constructResetTokenLink(String token, @Valid UserDTO userResetDTO) {
-        return "http://" + InetAddress.getLoopbackAddress().getHostName() + ":" + FRONTEND_PORT + "/reset?username=" + userResetDTO.getUsername() + "&token=" + token;
+        String url = "http://" + InetAddress.getLoopbackAddress().getHostName() + ":" + FRONTEND_PORT + "/reset?username=" + userDTO.getUsername() + "&token=" + token;
+
+        Mail passwordResetMail = new Mail();
+        passwordResetMail.setMailTo(userDTO.getUsername());
+        passwordResetMail.setSubject("Password-Reset");
+        Map<String, Object> propPasswordReset = new HashMap<>();
+        propPasswordReset.put("passwordResetLink", url);
+        passwordResetMail.setProps(propPasswordReset);
+
+        emailService.sendComplexMail(passwordResetMail, "password_reset");
     }
 
-
     @GetMapping("/user")
-    public User loadUser(Authentication authentication) {
-        return userService.getUserByUsername(authentication.getName());
+    public User loadUser(Principal principal) {
+        return userService.getUserByUsername(principal.getName());
+    }
+
+    @GetMapping("/security/{username}")
+    public Map<String, String> getSecurityQuestions(@PathVariable String username) {
+
+        HashMap<String, String> securityQuestions = new HashMap<>();
+        final User user = userService.getUserByUsername(username);
+        String securityQuestion_1 = user.getSecurityQuestion_1();
+        String securityQuestion_2 = user.getSecurityQuestion_2();
+        String securityQuestion_3 = user.getSecurityQuestion_3();
+
+        securityQuestions.put("securityQuestion_1", securityQuestion_1);
+        securityQuestions.put("securityQuestion_2", securityQuestion_2);
+        securityQuestions.put("securityQuestion_3", securityQuestion_3);
+
+        return securityQuestions;
+    }
+
+    @PostMapping("/security")
+    public ValidationResponse validateSecurityQuestions(@RequestBody @Valid UserDTO userDTO) throws MessagingException {
+        ValidationResponse validationResponse = new ValidationResponse();
+
+        final User user = userService.getUserByUsername(userDTO.getUsername());
+
+        if ((passwordEncoder.matches(userDTO.getSecurityAnswer_1(), user.getSecurityAnswer_1()))
+                && (passwordEncoder.matches(userDTO.getSecurityAnswer_2(), user.getSecurityAnswer_2()))
+                && (passwordEncoder.matches(userDTO.getSecurityAnswer_3(), user.getSecurityAnswer_3()))) {
+
+            validationResponse.setValidated(true);
+            validationResponse.setSuccessMessage("Correct answers!");
+            createAndSendPasswordResetToken(userDTO);
+        } else {
+            validationResponse.setValidated(false);
+            validationResponse.setErrorMessage("Wrong answers!");
+        }
+        return validationResponse;
     }
 }

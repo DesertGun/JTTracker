@@ -19,8 +19,16 @@ public class UserDTO {
 
     private String securityQuestions;
 
-    private String securityAnswers;
+    private String securityQuestion_1;
 
-    private Boolean securityEnabled;
+    private String securityQuestion_2;
+
+    private String securityQuestion_3;
+
+    private String securityAnswer_1;
+
+    private String securityAnswer_2;
+
+    private String securityAnswer_3;
 
 }

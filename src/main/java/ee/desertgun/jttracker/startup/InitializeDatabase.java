@@ -31,7 +31,6 @@ public class InitializeDatabase implements InitializingBean {
     private final UserProjectService userProjectService;
     private final EmailServiceImpl emailService;
 
-
     @Autowired
     public InitializeDatabase(final UserService userService, final EmailServiceImpl emailService,
                               final TrackedTimeService trackedTimeService, final UserProjectService userProjectService) {
@@ -39,29 +38,38 @@ public class InitializeDatabase implements InitializingBean {
         this.emailService = emailService;
         this.userProjectService = userProjectService;
         this.trackedTimeService = trackedTimeService;
-
     }
-
 
     @Override
     public void afterPropertiesSet() throws MessagingException {
         try {
             userService.loadUserByUsername("admin@domain.de");
         } catch (UsernameNotFoundException ex) {
-            List<String> roles = new ArrayList<String>();
-            roles.add("ROLE_USER");
 
             final User user = userService.createUser("admin@domain.de",
                     "Bob",
                     "$2a$10$WoG5Z4YN9Z37EWyNCkltyeFr6PtrSXSLMeFWOeDUwcanht5CIJgPa", true, "ROLE_USER");
 
-            final String securityQuestions = "What is the name of your first pet?," +
-                    "What is the name of your first school?," +
-                    "What was your first job?";
-            final String securityAnswers = "Test,Test,Test";
+            user.addRole("ROLE_USER");
+            final String securityQuestion_1 = "What is the name of your first pet?";
+            final String securityQuestion_2 = "What is the name of your first school?";
+            final String securityQuestion_3 = "What was your first job?";
+
+            final List<String> securityQuestions = new ArrayList<>();
+            securityQuestions.add(securityQuestion_1);
+            securityQuestions.add(securityQuestion_2);
+            securityQuestions.add(securityQuestion_3);
+
+            final String securityAnswer_1 = "$2a$09$QxTekzzvceCk1HHlodd0fOcKQdokWiDNUZObNLBIs7uHxBr8SsLk.";
+            final String securityAnswer_2 = "$2a$09$HcDpjpUwfiIpYiLzpU7Xj.rgLcrK0dWpP4q7AUXigwj70drDYZ.TC";
+            final String securityAnswer_3 = "$2a$09$pfMvtmRb62IR8I.2W7iz4eQA4q76X2FKe7rvGux02Jm1xtsjNhLsu";
+
+            final List<String> securityAnswers = new ArrayList<>();
+            securityAnswers.add(securityAnswer_1);
+            securityAnswers.add(securityAnswer_2);
+            securityAnswers.add(securityAnswer_3);
 
             userService.addSecurityQuestions("admin@domain.de", securityQuestions, securityAnswers);
-
 
             final TrackedTimeDTO trackedTimeDTO = new TrackedTimeDTO();
 
@@ -109,7 +117,6 @@ public class InitializeDatabase implements InitializingBean {
             adminMail.setProps(propAdmin);
             emailService.sendComplexMail(adminMail, "init");
 
-
             Mail testMail = new Mail();
             testMail.setFrom("admin@domain.de");
             testMail.setMailTo("test@domain.de");
@@ -117,6 +124,7 @@ public class InitializeDatabase implements InitializingBean {
             Map<String, Object> propTest = new HashMap<>();
             propTest.put("userName", testMail.getMailTo());
             testMail.setProps(propTest);
+
             emailService.sendComplexMail(testMail, "init");
         }
     }

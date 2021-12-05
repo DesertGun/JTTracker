@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -67,13 +69,25 @@ public class UserRegistrationController {
 
     private void createUserAccount(UserDTO userDTO) {
 
+        // TODO: Add variable that checks whether user wants to enable security_questions
+        // TODO: Refactor rename variable to check whether user has security_questions enabled
         String displayName = userDTO.getAccountName();
         String username = userDTO.getUsername();
         String password = passwordEncoder.encode(userDTO.getPassword());
         try {
             if (userDTO.getSecurityQuestions() != null) {
                 userService.createUser(username, displayName, password, true,"ROLE_USER");
-                userService.addSecurityQuestions(userDTO.getUsername(), userDTO.getSecurityQuestions(), userDTO.getSecurityAnswers());
+                List<String> securityQuestions = new ArrayList<>();
+                securityQuestions.add(userDTO.getSecurityQuestion_1());
+                securityQuestions.add(userDTO.getSecurityQuestion_2());
+                securityQuestions.add(userDTO.getSecurityQuestion_3());
+
+                List<String> securityAnswers = new ArrayList<>();
+                securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer_1()));
+                securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer_2()));
+                securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer_3()));
+
+                userService.addSecurityQuestions(userDTO.getUsername(), securityQuestions, securityAnswers);
             } else {
                 userService.createUser(username, displayName, password, false,"ROLE_USER");
             }
