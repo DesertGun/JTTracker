@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -33,9 +34,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createUser(String username, String displayName, String password, String... roles) {
+    public User createUser(String username, String displayName, String password, Boolean securityEnabled, String... roles) {
         String hash = UserProfileGravatarHash.md5Hex(username);
-        final User user = new User(username, displayName, password, hash);
+        final User user = new User(username, displayName, password, hash, securityEnabled);
         for (final String role : roles) {
             user.addRole(role);
         }
@@ -45,7 +46,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean userExists(String username) {
-      return userRepository.existsUserByUsername(username);
+        return userRepository.existsUserByUsername(username);
     }
 
     @Override
@@ -82,5 +83,22 @@ public class UserServiceImpl implements UserService {
             validationResponse.setValidated(false);
         }
         return validationResponse;
+    }
+
+    @Override
+    public void addSecurityQuestions(String username, List<String> securityQuestions, List<String> securityAnswers) {
+        User user = userRepository.findByUsername(username);
+
+        user.setSecurityQuestion_1(securityQuestions.get(0));
+        user.setSecurityQuestion_2(securityQuestions.get(1));
+        user.setSecurityQuestion_3(securityQuestions.get(2));
+
+        user.setSecurityAnswer_1(securityAnswers.get(0));
+        user.setSecurityAnswer_2(securityAnswers.get(1));
+        user.setSecurityAnswer_3(securityAnswers.get(2));
+
+        user.setSecurityEnabled(true);
+
+        userRepository.save(user);
     }
 }

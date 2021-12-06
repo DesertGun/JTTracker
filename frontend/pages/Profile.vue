@@ -153,6 +153,85 @@
                 Your profile was updated successfully!
               </b-alert>
             </div>
+            <div v-if="debugSec">
+              <b-button
+                variant="danger"
+                class="mt-2"
+                @click="removeEnchancedSecurity"
+              >
+                Disable enchanced Security for my Account !
+              </b-button>
+            </div>
+            <div v-else>
+              <b-form-group id="input-group-2fa" label-for="choice-2fa">
+                <b-button variant="primary" class="mt-2" @click="openQuestions">
+                  Enable enchanced Security for my Account !
+                </b-button>
+                <div v-if="enableSecurity">
+                  <b-form-select
+                    v-model="firstQuestion"
+                    :options="questions"
+                    class="mt-2"
+                  ></b-form-select>
+                  <div v-if="firstQuestion">
+                    <b-form-input
+                      v-model="firstAnswer"
+                      class="mt-2"
+                    ></b-form-input>
+                  </div>
+                  <div v-if="firstAnswer">
+                    <b-form-select
+                      v-model="secondQuestion"
+                      :options="questions"
+                      class="mt-2"
+                    ></b-form-select>
+                  </div>
+                  <div v-if="secondQuestion">
+                    <b-form-input
+                      v-model="secondAnswer"
+                      class="mt-2"
+                    ></b-form-input>
+                  </div>
+                  <div v-if="secondAnswer">
+                    <b-form-select
+                      v-model="thirdQuestion"
+                      :options="questions"
+                      class="mt-2"
+                    ></b-form-select>
+                  </div>
+                  <div v-if="thirdQuestion">
+                    <b-form-input
+                      v-model="thirdAnswer"
+                      class="mt-2"
+                    ></b-form-input>
+                  </div>
+                  <div v-if="thirdAnswer">
+                    Now you can enable enchanced security for your account !
+                    <b-row>
+                      <b-col>
+                        <b-button
+                          variant="success"
+                          class="mt-2"
+                          @click="submitSecurityQuestions"
+                        >
+                          Submit
+                        </b-button>
+                      </b-col>
+                      <b-col />
+                      <b-col>
+                        <b-button
+                          variant="danger"
+                          class="mt-2"
+                          @click="closeSecurityQuestions"
+                        >
+                          Forget it
+                        </b-button>
+                      </b-col>
+                    </b-row>
+                  </div>
+                </div>
+              </b-form-group>
+            </div>
           </b-form>
         </b-col>
         <b-col />
@@ -179,6 +258,34 @@ export default {
       responseSuccess: null,
       uploadCurrent: 0,
       uploadMax: 100,
+      enableSecurity: null,
+      firstQuestion: null,
+      secondQuestion: null,
+      thirdQuestion: null,
+      firstAnswer: null,
+      secondAnswer: null,
+      thirdAnswer: null,
+      debugSec: null,
+      questions: [
+        { value: null, text: 'Select a question !' },
+        {
+          value: 'What is the name of your first pet?',
+          text: 'What is the name of your first pet?',
+        },
+        {
+          value: 'What is the name of your first school?',
+          text: 'What is the name of your first school?',
+        },
+        { value: 'What was your first job?', text: 'What was your first job?' },
+        {
+          value: 'What is your favorite color?',
+          text: 'What is your favorite color?',
+        },
+        {
+          value: 'What is your favorite date in history?',
+          text: 'What is your favorite date in history?',
+        },
+      ],
     }
   },
   computed: {
@@ -195,6 +302,7 @@ export default {
       isLoggedIn: 'auth/isLoggedIn',
       getUsername: 'user/getUsername',
       getAccountname: 'user/getAccountname',
+      hasSecurityEnabled: 'user/hasSecurityEnabled',
     }),
   },
   mounted() {
@@ -208,11 +316,33 @@ export default {
         this.initaccountName = this.accountName
       }
       this.hash = this.getHash
+      this.debugSec = this.hasSecurityEnabled
     } catch (e) {
       alert(e.toString())
     }
   },
   methods: {
+    removeEnchancedSecurity() {
+      this.debugSec = false
+      // TODO: add backend-logic for removal of 2FA
+    },
+    openQuestions() {
+      this.enableSecurity = true
+    },
+    closeSecurityQuestions() {
+      this.firstQuestion = null
+      this.secondQuestion = null
+      this.thirdQuestion = null
+      this.firstAnswer = null
+      this.secondAnswer = null
+      this.thirdAnswer = null
+      this.enableSecurity = false
+    },
+    submitSecurityQuestions() {
+      this.debugSec = true
+      this.closeSecurityQuestions()
+      // TODO: add backend-logic for activation of 2FA
+    },
     async updateProfile() {
       try {
         const response = await this.$axios.put('/user/update', {

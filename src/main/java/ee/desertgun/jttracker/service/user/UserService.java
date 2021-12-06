@@ -7,9 +7,10 @@ import ee.desertgun.jttracker.response.ValidationResponse;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import javax.validation.Valid;
+import java.util.List;
 
 public interface UserService extends UserDetailsService {
-    User createUser(String username, String displayName, String password, String... roles);
+    User createUser(String username, String displayName, String password, Boolean securityEnabled, String... roles);
 
     boolean userExists(String username);
 
@@ -22,4 +23,7 @@ public interface UserService extends UserDetailsService {
     void updateUserProfile(User user, UserProfileDTO userProfileDTO);
 
     ValidationResponse validateOldUserPassword(String user, String oldPassword);
+
+    void addSecurityQuestions(String username, List<String> securityQuestions, List<String> securityAnswers);
+
 }
