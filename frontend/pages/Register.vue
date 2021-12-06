@@ -20,14 +20,14 @@
             />
           </b-form-group>
           <b-form-group
-            id="input-group-dname"
+            id="input-group-accountName"
             label="Your account name:"
-            label-for="input-dname"
+            label-for="input-accountName"
           >
             <b-form-input
-              id="input-dname"
-              v-model="dname"
-              placeholder="Enter the name of your Accaount"
+              id="input-accountName"
+              v-model="accountName"
+              placeholder="Enter the name of your Account"
               required
             />
           </b-form-group>
@@ -115,6 +115,12 @@
               <div v-if="thirdQuestion">
                 <b-form-input v-model="thirdAnswer" class="mt-2"></b-form-input>
               </div>
+              <b-form-invalid-feedback :state="validationSecurityQuestions">
+                You need to select 3 unique questions and answer them !
+              </b-form-invalid-feedback>
+              <b-form-valid-feedback :state="validationSecurityQuestions">
+                Security questions are answered and valid !
+              </b-form-valid-feedback>
             </div>
           </b-form-group>
           <b-form-group>
@@ -137,8 +143,32 @@
               I read and accept privacy-terms (DSGVO)
             </b-form-checkbox>
           </b-form-group>
-
-          <b-button variant="success" @click="register()"> Register </b-button>
+          <div
+            v-if="
+              (email &&
+                accountName &&
+                pw1 &&
+                pw2 &&
+                statusTerms === 'accepted' &&
+                statusPrivacy === 'accepted' &&
+                enableSecurity === 'false') ||
+              (email &&
+                accountName &&
+                pw1 &&
+                pw2 &&
+                statusTerms === 'accepted' &&
+                statusPrivacy === 'accepted' &&
+                enableSecurity === 'true' &&
+                firstAnswer &&
+                secondAnswer &&
+                thirdAnswer &&
+                validationSecurityQuestions)
+            "
+          >
+            <b-button variant="success" @click="register()">
+              Register
+            </b-button>
+          </div>
         </b-form>
         <b-button class="mt-2" nuxt-link to="/"> Go back </b-button>
         <div v-if="responseSuccess" class="pt-2" style="text-align: center">
@@ -165,7 +195,7 @@ export default {
   asyncData() {
     return {
       email: '',
-      dname: '',
+      accountName: '',
       pw1: '',
       pw2: '',
       statusTerms: 'not_accepted',
@@ -208,20 +238,57 @@ export default {
     validationPasswordEq() {
       return this.pw1 === this.pw2
     },
+    validationSecurityQuestions() {
+      return (
+        this.firstQuestion !== this.secondQuestion &&
+        this.firstQuestion !== this.thirdQuestion &&
+        this.secondQuestion !== this.thirdQuestion &&
+        this.firstAnswer &&
+        this.secondAnswer &&
+        this.thirdAnswer
+      )
+    },
   },
   methods: {
     async register() {
       try {
-        if (this.email && this.dname) {
-          const response = await this.$axios.post('/register', {
-            username: this.email,
-            accountName: this.dname,
-            password: this.pw2,
-          })
-          if (response.data.validated === true) {
-            this.responseSuccess = response.data.successMessage
+        if (this.enableSecurity === 'false') {
+          const responseWithoutSecurityQuestions = await this.$axios.post(
+            '/register',
+            {
+              username: this.email,
+              accountName: this.accountName,
+              password: this.pw2,
+            }
+          )
+          if (responseWithoutSecurityQuestions.data.validated === true) {
+            this.responseSuccess =
+              responseWithoutSecurityQuestions.data.successMessage
           } else {
-            this.responseError = response.data.errorMessage
+            this.responseError =
+              responseWithoutSecurityQuestions.data.errorMessage
+          }
+        } else {
+          const responseWithSecurityQuestions = await this.$axios.post(
+            '/register',
+            {
+              username: this.email,
+              accountName: this.accountName,
+              password: this.pw2,
+              securityQuestionsAvailable: this.enableSecurity,
+              securityQuestion_1: this.firstQuestion,
+              securityQuestion_2: this.secondQuestion,
+              securityQuestion_3: this.thirdQuestion,
+              securityAnswer_1: this.firstAnswer,
+              securityAnswer_2: this.secondAnswer,
+              securityAnswer_3: this.thirdAnswer,
+            }
+          )
+          if (responseWithSecurityQuestions.data.validated === true) {
+            this.responseSuccess =
+              responseWithSecurityQuestions.data.successMessage
+          } else {
+            this.responseError = responseWithSecurityQuestions.data.errorMessage
           }
         }
       } catch (e) {
