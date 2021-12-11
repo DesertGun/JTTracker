@@ -45,21 +45,37 @@ public class StatisticController {
         Duration trackedTimeDuration;
         List<Duration> durationListProject = new ArrayList<>();
         List<Duration> durationListTrackedTime = new ArrayList<>();
+        // List<Duration> durationList = new ArrayList<>();
 
-        for (TrackedTime trackedTime : trackedTimeList) {
-            durationListProject.add((trackedTime.getDuration()));
-        }
-        userProjectDuration = durationListProject.stream().reduce(Duration.ZERO, Duration::plus);
 
-        for (UserProject userProject : userProjects) {
-            durationListTrackedTime.add((userProject.getProjectTime()));
+        if (!trackedTimeList.isEmpty()) {
+
+            for (TrackedTime trackedTime : trackedTimeList) {
+                durationListTrackedTime.add((trackedTime.getDuration()));
+                // durationList.add(trackedTime.getDuration());
+            }
+            // System.out.println(durationList);
+
+            trackedTimeDuration = durationListTrackedTime.stream().reduce(Duration.ZERO, Duration::plus);
+            statistics.put("totalTimeTracked", trackedTimeDuration);
+
         }
-        trackedTimeDuration = durationListTrackedTime.stream().reduce(Duration.ZERO, Duration::plus);
+
+        if (!userProjects.isEmpty()) {
+            for (UserProject userProject : userProjects) {
+                if (userProject.getProjectTime() != null) {
+                    durationListProject.add((userProject.getProjectTime()));
+                }
+            }
+
+            userProjectDuration = durationListProject.stream().reduce(Duration.ZERO, Duration::plus);
+            statistics.put("totalTimeTrackedInProjects", userProjectDuration);
+
+        }
+
 
         statistics.put("numberOfTimers", numberOfTimers);
         statistics.put("numberOfProjects", numberOfProjects);
-        statistics.put("totalTimeTracked", trackedTimeDuration);
-        statistics.put("totalTimeTrackedInProject", userProjectDuration);
         logger.info(statistics.values().toString());
 
         return statistics;

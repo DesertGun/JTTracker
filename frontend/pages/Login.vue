@@ -81,6 +81,7 @@ export default {
           this.$store.dispatch('user/setProfileData')
           this.$store.dispatch('user/setProfilePicture')
           this.$store.dispatch('user/setProfileHash')
+          this.$store.dispatch('statistics/setStatisticsData')
           this.setUserTimers()
           this.setUserProjects()
           this.$router.replace('/')
