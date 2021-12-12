@@ -171,6 +171,7 @@ export default {
         }
         await this.$axios.post('/timer', timer)
         this.$store.commit('timer/addTimer', timer)
+        this.$store.dispatch('statistics/setStatisticsData')
       } else {
         alert('Invalid time-records?!')
       }
@@ -186,6 +187,7 @@ export default {
       )
       this.$store.dispatch('timer/deleteTimerAction', index)
       this.updateProjects()
+      this.$store.dispatch('statistics/setStatisticsData')
     },
   },
 }

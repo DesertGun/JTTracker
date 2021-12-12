@@ -273,6 +273,8 @@ export default {
           projectTime: this.projectTime.toISOString(),
         })
         this.$store.dispatch('project/setProjectsAction')
+        this.$store.dispatch('statistics/setStatisticsData')
+
         time.assigned = true
       }
     },
@@ -288,6 +290,8 @@ export default {
         projectTime: this.projectTime.toISOString(),
       })
       this.$store.dispatch('project/setProjectsAction')
+      this.$store.dispatch('statistics/setStatisticsData')
+
       time.assigned = false
     },
   },

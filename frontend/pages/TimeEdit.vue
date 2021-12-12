@@ -127,6 +127,8 @@ export default {
       })
       await this.updateProjects()
       await this.setUserTimers()
+      await this.$store.dispatch('statistics/setStatisticsData')
+
       this.$router.push('/timer')
     },
     ...mapActions({

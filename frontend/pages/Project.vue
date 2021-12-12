@@ -167,6 +167,7 @@ export default {
         }
         await this.$axios.post('/project', project)
         this.$store.commit('project/addProject', project)
+        this.$store.dispatch('statistics/setStatisticsData')
       } else {
         alert('Invalid-Data')
       }
@@ -181,6 +182,7 @@ export default {
         '/project/' + this.$store.state.project.projects[index].projectID
       )
       this.$store.dispatch('project/deleteProjectAction', index)
+      this.$store.dispatch('statistics/setStatisticsData')
     },
   },
 }
