@@ -26,6 +26,12 @@ public class TrackedTime {
 
     private Duration duration;
 
+    private String loggedYear;
+
+    private int loggedDayOfYear;
+
+    private String loggedMonth;
+
     @ManyToMany
     @JsonIgnore
     private List<UserProject> projectList;

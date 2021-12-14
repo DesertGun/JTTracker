@@ -8,6 +8,8 @@ export const state = () => ({
   maxDuration: null,
   minDuration: null,
   avgTimeTracked: null,
+  mostProductiveYear: null,
+  mostProductiveMonth: null,
 })
 
 export const mutations = {
@@ -21,6 +23,8 @@ export const mutations = {
     state.totalTimeTrackedInProjects = statisticsData.totalTimeTrackedInProjects
     state.timersInProjectsTotal = statisticsData.timersInProjectsTotal
     state.timersNotInProjectsTotal = statisticsData.timersNotInProjectsTotal
+    state.mostProductiveMonth = statisticsData.mostProductiveMonth
+    state.mostProductiveYear = statisticsData.mostProductiveYear
   },
 }
 
@@ -39,6 +43,8 @@ export const actions = {
         response.data.totalTimeTrackedInProjects
       const timersNotInProjectsTotal = response.data.timersNotInProjectsTotal
       const timersInProjectsTotal = response.data.timersInProjectsTotal
+      const mostProductiveYear = response.data.mostProductiveYear
+      const mostProductiveMonth = response.data.mostProductiveMonth
 
       const statisticsData = {
         numberOfTimers,
@@ -50,6 +56,8 @@ export const actions = {
         totalTimeTrackedInProjects,
         timersInProjectsTotal,
         timersNotInProjectsTotal,
+        mostProductiveYear,
+        mostProductiveMonth,
       }
 
       await commit('setStatisticsDataMutation', statisticsData)
@@ -69,6 +77,8 @@ export const getters = {
   getMinDuration: (state) => state.minDuration,
   getAvgTimeTracked: (state) => state.avgTimeTracked,
   getTimersNotInProjectsTotal: (state) => state.timersNotInProjectsTotal,
+  getMostProductiveMonth: (state) => state.mostProductiveMonth,
+  getMostProductiveYear: (state) => state.mostProductiveYear,
 }
 
 export const setters = {}

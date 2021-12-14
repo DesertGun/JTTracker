@@ -52,6 +52,12 @@
             {{ formatTotalTime(getTotalTimeTrackedInProjects).hours() }}h:
             {{ formatTotalTime(getTotalTimeTrackedInProjects).minutes() }}m:
             {{ formatTotalTime(getTotalTimeTrackedInProjects).seconds() }}s
+            <br />
+            Most productive year:
+            {{ getMostProductiveYear }}
+            <br />
+            Most productive month:
+            {{ getMostProductiveMonth }}
           </b-col>
           <b-col />
         </b-row>
@@ -80,6 +86,8 @@ export default {
       getAvgTimeTracked: 'statistics/getAvgTimeTracked',
       getMaxDuration: 'statistics/getMaxDuration',
       getMinDuration: 'statistics/getMinDuration',
+      getMostProductiveMonth: 'statistics/getMostProductiveMonth',
+      getMostProductiveYear: 'statistics/getMostProductiveYear',
       getUsername: 'user/getUsername',
     }),
   },
