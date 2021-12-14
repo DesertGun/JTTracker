@@ -16,7 +16,6 @@ import java.util.UUID;
 public class UserProjectServiceImpl implements UserProjectService {
 
     private final ProjectRepository projectRepository;
-
     private final UserRepository userRepository;
 
     public UserProjectServiceImpl(final ProjectRepository projectRepository, UserRepository userRepository) {
