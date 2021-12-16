@@ -4,7 +4,9 @@
       <b-row>
         <b-col />
         <b-col>
-          <h3>Profile</h3>
+          <div style="text-align: center">
+            <h3>Profile</h3>
+          </div>
         </b-col>
         <b-col />
       </b-row>

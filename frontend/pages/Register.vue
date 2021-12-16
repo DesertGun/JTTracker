@@ -3,7 +3,9 @@
     <b-row>
       <b-col />
       <b-col cols="6">
-        <h4>Registration</h4>
+        <div style="text-align: center">
+          <h3>Registration</h3>
+        </div>
         <b-form>
           <b-form-group
             id="input-group-email"

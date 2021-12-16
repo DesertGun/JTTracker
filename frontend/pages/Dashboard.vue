@@ -4,7 +4,9 @@
       <b-row class="infoRow">
         <b-col />
         <b-col cols="10">
-          <h4>Modules:</h4>
+          <div style="text-align: center">
+            <h3>Modules:</h3>
+          </div>
           <b-row class="moduleCardRow">
             <b-card-group deck>
               <b-card>
@@ -55,7 +57,9 @@
       <b-row class="displayRow">
         <b-col />
         <b-col cols="10">
-          <h3>Your latest Times and Projects!</h3>
+          <div style="text-align: center">
+            <h3>Your latest Times and Projects!</h3>
+          </div>
           <b-row>
             <b-col>
               <h4>Last-Times:</h4>
@@ -94,6 +98,7 @@
               </div>
             </b-col>
           </b-row>
+          <br />
           <b-row>
             <b-col>
               <h4>Last-Projects:</h4>

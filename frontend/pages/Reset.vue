@@ -3,7 +3,9 @@
     <b-row>
       <b-col />
       <b-col>
-        <h3>Test</h3>
+        <div style="text-align: center">
+          <h3>Test</h3>
+        </div>
         <div v-if="responseSuccess">
           <b-alert show variant="success">
             {{ responseSuccess }}

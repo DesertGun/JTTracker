@@ -6,7 +6,9 @@
           <b-row>
             <b-col />
             <b-col cols="5">
-              <h3>Project-Edition</h3>
+              <div style="text-align: center">
+                <h3>Project-Edition</h3>
+              </div>
               <b-form-group
                 id="inputProjectName"
                 description="Change the name if needed."

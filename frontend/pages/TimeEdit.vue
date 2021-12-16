@@ -3,7 +3,9 @@
     <b-row>
       <b-col />
       <b-col cols="6">
-        <h3>Time-Record-Edit</h3>
+        <div style="text-align: center">
+          <h3>Time-Record-Edit</h3>
+        </div>
         <div class="editDesc">
           <b-row>
             <b-col sm="2">

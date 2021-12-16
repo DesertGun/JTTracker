@@ -158,15 +158,15 @@ public class StatisticsServiceImpl implements StatisticsService {
         }
 
         if (maxDistanceBetweenLastLoggedDay < 1) {
-            return PRODUCTIVITY_LEVEL[0];
+            return PRODUCTIVITY_LEVEL[4];
         } else if (maxDistanceBetweenLastLoggedDay <= 2) {
-            return PRODUCTIVITY_LEVEL[1];
+            return PRODUCTIVITY_LEVEL[3];
         } else if (maxDistanceBetweenLastLoggedDay <= 4) {
             return PRODUCTIVITY_LEVEL[2];
         } else if (maxDistanceBetweenLastLoggedDay <= 7) {
-            return PRODUCTIVITY_LEVEL[3];
+            return PRODUCTIVITY_LEVEL[1];
         } else {
-            return PRODUCTIVITY_LEVEL[4];
+            return PRODUCTIVITY_LEVEL[0];
         }
     }
 }

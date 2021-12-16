@@ -2,7 +2,9 @@
   <b-container class="projectMain" fluid>
     <b-row class="formRow justify-content-center">
       <b-col class="projectCol" cols="5">
-        <h3>Project-creation</h3>
+        <div style="text-align: center">
+          <h3>Project-creation</h3>
+        </div>
         <div class="projectForm">
           <b-form class="forms">
             <b-form-group

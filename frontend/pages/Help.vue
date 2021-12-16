@@ -4,7 +4,9 @@
       <b-row>
         <b-col />
         <b-col cols="6">
-          <h3>Help and FAQ</h3>
+          <div style="text-align: center">
+            <h3>Help and FAQ</h3>
+          </div>
           <h5 class="desc">
             Q: What does JTTracker stand for? <br />
             A: JavaTimeTracker

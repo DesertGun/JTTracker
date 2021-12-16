@@ -4,7 +4,9 @@
       <b-row>
         <b-col />
         <b-col>
-          <h4>Login</h4>
+          <div style="text-align: center">
+            <h3>Login</h3>
+          </div>
           <b-form-group
             description="Please enter your username to login"
             label="Username:"
