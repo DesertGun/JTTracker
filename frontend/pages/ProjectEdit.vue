@@ -1,157 +1,150 @@
 <template>
-  <b-container class="projectEditContainer" fluid>
-    <b-form>
-      <b-row class="projectDataRow">
-        <b-col cols="12">
-          <b-row>
-            <b-col />
-            <b-col cols="5">
-              <div style="text-align: center">
-                <h3>Project-Edition</h3>
-              </div>
-              <b-form-group
-                id="inputProjectName"
-                description="Change the name if needed."
-                label="Project-name:"
-                label-for="projectName"
-              >
-                <b-form-input
-                  id="projectName"
-                  v-model="projectName"
-                  placeholder="Project-name"
-                  required
-                  type="text"
-                />
-              </b-form-group>
-              <b-form-group
-                id="inputProjectDesc"
-                description="Modify or add a description to your project"
-                label="Project-desc:"
-                label-for="projectDesc"
-              >
-                <b-form-textarea
-                  id="projectDesc"
-                  v-model="projectDesc"
-                  max-rows="6"
-                  placeholder="Project-desc"
-                  rows="3"
-                  type="text"
-                />
-              </b-form-group>
-              <b-form-group
-                id="projectPriority"
-                label="Priority"
-                label-for="inputProjectPriority"
-              >
-                <b-form-select
-                  id="inputProjectPriority"
-                  v-model="priority"
-                  :options="prioritySelect"
-                  required
-                />
-                <b-form-invalid-feedback :state="validationPriority">
-                  You need to select one priority!
-                </b-form-invalid-feedback>
-              </b-form-group>
-              <b-form-group
-                id="projectStatus"
-                description="If a project is not active, it will not be followed in statistics and in the dashboard"
-              >
-                <b-form-checkbox v-model="status">
-                  This project is active
-                </b-form-checkbox>
-              </b-form-group>
-              <b-button variant="primary" @click="editProject">
-                Submit
-              </b-button>
-            </b-col>
-            <b-col />
-          </b-row>
-        </b-col>
-      </b-row>
-    </b-form>
-    <b-row class="projectTimeRow">
-      <b-col>
-        <b-row>
-          <b-col />
-          <b-col cols="10">
-            <h3>Your recorded Times:</h3>
-            <div v-if="timesUser.length === 0">
-              It seems you have no time-records...
-            </div>
-            <div v-else>
-              <b-card-group id="userTimes" class="cardsUserTimes" deck>
-                <b-container>
-                  <b-row cols="3">
-                    <b-col
-                      v-for="(timeUser, index) in timesUser"
-                      :key="timeUser.timeID"
-                      class="timeCardCol"
-                      md="4"
-                    >
-                      <b-card class="cards">
-                        <h4 v-if="timeUser.timeDesc === null">
-                          No description available
-                        </h4>
-                        <h4 v-else>
-                          {{ timeUser.timeDesc }}
-                        </h4>
-                        <b-card-body>
-                          <b-row> Time-record Nr.: {{ index + 1 }}</b-row>
-                          <b-row>
-                            From: {{ formatTime(timeUser.startTime) }}
-                          </b-row>
-                          <b-row>
-                            Until: {{ formatTime(timeUser.endTime) }}</b-row
-                          >
-                          <b-row>
-                            Duration:
-                            {{ timeUser.duration.hours() }}h :
-                            {{ timeUser.duration.minutes() }}m :
-                            {{ timeUser.duration.seconds() }}s
-                          </b-row>
-                          <b-row>
-                            Recorded on: {{ formatDate(timeUser.startTime) }}
-                          </b-row>
-                        </b-card-body>
-                        <b-button
-                          v-if="timeUser.assigned === true"
-                          class="mr-2"
-                          variant="danger"
-                          @click="removeTimeFromProject(timeUser)"
-                        >
-                          <b-icon icon="clipboard-minus" />
-                          Remove
-                        </b-button>
-                        <b-button
-                          v-if="timeUser.assigned === false"
-                          class="mr-2"
-                          variant="primary"
-                          @click="addTimeToProject(timeUser)"
-                        >
-                          <b-icon icon="clipboard-plus" />
-                          Add
-                        </b-button>
-                        <b-button
-                          class="mr-2"
-                          variant="secondary"
-                          @click="addTimeToProject(timeUser)"
-                        >
-                          <b-icon icon="clock-history" />
-                          Edit Time
-                        </b-button>
-                      </b-card>
-                    </b-col>
-                  </b-row>
-                </b-container>
-              </b-card-group>
-            </div>
+  <div>
+    <b-container class="projectEditContainer" fluid>
+      <b-form>
+        <b-row class="projectDataRow">
+          <b-col cols="12">
+            <b-row>
+              <b-col />
+              <b-col cols="5">
+                <div style="text-align: center">
+                  <h3>Project-Edition</h3>
+                </div>
+                <b-form-group
+                  id="inputProjectName"
+                  description="Change the name if needed."
+                  label="Project-name:"
+                  label-for="projectName"
+                >
+                  <b-form-input
+                    id="projectName"
+                    v-model="projectName"
+                    placeholder="Project-name"
+                    required
+                    type="text"
+                  />
+                </b-form-group>
+                <b-form-group
+                  id="inputProjectDesc"
+                  description="Modify or add a description to your project"
+                  label="Project-desc:"
+                  label-for="projectDesc"
+                >
+                  <b-form-textarea
+                    id="projectDesc"
+                    v-model="projectDesc"
+                    max-rows="6"
+                    placeholder="Project-desc"
+                    rows="3"
+                    type="text"
+                  />
+                </b-form-group>
+                <b-form-group
+                  id="projectPriority"
+                  label="Priority"
+                  label-for="inputProjectPriority"
+                >
+                  <b-form-select
+                    id="inputProjectPriority"
+                    v-model="priority"
+                    :options="prioritySelect"
+                    required
+                  />
+                  <b-form-invalid-feedback :state="validationPriority">
+                    You need to select one priority!
+                  </b-form-invalid-feedback>
+                </b-form-group>
+                <b-form-group
+                  id="projectStatus"
+                  description="If a project is not active, it will not be followed in statistics and in the dashboard"
+                >
+                  <b-form-checkbox v-model="status">
+                    This project is active
+                  </b-form-checkbox>
+                </b-form-group>
+                <b-button variant="primary" @click="editProject">
+                  Submit
+                </b-button>
+              </b-col>
+              <b-col />
+            </b-row>
           </b-col>
-          <b-col />
         </b-row>
-      </b-col>
-    </b-row>
-  </b-container>
+      </b-form>
+    </b-container>
+    <b-container fluid class="card-container">
+      <h3>Your recorded times:</h3>
+      <b-row>
+        <div v-if="timesUser.length === 0">
+          It seems you have no time-records...
+        </div>
+        <div v-else class="flexElementFix">
+          <b-card-group deck>
+            <b-col
+              v-for="(timeUser, index) in timesUser"
+              :key="timeUser.timeID"
+              class="timeCardCol"
+            >
+              <b-card class="cards">
+                <b-card-title>
+                  <h4 v-if="timeUser.timeDesc === null">
+                    No description available
+                  </h4>
+                  <h4 v-else>
+                    {{ timeUser.timeDesc }}
+                  </h4>
+                </b-card-title>
+                <b-card-body>
+                  Time-record Nr.{{ index + 1 }}
+                  <br />
+                  From: {{ formatTime(timeUser.startTime) }}
+                  <br />
+                  Until: {{ formatTime(timeUser.endTime) }}
+                  <br />
+                  Duration:
+                  <br />
+                  {{ timeUser.duration.hours() }}h :
+                  {{ timeUser.duration.minutes() }}m :
+                  {{ timeUser.duration.seconds() }}s
+                  <br />
+                  Recorded on:
+                  <br />
+                  {{ formatDate(timeUser.startTime) }}
+                </b-card-body>
+                <b-row>
+                  <b-col cols="5">
+                    <b-button
+                      v-if="timeUser.assigned === true"
+                      variant="danger"
+                      @click="removeTimeFromProject(timeUser)"
+                    >
+                      <b-icon icon="clipboard-minus" />
+                      Del
+                    </b-button>
+                    <b-button
+                      v-if="timeUser.assigned === false"
+                      variant="primary"
+                      @click="addTimeToProject(timeUser)"
+                    >
+                      <b-icon icon="clipboard-plus" />
+                      Add
+                    </b-button>
+                  </b-col>
+                  <b-col />
+                  <b-col cols="5">
+                    <b-button variant="secondary" @click="editTime(timeUser)">
+                      <b-icon icon="clock-history" />
+                      Edit
+                    </b-button>
+                  </b-col>
+                </b-row>
+              </b-card>
+            </b-col>
+          </b-card-group>
+        </div>
+      </b-row>
+    </b-container>
+  </div>
 </template>
 
 <script>
@@ -166,7 +159,7 @@ export default {
     },
     ...mapGetters({ getProjects: 'project/projects' }),
   },
-  asyncData() {
+  asyncData({ from }) {
     return {
       prioritySelect: [
         { text: 'Select priority', value: null },
@@ -184,6 +177,7 @@ export default {
       status: false,
       assigned: false,
       projectTime: null,
+      from,
     }
   },
   async mounted() {
@@ -237,10 +231,13 @@ export default {
     },
     ...mapActions({ updateProjects: 'project/setProjectsAction' }),
     formatTime(time) {
-      return time.format('LTS')
+      return time.format('HH:mm:ss')
     },
     formatDate(time) {
       return time.format('ll')
+    },
+    editTime(time) {
+      this.$router.push(`timeEdit?timeID=${time.timeID}`)
     },
     async editProject() {
       await this.$axios.patch('/project/' + this.projectID, {
@@ -251,7 +248,7 @@ export default {
         priority: this.priority,
       })
       await this.updateProjects()
-      this.$router.push('/project')
+      this.$router.push(this.from.fullPath)
     },
     async addTimeToProject(time) {
       const found = this.timesProject.some(
@@ -303,10 +300,11 @@ export default {
 <style>
 .cards {
   margin-top: 10vh;
+  min-width: 300px;
+  max-width: 300px;
 }
 
-.timeCardCol {
-  flex: content;
-  max-width: fit-content;
+.flexElementFix {
+  max-width: 100%;
 }
 </style>

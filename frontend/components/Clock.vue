@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     time() {
-      this.currentTime = moment().format('LTS')
+      this.currentTime = moment().format('HH:mm:ss')
     },
   },
 }

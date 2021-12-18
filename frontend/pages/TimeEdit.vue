@@ -83,7 +83,7 @@ import { mapActions } from 'vuex'
 
 export default {
   middleware: 'authenticated',
-  asyncData() {
+  asyncData({ from }) {
     return {
       timeDesc: null,
       startTime: null,
@@ -94,6 +94,7 @@ export default {
       endTimeTimer: null,
       timeID: null,
       duration: null,
+      from,
     }
   },
   async mounted() {
@@ -105,9 +106,9 @@ export default {
       this.startTime = moment(response.data.startTime)
       this.endTime = moment(response.data.endTime)
       this.endTimeDate = this.endTime.format('YYYY-MM-DD')
-      this.endTimeTimer = this.endTime.format('hh:mm:ss')
+      this.endTimeTimer = this.endTime.format('HH:mm:ss')
       this.startTimeDate = this.startTime.format('YYYY-MM-DD')
-      this.startTimeTimer = this.startTime.format('hh:mm:ss')
+      this.startTimeTimer = this.startTime.format('HH:mm:ss')
       this.timeID = timeID
     } catch (e) {
       alert(e.toString())
@@ -117,8 +118,8 @@ export default {
     async onSubmit() {
       const timeStart = this.startTimeDate + ' ' + this.startTimeTimer
       const timeEnd = this.endTimeDate + ' ' + this.endTimeTimer
-      const startTime = moment(timeStart, 'YYYY-MM-DD hh:mm:ss')
-      const endTime = moment(timeEnd, 'YYYY-MM-DD hh:mm:ss')
+      const startTime = moment(timeStart, 'YYYY-MM-DD HH:mm:ss')
+      const endTime = moment(timeEnd, 'YYYY-MM-DD HH:mm:ss')
       const duration = this.countDuration(startTime, endTime)
       await this.$axios.put('/timer/' + this.timeID, {
         startTime,
@@ -131,7 +132,7 @@ export default {
       await this.setUserTimers()
       await this.$store.dispatch('statistics/setStatisticsData')
 
-      this.$router.push('/timer')
+      this.$router.push(this.from.fullPath)
     },
     ...mapActions({
       setUserTimers: 'timer/setTimersAction',

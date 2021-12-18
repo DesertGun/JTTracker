@@ -32,7 +32,7 @@ public class TrackedTime {
 
     private String loggedMonth;
 
-    //TODO: Remove or implement update functionality, upon addition or deletion from a project
+    //TODO: implementation of additional way to store/update project info, if object added to entity UserProject
     @ManyToMany
     @JsonIgnore
     private List<UserProject> projectList;

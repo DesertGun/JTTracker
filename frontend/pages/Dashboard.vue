@@ -7,6 +7,7 @@
           <div style="text-align: center">
             <h3>Modules:</h3>
           </div>
+          <br />
           <b-row class="moduleCardRow">
             <b-card-group deck>
               <b-card>
@@ -104,16 +105,17 @@
               <h4>Last-Projects:</h4>
               <div v-if="projectsUser.length !== 0">
                 <b-card-group deck>
-                  <b-row cols="3">
-                    <b-card
+                  <b-row>
+                    <b-col
                       v-for="project in projectsUser"
                       :key="project.projectID"
                       md="4"
+                      class="project-card"
                     >
-                      <b-card-text>
-                        <b-row>
-                          <b-col>
-                            <h4>{{ project.projectName }}</h4>
+                      <b-card>
+                        <b-card-body>
+                          <h4>{{ project.projectName }}</h4>
+                          <h5>
                             <div v-if="project.projectDesc === null">
                               Sadly, there is no description to the current
                               project.
@@ -121,21 +123,17 @@
                             <div v-else>
                               {{ project.projectDesc }}
                             </div>
-                            Following project was marked as
-                            {{ project.priority }}. It has
-                            {{ project.trackedTimeList.length }} time-records
-                            allocated. Time allocated in total:
-                            {{ formatTotalTime(project.projectTime).hours() }}h:
-                            {{
-                              formatTotalTime(project.projectTime).minutes()
-                            }}m:
-                            {{
-                              formatTotalTime(project.projectTime).seconds()
-                            }}s
-                          </b-col>
-                        </b-row>
-                      </b-card-text>
-                    </b-card>
+                          </h5>
+                          Following project was marked as
+                          {{ project.priority }}.
+                          {{ project.trackedTimeList.length }} timers logged.
+                          Time allocated in total:
+                          {{ formatTotalTime(project.projectTime).hours() }}h:
+                          {{ formatTotalTime(project.projectTime).minutes() }}m:
+                          {{ formatTotalTime(project.projectTime).seconds() }}s
+                        </b-card-body>
+                      </b-card>
+                    </b-col>
                   </b-row>
                 </b-card-group>
               </div>
@@ -211,7 +209,7 @@ export default {
       return moment.duration(diffTime)
     },
     formatTime(time) {
-      return time.format('LTS')
+      return time.format('HH:mm:ss')
     },
     formatDate(time) {
       return time.format('ll')
@@ -234,5 +232,10 @@ export default {
 
 .dataDisplayContainer {
   padding-top: 30px;
+}
+
+.project-card {
+  max-width: 32%;
+  min-width: 32%;
 }
 </style>

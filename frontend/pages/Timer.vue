@@ -151,7 +151,7 @@ export default {
       this.endTime = null
     },
     formatTime(time) {
-      return time.format('LTS')
+      return time.format('HH:mm:ss')
     },
     countDuration(startTime, endTime) {
       const diffTime = endTime.diff(startTime)

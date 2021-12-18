@@ -168,7 +168,8 @@ export default {
           status: this.status,
         }
         await this.$axios.post('/project', project)
-        this.$store.commit('project/addProject', project)
+        await this.$store.dispatch('project/setProjectsAction', project)
+        this.items = this.getProjects
         this.$store.dispatch('statistics/setStatisticsData')
       } else {
         alert('Invalid-Data')
