@@ -144,6 +144,9 @@ export default {
     ...mapActions({
       updateTimers: 'timer/setTimersAction',
       updateProjects: 'project/setProjectsAction',
+      addTimer: 'timer/addTimerAction',
+      setStatistics: 'statistics/setStatisticsData',
+      deleteTimer: 'timer/deleteTimerAction',
     }),
     rec() {
       this.isTracked = true
@@ -169,9 +172,7 @@ export default {
           timeDesc: this.timeDesc,
           duration: this.duration,
         }
-        await this.$axios.post('/timer', timer)
-        this.$store.commit('timer/addTimer', timer)
-        this.$store.dispatch('statistics/setStatisticsData')
+        await this.addTimer(timer)
       } else {
         alert('Invalid time-records?!')
       }
@@ -180,14 +181,15 @@ export default {
       this.timeID = null
       this.isTracked = false
       this.duration = null
+      this.setStatistics()
     },
     async deleteRecord(index) {
       await this.$axios.delete(
         '/timer/' + this.$store.state.timer.timers[index].timeID
       )
-      this.$store.dispatch('timer/deleteTimerAction', index)
+      this.deleteTimer(index)
       this.updateProjects()
-      this.$store.dispatch('statistics/setStatisticsData')
+      this.setStatistics()
     },
   },
 }

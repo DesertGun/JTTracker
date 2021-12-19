@@ -54,96 +54,114 @@
         <b-col />
       </b-row>
     </b-container>
-    <b-container class="dataDisplayContainer justify-content-center" fluid>
-      <b-row class="displayRow">
+    <b-container fluid>
+      <div style="text-align: center">
+        <h3>Your productivity level:</h3>
+      </div>
+      <b-row>
         <b-col />
-        <b-col cols="10">
-          <div style="text-align: center">
-            <h3>Your latest Times and Projects!</h3>
-          </div>
-          <b-row>
-            <b-col>
-              <h4>Last-Times:</h4>
-              <div v-if="timesUser.length !== 0">
-                <b-card-group deck>
-                  <b-row cols="3">
-                    <b-card v-for="time in timesUser" :key="time.timeID" md="4">
-                      <b-card-text>
-                        <b-row>
-                          <b-col>
-                            <div v-if="time.timeDesc === null">
-                              <h4>
-                                Sadly, there is no description for the current
-                                record.
-                              </h4>
-                            </div>
-                            <div v-else>
-                              <h4>{{ time.timeDesc }}</h4>
-                            </div>
-                            Recorded on: {{ formatDate(time.startTime) }} at
-                            {{ formatTime(time.startTime) }}, recording ended on
-                            {{ formatDate(time.endTime) }} at
-                            {{ formatTime(time.endTime) }}. With total duration
-                            of {{ time.duration.hours() }}h :
-                            {{ time.duration.minutes() }}m :
-                            {{ time.duration.seconds() }}s
-                          </b-col>
-                        </b-row>
-                      </b-card-text>
-                    </b-card>
-                  </b-row>
-                </b-card-group>
-              </div>
-              <div v-else>
-                <h5>No timers avalible !</h5>
-              </div>
-            </b-col>
-          </b-row>
-          <br />
-          <b-row>
-            <b-col>
-              <h4>Last-Projects:</h4>
-              <div v-if="projectsUser.length !== 0">
-                <b-card-group deck>
-                  <b-row>
-                    <b-col
-                      v-for="project in projectsUser"
-                      :key="project.projectID"
-                      md="4"
-                      class="project-card"
-                    >
-                      <b-card>
-                        <b-card-body>
-                          <h4>{{ project.projectName }}</h4>
-                          <h5>
-                            <div v-if="project.projectDesc === null">
-                              Sadly, there is no description to the current
-                              project.
-                            </div>
-                            <div v-else>
-                              {{ project.projectDesc }}
-                            </div>
-                          </h5>
-                          Following project was marked as
-                          {{ project.priority }}.
-                          {{ project.trackedTimeList.length }} timers logged.
-                          Time allocated in total:
-                          {{ formatTotalTime(project.projectTime).hours() }}h:
-                          {{ formatTotalTime(project.projectTime).minutes() }}m:
-                          {{ formatTotalTime(project.projectTime).seconds() }}s
-                        </b-card-body>
-                      </b-card>
-                    </b-col>
-                  </b-row>
-                </b-card-group>
-              </div>
-              <div v-else>
-                <h5>No Projects avalible !</h5>
-              </div>
-            </b-col>
-          </b-row>
+        <b-col>
+          <b-form-rating
+            v-model="getProductivityLevel"
+            no-border
+            readonly
+            class="rating-level"
+          ></b-form-rating>
         </b-col>
         <b-col />
+      </b-row>
+    </b-container>
+    <b-container fluid>
+      <div style="text-align: center">
+        <h3>Your latest times and projects:</h3>
+      </div>
+      <h4>Latest times logged:</h4>
+      <b-row>
+        <div v-if="timesUser.length !== 0" class="flexElementFix">
+          <b-card-group deck>
+            <b-col v-for="time in timesUser" :key="time.timeID">
+              <b-card class="cards">
+                <b-card-text>
+                  <div v-if="time.timeDesc === null">
+                    <h4>
+                      Sadly, there is no description for the current record.
+                    </h4>
+                  </div>
+                  <div v-else>
+                    <h4>{{ time.timeDesc }}</h4>
+                  </div>
+                  Recorded on: {{ formatDate(time.startTime) }}
+                  <br />
+                  at {{ formatTime(time.startTime) }}
+                  <br />
+                  recording ended on: {{ formatDate(time.endTime) }}
+                  <br />
+                  at {{ formatTime(time.endTime) }}
+                  <br />
+                  With total duration of
+                  <br />
+                  {{ time.duration.hours() }}h : {{ time.duration.minutes() }}m
+                  : {{ time.duration.seconds() }}s
+                </b-card-text>
+                <b-button variant="secondary" @click="editTimer(time.timeID)">
+                  <b-icon icon="gear-fill" />
+                  Edit
+                </b-button>
+              </b-card>
+            </b-col>
+          </b-card-group>
+        </div>
+        <div v-else>
+          <h5>No timers avalible !</h5>
+        </div>
+      </b-row>
+    </b-container>
+    <b-container fluid>
+      <br />
+      <h4>Latest projects created:</h4>
+      <b-row>
+        <div v-if="projectsUser.length !== 0" class="flexElementFix">
+          <b-col v-for="project in projectsUser" :key="project.projectID">
+            <b-card-group deck>
+              <b-card class="cards">
+                <b-card-text>
+                  <h4>{{ project.projectName }}</h4>
+                  <h5>
+                    <div v-if="project.projectDesc === null">
+                      Sadly, there is no description for the current project.
+                    </div>
+                    <div v-else>
+                      {{ project.projectDesc }}
+                    </div>
+                  </h5>
+                  Following project was marked with priority:
+                  <br />
+                  {{ project.priority }}
+                  <br />
+                  It has
+                  {{ project.trackedTimeList.length }}
+                  timers logged
+                  <br />
+                  Time allocated in total:
+                  <br />
+                  {{ formatTotalTime(project.projectTime).hours() }}h:
+                  {{ formatTotalTime(project.projectTime).minutes() }}m:
+                  {{ formatTotalTime(project.projectTime).seconds() }}s
+                </b-card-text>
+                <b-button
+                  variant="secondary"
+                  @click="editProject(project.projectID)"
+                >
+                  <b-icon icon="gear-fill" />
+                  Edit
+                </b-button>
+              </b-card>
+            </b-card-group>
+          </b-col>
+        </div>
+        <div v-else>
+          <h5>No Projects avalible !</h5>
+        </div>
       </b-row>
     </b-container>
   </div>
@@ -159,6 +177,7 @@ export default {
     ...mapGetters({
       getUserTimers: 'timer/timers',
       getUserProjects: 'project/projects',
+      getProductivityLevel: 'statistics/getProductivityLevel',
     }),
   },
   asyncData() {
@@ -177,7 +196,7 @@ export default {
             projectTime,
           }
         })
-        .splice(this.projectsUser.length - 3, 3)
+        .splice(this.projectsUser.length - 4, 4)
 
       this.timesUser = this.getUserTimers
         .map((timerJson) => {
@@ -192,12 +211,18 @@ export default {
             duration,
           }
         })
-        .splice(this.timesUser.length - 3, 3)
+        .splice(this.timesUser.length - 4, 4)
     } catch (e) {
       alert(e.toString())
     }
   },
   methods: {
+    editProject(projectID) {
+      this.$router.push(`projectEdit?projectID=${projectID}`)
+    },
+    editTimer(timeID) {
+      this.$router.push(`timeEdit?timeID=${timeID}`)
+    },
     timer() {
       this.$router.push('/timer')
     },
@@ -230,12 +255,17 @@ export default {
   padding: 30px;
 }
 
-.dataDisplayContainer {
-  padding-top: 30px;
+.cards {
+  margin-top: 10vh;
+  min-width: 300px;
+  max-width: 300px;
 }
 
-.project-card {
-  max-width: 32%;
-  min-width: 32%;
+.flexElementFix {
+  max-width: 100%;
+}
+
+.rating-level {
+  background-color: #f8f8ff;
 }
 </style>

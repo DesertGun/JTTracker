@@ -130,13 +130,13 @@ export default {
       })
       await this.updateProjects()
       await this.setUserTimers()
-      await this.$store.dispatch('statistics/setStatisticsData')
-
+      this.updateStatistics()
       this.$router.push(this.from.fullPath)
     },
     ...mapActions({
       setUserTimers: 'timer/setTimersAction',
       updateProjects: 'project/setProjectsAction',
+      updateStatistics: 'statistics/setStatisticsData',
     }),
     countDuration(startTime, endTime) {
       const diffTime = endTime.diff(startTime)
