@@ -19,6 +19,10 @@ export const mutations = {
 }
 
 export const actions = {
+  async addTimerAction({ commit }, timer) {
+    await this.$axios.post('/timer', timer)
+    commit('addTimer', timer)
+  },
   async setTimersAction({ commit }) {
     try {
       const response = await this.$axios.get('/timer')

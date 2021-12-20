@@ -3,7 +3,9 @@
     <b-row>
       <b-col />
       <b-col cols="6">
-        <h3>Time-Record-Edit</h3>
+        <div style="text-align: center">
+          <h3>Time-Record-Edit</h3>
+        </div>
         <div class="editDesc">
           <b-row>
             <b-col sm="2">
@@ -81,7 +83,7 @@ import { mapActions } from 'vuex'
 
 export default {
   middleware: 'authenticated',
-  asyncData() {
+  asyncData({ from }) {
     return {
       timeDesc: null,
       startTime: null,
@@ -92,6 +94,7 @@ export default {
       endTimeTimer: null,
       timeID: null,
       duration: null,
+      from,
     }
   },
   async mounted() {
@@ -103,9 +106,9 @@ export default {
       this.startTime = moment(response.data.startTime)
       this.endTime = moment(response.data.endTime)
       this.endTimeDate = this.endTime.format('YYYY-MM-DD')
-      this.endTimeTimer = this.endTime.format('hh:mm:ss')
+      this.endTimeTimer = this.endTime.format('HH:mm:ss')
       this.startTimeDate = this.startTime.format('YYYY-MM-DD')
-      this.startTimeTimer = this.startTime.format('hh:mm:ss')
+      this.startTimeTimer = this.startTime.format('HH:mm:ss')
       this.timeID = timeID
     } catch (e) {
       alert(e.toString())
@@ -115,8 +118,8 @@ export default {
     async onSubmit() {
       const timeStart = this.startTimeDate + ' ' + this.startTimeTimer
       const timeEnd = this.endTimeDate + ' ' + this.endTimeTimer
-      const startTime = moment(timeStart, 'YYYY-MM-DD hh:mm:ss')
-      const endTime = moment(timeEnd, 'YYYY-MM-DD hh:mm:ss')
+      const startTime = moment(timeStart, 'YYYY-MM-DD HH:mm:ss')
+      const endTime = moment(timeEnd, 'YYYY-MM-DD HH:mm:ss')
       const duration = this.countDuration(startTime, endTime)
       await this.$axios.put('/timer/' + this.timeID, {
         startTime,
@@ -127,11 +130,13 @@ export default {
       })
       await this.updateProjects()
       await this.setUserTimers()
-      this.$router.push('/timer')
+      this.updateStatistics()
+      this.$router.push(this.from.fullPath)
     },
     ...mapActions({
       setUserTimers: 'timer/setTimersAction',
       updateProjects: 'project/setProjectsAction',
+      updateStatistics: 'statistics/setStatisticsData',
     }),
     countDuration(startTime, endTime) {
       const diffTime = endTime.diff(startTime)

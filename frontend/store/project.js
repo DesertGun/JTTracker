@@ -26,6 +26,7 @@ export const actions = {
         const status = projectJSON.status
         const priority = projectJSON.priority
         const projectTime = projectJSON.projectTime
+        const trackedTimeList = projectJSON.trackedTimeList
 
         return {
           ...projectJSON,
@@ -34,6 +35,7 @@ export const actions = {
           status,
           priority,
           projectTime,
+          trackedTimeList,
         }
       })
       commit('setProjects', projects)

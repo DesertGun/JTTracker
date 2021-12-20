@@ -4,7 +4,9 @@
       <b-row>
         <b-col cols="3" />
         <b-col cols="6">
-          <h3>About JTTracker</h3>
+          <div style="text-align: center">
+            <h3>About JTTracker</h3>
+          </div>
           <h5 class="desc">
             JTTracker is a Time tracking-Web-Application which is designed to
             help developers track their spend time, in order to to measure their

@@ -4,7 +4,9 @@
       <b-row>
         <b-col />
         <b-col>
-          <h3>Recover your password</h3>
+          <div style="text-align: center">
+            <h3>Recover your password</h3>
+          </div>
           <div v-if="responseSuccess" />
           <div v-else>
             <b-form-group

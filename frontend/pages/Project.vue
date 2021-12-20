@@ -2,7 +2,9 @@
   <b-container class="projectMain" fluid>
     <b-row class="formRow justify-content-center">
       <b-col class="projectCol" cols="5">
-        <h3>Project-creation</h3>
+        <div style="text-align: center">
+          <h3>Project-creation</h3>
+        </div>
         <div class="projectForm">
           <b-form class="forms">
             <b-form-group
@@ -166,7 +168,9 @@ export default {
           status: this.status,
         }
         await this.$axios.post('/project', project)
-        this.$store.commit('project/addProject', project)
+        await this.$store.dispatch('project/setProjectsAction', project)
+        this.items = this.getProjects
+        this.$store.dispatch('statistics/setStatisticsData')
       } else {
         alert('Invalid-Data')
       }
@@ -181,6 +185,7 @@ export default {
         '/project/' + this.$store.state.project.projects[index].projectID
       )
       this.$store.dispatch('project/deleteProjectAction', index)
+      this.$store.dispatch('statistics/setStatisticsData')
     },
   },
 }

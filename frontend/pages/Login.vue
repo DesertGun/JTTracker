@@ -4,7 +4,9 @@
       <b-row>
         <b-col />
         <b-col>
-          <h4>Login</h4>
+          <div style="text-align: center">
+            <h3>Login</h3>
+          </div>
           <b-form-group
             description="Please enter your username to login"
             label="Username:"
@@ -81,6 +83,7 @@ export default {
           this.$store.dispatch('user/setProfileData')
           this.$store.dispatch('user/setProfilePicture')
           this.$store.dispatch('user/setProfileHash')
+          this.$store.dispatch('statistics/setStatisticsData')
           this.setUserTimers()
           this.setUserProjects()
           this.$router.replace('/')

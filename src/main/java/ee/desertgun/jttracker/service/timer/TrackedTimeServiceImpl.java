@@ -11,8 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
-import java.util.UUID;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.*;
 
 @Service
 public class TrackedTimeServiceImpl implements TrackedTimeService {
@@ -61,7 +62,8 @@ public class TrackedTimeServiceImpl implements TrackedTimeService {
     time.setStartTime(timer.getStartTime());
     time.setTimeDesc(timer.getTimeDesc());
     time.setDuration(timer.getDuration());
-    trackedTimeRepository.save(time);
+
+    setZoneDateTimeOfTrackedTime(time);
 
     User user = trackedTimeRepository.getTrackedTimeByTimeID(timeID).getUser();
 
@@ -84,6 +86,17 @@ public class TrackedTimeServiceImpl implements TrackedTimeService {
     User user = userRepository.findByUsername(username);
     TrackedTime trackedTime = createNewTrackedTime(trackedTimeDTO, user);
     trackedTime.setDuration(countDuration(trackedTime.getStartTime(), trackedTime.getEndTime()));
+    setZoneDateTimeOfTrackedTime(trackedTime);
+  }
+
+  private void setZoneDateTimeOfTrackedTime(TrackedTime trackedTime) {
+    ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(trackedTime.getEndTime(), ZoneId.systemDefault());
+    Calendar calenderDate = GregorianCalendar.from(zonedDateTime);
+
+    trackedTime.setLoggedYear(String.valueOf(calenderDate.get(Calendar.YEAR)));
+    trackedTime.setLoggedDayOfYear(calenderDate.get(Calendar.DAY_OF_YEAR));
+    trackedTime.setLoggedMonth(calenderDate.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH));
+
     trackedTimeRepository.save(trackedTime);
   }
 

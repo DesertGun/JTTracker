@@ -26,6 +26,13 @@ public class TrackedTime {
 
     private Duration duration;
 
+    private String loggedYear;
+
+    private int loggedDayOfYear;
+
+    private String loggedMonth;
+
+    //TODO: implementation of additional way to store/update project info, if object added to entity UserProject
     @ManyToMany
     @JsonIgnore
     private List<UserProject> projectList;
