@@ -73,12 +73,10 @@ public class StatisticsServiceImpl implements StatisticsService {
                 years.add(loggedYear);
                 months.add(loggedMonth);
 
-                for (UserProject userProject : userProjectList) {
-                    if (!userProject.getTrackedTimeList().contains(trackedTime)) {
-                        timersNotInProjectsTotal++;
-                    } else {
-                        timersInProjectsTotal++;
-                    }
+                if (trackedTime.getProjectList().isEmpty()) {
+                    timersNotInProjectsTotal += 1;
+                } else {
+                    timersInProjectsTotal += 1;
                 }
             }
 

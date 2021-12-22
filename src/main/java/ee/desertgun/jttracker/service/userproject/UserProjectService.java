@@ -12,13 +12,13 @@ public interface UserProjectService {
 
     void createUserProject(UserProjectDTO userProjectDTO, String username);
 
-    void deleteUserProject(UUID projectID);
+    void deleteUserProject(UUID projectID, String name);
 
     void updateUserProject(UUID projectID, UserProjectDTO userProjectDTO);
 
     List<UserProject> getUserProjects(String username);
 
-    void addTimeToProject(UUID projectID, List<TrackedTime> trackedTimeList, Duration projectTime);
+    void addTimeToProject(UUID projectID, List<TrackedTime> trackedTimeList, UUID trackedTimeID, Duration projectTime);
 
 
     UserProject getProject(UUID projectID);

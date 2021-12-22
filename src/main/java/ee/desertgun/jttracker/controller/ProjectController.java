@@ -33,8 +33,8 @@ public class ProjectController {
     }
 
     @DeleteMapping("/project/{projectID}")
-    public void deleteProject(@PathVariable UUID projectID) {
-        userProjectService.deleteUserProject(projectID);
+    public void deleteProject(@PathVariable UUID projectID, Principal principal) {
+        userProjectService.deleteUserProject(projectID, principal.getName());
     }
 
     @PatchMapping("/project/{projectID}")
@@ -44,7 +44,7 @@ public class ProjectController {
 
     @PatchMapping("/project/time/{projectID}")
     public void updateProjectTime(@PathVariable UUID projectID, @RequestBody @Valid UserProjectTimeDTO userProjectTimeDTO) {
-        userProjectService.addTimeToProject(projectID, userProjectTimeDTO.getTrackedTimeList(),
+        userProjectService.addTimeToProject(projectID, userProjectTimeDTO.getTrackedTimeList(), userProjectTimeDTO.getTrackedTimeID(),
                 userProjectTimeDTO.getProjectTime());
     }
 

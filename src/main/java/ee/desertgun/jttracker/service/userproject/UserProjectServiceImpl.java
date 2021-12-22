@@ -5,6 +5,7 @@ import ee.desertgun.jttracker.domain.User;
 import ee.desertgun.jttracker.domain.UserProject;
 import ee.desertgun.jttracker.dto.UserProjectDTO;
 import ee.desertgun.jttracker.repository.ProjectRepository;
+import ee.desertgun.jttracker.repository.TrackedTimeRepository;
 import ee.desertgun.jttracker.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +18,12 @@ public class UserProjectServiceImpl implements UserProjectService {
 
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
+    private final TrackedTimeRepository trackedTimeRepository;
 
-    public UserProjectServiceImpl(final ProjectRepository projectRepository, UserRepository userRepository) {
+    public UserProjectServiceImpl(final ProjectRepository projectRepository, UserRepository userRepository, TrackedTimeRepository trackedTimeRepository) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
+        this.trackedTimeRepository = trackedTimeRepository;
     }
 
     @Override
@@ -37,8 +40,17 @@ public class UserProjectServiceImpl implements UserProjectService {
     }
 
     @Override
-    public void deleteUserProject(UUID projectID) {
-        projectRepository.delete(projectRepository.getByProjectID(projectID));
+    public void deleteUserProject(UUID projectID, String username) {
+        UserProject userProject = projectRepository.getByProjectID(projectID);
+        List<TrackedTime> trackedTimeList = trackedTimeRepository.getTrackedTimesByUser(userRepository.findByUsername(username));
+        for (TrackedTime trackedTime : trackedTimeList) {
+            if (trackedTime.getProjectList().contains(userProject)) {
+                trackedTime.removeProject(userProject);
+                trackedTimeRepository.save(trackedTime);
+                userProject.removeTime(trackedTime);
+            }
+        }
+        projectRepository.delete(userProject);
     }
 
     @Override
@@ -57,11 +69,18 @@ public class UserProjectServiceImpl implements UserProjectService {
     }
 
     @Override
-    public void addTimeToProject(UUID projectID, List<TrackedTime> trackedTimeList, Duration projectTime) {
+    public void addTimeToProject(UUID projectID, List<TrackedTime> trackedTimeList, UUID trackedTimeID, Duration projectTime) {
         UserProject userProject = projectRepository.getByProjectID(projectID);
+        TrackedTime trackedTimeToAdd = trackedTimeRepository.getTrackedTimeByTimeID(trackedTimeID);
+        if (trackedTimeToAdd.getProjectList().contains(userProject)) {
+            trackedTimeToAdd.getProjectList().remove(userProject);
+        } else {
+            trackedTimeToAdd.getProjectList().add(userProject);
+        }
         userProject.setTrackedTimeList(trackedTimeList);
         userProject.setProjectTime(projectTime);
         projectRepository.save(userProject);
+        trackedTimeRepository.save(trackedTimeToAdd);
     }
 
     @Override

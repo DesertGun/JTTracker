@@ -269,6 +269,7 @@ export default {
         await this.$axios.patch('/project/time/' + this.projectID, {
           projectID: this.projectID,
           trackedTimeList: this.timesProject,
+          trackedTimeID: time.timeID,
           projectTime: this.projectTime.toISOString(),
         })
         this.$store.dispatch('project/setProjectsAction')
@@ -286,6 +287,7 @@ export default {
       await this.$axios.patch('/project/time/' + this.projectID, {
         projectID: this.projectID,
         trackedTimeList: this.timesProject,
+        trackedTimeID: time.timeID,
         projectTime: this.projectTime.toISOString(),
       })
       this.$store.dispatch('project/setProjectsAction')

@@ -15,6 +15,8 @@ public class UserProjectTimeDTO {
 
     private List<TrackedTime> trackedTimeList;
 
+    private UUID trackedTimeID;
+
     @NotNull
     private Duration projectTime;
 }
