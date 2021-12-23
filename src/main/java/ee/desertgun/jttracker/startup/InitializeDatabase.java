@@ -30,6 +30,8 @@ public class InitializeDatabase implements InitializingBean {
     private final TrackedTimeService trackedTimeService;
     private final UserProjectService userProjectService;
     private final EmailServiceImpl emailService;
+    private static final String USERNAME_MAIN = "main@jttracker.de";
+    private static final String USERNAME_TEST = "test@jttracker.de";
 
     @Autowired
     public InitializeDatabase(final UserService userService, final EmailServiceImpl emailService,
@@ -43,10 +45,10 @@ public class InitializeDatabase implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws MessagingException {
         try {
-            userService.loadUserByUsername("admin@domain.de");
+            userService.loadUserByUsername(USERNAME_MAIN);
         } catch (UsernameNotFoundException ex) {
 
-            final User user = userService.createUser("admin@domain.de",
+            final User user = userService.createUser(USERNAME_MAIN,
                     "Bob",
                     "$2a$10$WoG5Z4YN9Z37EWyNCkltyeFr6PtrSXSLMeFWOeDUwcanht5CIJgPa", true, "ROLE_USER");
 
@@ -69,7 +71,7 @@ public class InitializeDatabase implements InitializingBean {
             securityAnswers.add(securityAnswer_2);
             securityAnswers.add(securityAnswer_3);
 
-            userService.addSecurityQuestions("admin@domain.de", securityQuestions, securityAnswers);
+            userService.addSecurityQuestions(USERNAME_MAIN, securityQuestions, securityAnswers);
 
             final TrackedTimeDTO trackedTimeDTO = new TrackedTimeDTO();
 
@@ -103,14 +105,13 @@ public class InitializeDatabase implements InitializingBean {
             userProjectService.createUserProject(userProjectDTO, user.getUsername());
 
             GreenMail greenMail = new GreenMail(ServerSetup.ALL);
-            greenMail.setUser("admin@domain.de", "password");
-            greenMail.setUser("test@domain.de", "password");
+            greenMail.setUser(USERNAME_MAIN, "password");
+            greenMail.setUser(USERNAME_TEST, "password");
             greenMail.start();
-            // greenMail.stop();
 
             Mail adminMail = new Mail();
-            adminMail.setFrom("admin@domain.de");
-            adminMail.setMailTo("admin@domain.de");
+            adminMail.setFrom(USERNAME_MAIN);
+            adminMail.setMailTo(USERNAME_MAIN);
             adminMail.setSubject("Init-Confirmation-Admin");
             Map<String, Object> propAdmin = new HashMap<>();
             propAdmin.put("userName", adminMail.getMailTo());
@@ -118,8 +119,8 @@ public class InitializeDatabase implements InitializingBean {
             emailService.sendComplexMail(adminMail, "init");
 
             Mail testMail = new Mail();
-            testMail.setFrom("admin@domain.de");
-            testMail.setMailTo("test@domain.de");
+            testMail.setFrom(USERNAME_MAIN);
+            testMail.setMailTo(USERNAME_TEST);
             testMail.setSubject("Init-Confirmation-Test");
             Map<String, Object> propTest = new HashMap<>();
             propTest.put("userName", testMail.getMailTo());

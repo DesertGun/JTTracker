@@ -229,7 +229,10 @@ export default {
       const diffTime = endTime.diff(startTime)
       return moment.duration(diffTime)
     },
-    ...mapActions({ updateProjects: 'project/setProjectsAction' }),
+    ...mapActions({
+      updateProjects: 'project/setProjectsAction',
+      updateStatistics: 'statistics/setStatisticsData',
+    }),
     formatTime(time) {
       return time.format('HH:mm:ss')
     },
@@ -248,6 +251,7 @@ export default {
         priority: this.priority,
       })
       await this.updateProjects()
+      await this.updateStatistics()
       this.$router.push(this.from.fullPath)
     },
     async addTimeToProject(time) {
@@ -272,8 +276,8 @@ export default {
           trackedTimeID: time.timeID,
           projectTime: this.projectTime.toISOString(),
         })
-        this.$store.dispatch('project/setProjectsAction')
-        this.$store.dispatch('statistics/setStatisticsData')
+        await this.updateProjects()
+        await this.updateStatistics()
 
         time.assigned = true
       }
@@ -290,8 +294,8 @@ export default {
         trackedTimeID: time.timeID,
         projectTime: this.projectTime.toISOString(),
       })
-      this.$store.dispatch('project/setProjectsAction')
-      this.$store.dispatch('statistics/setStatisticsData')
+      await this.updateProjects()
+      await this.updateStatistics()
 
       time.assigned = false
     },

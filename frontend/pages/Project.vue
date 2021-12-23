@@ -153,7 +153,10 @@ export default {
     editRecord(projectID) {
       this.$router.push(`projectEdit?projectID=${projectID}`)
     },
-    ...mapActions({ updateProjects: 'project/setProjectsAction' }),
+    ...mapActions({
+      updateProjects: 'project/setProjectsAction',
+      updateStatistics: 'statistics/setStatisticsData',
+    }),
     formatTime(time) {
       return moment.duration(time)
     },
@@ -170,7 +173,7 @@ export default {
         await this.$axios.post('/project', project)
         await this.$store.dispatch('project/setProjectsAction', project)
         this.items = this.getProjects
-        this.$store.dispatch('statistics/setStatisticsData')
+        await this.updateStatistics()
       } else {
         alert('Invalid-Data')
       }
@@ -185,7 +188,7 @@ export default {
         '/project/' + this.$store.state.project.projects[index].projectID
       )
       this.$store.dispatch('project/deleteProjectAction', index)
-      this.$store.dispatch('statistics/setStatisticsData')
+      await this.updateStatistics()
     },
   },
 }

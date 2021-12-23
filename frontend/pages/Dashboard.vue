@@ -121,43 +121,48 @@
       <h4>Latest projects created:</h4>
       <b-row>
         <div v-if="projectsUser.length !== 0" class="flexElementFix">
-          <b-col v-for="project in projectsUser" :key="project.projectID">
-            <b-card-group deck>
-              <b-card class="cards">
-                <b-card-text>
-                  <h4>{{ project.projectName }}</h4>
-                  <h5>
-                    <div v-if="project.projectDesc === null">
-                      Sadly, there is no description for the current project.
-                    </div>
-                    <div v-else>
-                      {{ project.projectDesc }}
-                    </div>
-                  </h5>
-                  Following project was marked with priority:
-                  <br />
-                  {{ project.priority }}
-                  <br />
-                  It has
-                  {{ project.trackedTimeList.length }}
-                  timers logged
-                  <br />
-                  Time allocated in total:
-                  <br />
-                  {{ formatTotalTime(project.projectTime).hours() }}h:
-                  {{ formatTotalTime(project.projectTime).minutes() }}m:
-                  {{ formatTotalTime(project.projectTime).seconds() }}s
-                </b-card-text>
-                <b-button
-                  variant="secondary"
-                  @click="editProject(project.projectID)"
-                >
-                  <b-icon icon="gear-fill" />
-                  Edit
-                </b-button>
-              </b-card>
-            </b-card-group>
-          </b-col>
+          <b-card-group deck>
+            <b-col v-for="project in projectsUser" :key="project.projectID">
+              <div v-if="project.status === true">
+                <b-card class="cards">
+                  <b-card-text>
+                    <h4>{{ project.projectName }}</h4>
+                    <h5>
+                      <div v-if="project.projectDesc === null">
+                        Sadly, there is no description for the current project.
+                      </div>
+                      <div v-else>
+                        {{ project.projectDesc }}
+                      </div>
+                    </h5>
+                    Following project was marked with priority:
+                    <br />
+                    {{ project.priority }}
+                    <br />
+                    It has
+                    {{ project.trackedTimeList.length }}
+                    timers logged
+                    <br />
+                    Time allocated in total:
+                    <br />
+                    {{ formatTotalTime(project.projectTime).hours() }}h:
+                    {{ formatTotalTime(project.projectTime).minutes() }}m:
+                    {{ formatTotalTime(project.projectTime).seconds() }}s
+                  </b-card-text>
+                  <b-button
+                    variant="secondary"
+                    @click="editProject(project.projectID)"
+                  >
+                    <b-icon icon="gear-fill" />
+                    Edit
+                  </b-button>
+                </b-card>
+              </div>
+              <div v-else>
+                <h5>No Projects avalible !</h5>
+              </div>
+            </b-col>
+          </b-card-group>
         </div>
         <div v-else>
           <h5>No Projects avalible !</h5>

@@ -19,7 +19,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     @Override
     public Map<String, Object> createUserStatistics(List<TrackedTime> trackedTimeList, List<UserProject> userProjectList) {
 
-        Map<String, Object> timerStatistics = getTimerStatistics(trackedTimeList, userProjectList);
+        Map<String, Object> timerStatistics = getTimerStatistics(trackedTimeList);
         Map<String, Object> projectStatistics = getProjectStatistics(userProjectList);
 
         timerStatistics.putAll(projectStatistics);
@@ -35,8 +35,8 @@ public class StatisticsServiceImpl implements StatisticsService {
 
         if (!userProjectList.isEmpty()) {
             for (UserProject userProject : userProjectList) {
-                if (userProject.getProjectTime() != null) {
-                    durationListProject.add((userProject.getProjectTime()));
+                if (Boolean.TRUE.equals(userProject.getStatus()) && userProject.getProjectTime() != null) {
+                        durationListProject.add((userProject.getProjectTime()));
                 }
             }
             userProjectDuration = durationListProject.stream().reduce(Duration.ZERO, Duration::plus);
@@ -46,7 +46,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         return projectStatistics;
     }
 
-    private Map<String, Object> getTimerStatistics(List<TrackedTime> trackedTimeList, List<UserProject> userProjectList) {
+    private Map<String, Object> getTimerStatistics(List<TrackedTime> trackedTimeList) {
         Map<String, Object> timerStatistics = new HashMap<>();
 
         int timersInProjectsTotal = 0;

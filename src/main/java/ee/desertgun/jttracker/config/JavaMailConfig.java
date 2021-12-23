@@ -16,7 +16,7 @@ public class JavaMailConfig {
     javaMailSender.setHost("localhost");
     javaMailSender.setPort(25);
 
-    javaMailSender.setUsername("admin@domain.de");
+    javaMailSender.setUsername("main@jttracker.de");
     javaMailSender.setPassword("password");
 
     Properties props = javaMailSender.getJavaMailProperties();

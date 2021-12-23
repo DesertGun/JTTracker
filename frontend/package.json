@@ -1,7 +1,7 @@
 {
   "name": "jttracker",
-  "version": "0.9.0",
-  "description": "jttracker-beta",
+  "version": "1.0",
+  "description": "Open Source Time-Tracker",
   "author": "DesertGun",
   "private":false,
   "scripts": {
@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.13.6",
-    "bootstrap": "^4.5.3",
-    "bootstrap-vue": "^2.18.0",
+    "bootstrap": "^4.6.1",
+    "bootstrap-vue": "^2.21.2",
     "core-js": "^3.19.1",
     "moment": "^2.29.0",
     "nuxt": "^2.15.8",
