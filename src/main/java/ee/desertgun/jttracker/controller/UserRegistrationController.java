@@ -71,7 +71,7 @@ public class UserRegistrationController {
         String password = passwordEncoder.encode(userDTO.getPassword());
 
         try {
-            if (userDTO.getSecurityQuestionsAvailable()) {
+            if (Boolean.TRUE.equals(userDTO.getSecurityQuestionsAvailable())) {
                 userService.createUser(username, accountName, password, true, "ROLE_USER");
                 List<String> securityQuestions = new ArrayList<>();
                 securityQuestions.add(userDTO.getSecurityQuestion_1());
@@ -83,14 +83,12 @@ public class UserRegistrationController {
                 securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer_2()));
                 securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer_3()));
 
-                userService.createUser(username, accountName, password, false, "ROLE_USER");
-
                 userService.addSecurityQuestions(userDTO.getUsername(), securityQuestions, securityAnswers);
             } else {
                 userService.createUser(username, accountName, password, false, "ROLE_USER");
             }
         } catch (Exception e) {
-            logger.warn("Not possible to create new User");
+           e.printStackTrace();
         }
     }
 }
