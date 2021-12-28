@@ -57,7 +57,6 @@ public class UserAccountController {
         this.fileLocationService = fileLocationService;
     }
 
-    //TODO: Catch and display the correct validation responses in frontend
     @PostMapping("/user/password/reset")
     public ValidationResponse resetPassword(@RequestBody @Valid UserDTO userDTO, BindingResult bindingResult) throws MessagingException {
         ValidationResponse response = new ValidationResponse();
@@ -65,7 +64,7 @@ public class UserAccountController {
         if (userService.userExists(userDTO.getUsername()) && !bindingResult.hasErrors()) {
             response.setValidated(true);
 
-            if (userService.getUserByUsername(userDTO.getUsername()).getSecurityEnabled()) {
+            if (Boolean.TRUE.equals(userService.getUserByUsername(userDTO.getUsername()).getSecurityEnabled())) {
                 response.setValidated(false);
                 final String validationMessage = "Security Authentication required!";
                 response.setValidationMessage(validationMessage);
@@ -171,7 +170,7 @@ public class UserAccountController {
     }
 
     @PostMapping("/user/picture")
-    ValidationResponse uploadImage(@RequestParam MultipartFile profilePicture, Principal principal) throws Exception {
+    public ValidationResponse uploadImage(@RequestParam MultipartFile profilePicture, Principal principal) throws Exception {
         ValidationResponse validationResponse = new ValidationResponse();
         fileLocationService.save(profilePicture.getBytes(), profilePicture.getOriginalFilename(), principal.getName());
         validationResponse.setValidated(true);
@@ -180,10 +179,8 @@ public class UserAccountController {
     }
 
     @GetMapping(value = "/user/picture/")
-    private ResponseEntity<?> downloadImage(Principal principal) throws IOException {
+    public ResponseEntity<?> downloadImage(Principal principal) throws IOException {
         User user = userService.getUserByUsername(principal.getName());
-        logger.warn(fileLocationService.find(user.getProfilePictureID()).toString());
-
         Path fileSystemResourcePath = Path.of(fileLocationService.find(user.getProfilePictureID()).getPath());
         ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(fileSystemResourcePath));
         byte[] encode = Base64.getEncoder().encode(resource.getByteArray());

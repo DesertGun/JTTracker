@@ -3,10 +3,7 @@ package ee.desertgun.jttracker.domain;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Lob;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
@@ -16,16 +13,17 @@ public class ProfilePicture {
 
     @Id
     @GeneratedValue
-    UUID id;
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id;
 
     @Lob
-    byte[] content;
+    private byte[] content;
 
-    String name;
+    private String name;
 
-    String location;
+    private String location;
 
-    String username;
+    private String username;
 
     public ProfilePicture(String name, String location) {
         this.name = name;

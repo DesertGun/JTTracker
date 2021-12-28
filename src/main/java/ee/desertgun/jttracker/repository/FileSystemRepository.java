@@ -12,14 +12,14 @@ import java.util.UUID;
 
 public interface FileSystemRepository extends JpaRepository<ProfilePicture, UUID> {
 
-    String RESOURCES_DIR = "./profile-pictures/";
+
+    String RESOURCES_DIR = "profile-pictures/";
 
     default String save(byte[] content, String imageName) throws Exception {
         Path newFile = Paths.get(RESOURCES_DIR + new Date().getTime() + "-" + imageName);
         Files.createDirectories(newFile.getParent());
 
         Files.write(newFile, content);
-
         return newFile.toAbsolutePath().toString();
     }
 
