@@ -165,26 +165,26 @@
               </b-button>
               <div v-if="removeSec">
                 Please enter the answer for the security question !
-                <br/>
+                <br />
                 {{ securityQuestion1 }}
                 <b-form-input
                   v-model="securityAnswer1"
                   class="mt-2"
                 ></b-form-input>
-              <div v-if="securityAnswer1">
-                {{ securityQuestion2 }}
-                <b-form-input
-                  v-model="securityAnswer2"
-                  class="mt-2"
-                ></b-form-input>
-              </div>
-              <div v-if="securityAnswer2">
-                {{ securityQuestion3 }}
-                <b-form-input
-                  v-model="securityAnswer3"
-                  class="mt-2"
-                ></b-form-input>
-              </div>
+                <div v-if="securityAnswer1">
+                  {{ securityQuestion2 }}
+                  <b-form-input
+                    v-model="securityAnswer2"
+                    class="mt-2"
+                  ></b-form-input>
+                </div>
+                <div v-if="securityAnswer2">
+                  {{ securityQuestion3 }}
+                  <b-form-input
+                    v-model="securityAnswer3"
+                    class="mt-2"
+                  ></b-form-input>
+                </div>
               </div>
               <div v-if="securityAnswer1 && securityAnswer2 && securityAnswer3">
                 <b-button
@@ -239,29 +239,45 @@
                       class="mt-2"
                     ></b-form-input>
                   </div>
+                  <b-form-invalid-feedback :state="validationSecurityQuestions">
+                    You need to select 3 unique questions and answer them !
+                  </b-form-invalid-feedback>
+                  <b-form-valid-feedback :state="validationSecurityQuestions">
+                    Security questions are answered and valid !
+                  </b-form-valid-feedback>
                   <div v-if="thirdAnswer">
-                    Now you can enable enchanced security for your account !
-                    <b-row>
-                      <b-col>
-                        <b-button
-                          variant="success"
-                          class="mt-2"
-                          @click="submitSecurityQuestions"
-                        >
-                          Submit
-                        </b-button>
-                      </b-col>
-                      <b-col />
-                      <b-col>
-                        <b-button
-                          variant="danger"
-                          class="mt-2"
-                          @click="closeSecurityQuestions"
-                        >
-                          Forget it
-                        </b-button>
-                      </b-col>
-                    </b-row>
+                    <div
+                      v-if="
+                        enableSecurity &&
+                        firstAnswer &&
+                        secondAnswer &&
+                        thirdAnswer &&
+                        validationSecurityQuestions
+                      "
+                    >
+                      Now you can enable enchanced security for your account !
+                      <b-row>
+                        <b-col>
+                          <b-button
+                            variant="success"
+                            class="mt-2"
+                            @click="submitSecurityQuestions"
+                          >
+                            Submit
+                          </b-button>
+                        </b-col>
+                        <b-col />
+                        <b-col>
+                          <b-button
+                            variant="danger"
+                            class="mt-2"
+                            @click="closeSecurityQuestions"
+                          >
+                            Forget it
+                          </b-button>
+                        </b-col>
+                      </b-row>
+                    </div>
                   </div>
                 </div>
               </b-form-group>
@@ -285,7 +301,6 @@ export default {
       username: null,
       accountName: '',
       initaccountName: '',
-      dummyPassword: 'placeHolderPasswordForRenderingPurposes',
       changed: false,
       updated: false,
       profilePictureUpload: null,
@@ -306,7 +321,6 @@ export default {
       securityAnswer1: null,
       securityAnswer2: null,
       securityAnswer3: null,
-      debugSec: null,
       removeSec: null,
       questions: [
         { value: null, text: 'Select a question !' },
@@ -331,6 +345,16 @@ export default {
     }
   },
   computed: {
+    validationSecurityQuestions() {
+      return (
+        this.firstQuestion !== this.secondQuestion &&
+        this.firstQuestion !== this.thirdQuestion &&
+        this.secondQuestion !== this.thirdQuestion &&
+        this.firstAnswer &&
+        this.secondAnswer &&
+        this.thirdAnswer
+      )
+    },
     validationaccountNameChange() {
       return this.accountName.length > 0
     },
@@ -368,17 +392,17 @@ export default {
       this.removeSec = true
       try {
         const securityResponse = await this.$axios.get(
-            '/security/' + this.username
-          )
-          this.securityQuestion1 = securityResponse.data.securityQuestion1
-          this.securityQuestion2 = securityResponse.data.securityQuestion2
-          this.securityQuestion3 = securityResponse.data.securityQuestion3
+          '/security/' + this.username
+        )
+        this.securityQuestion1 = securityResponse.data.securityQuestion1
+        this.securityQuestion2 = securityResponse.data.securityQuestion2
+        this.securityQuestion3 = securityResponse.data.securityQuestion3
       } catch (e) {
         alert(e.toString())
       }
     },
     async disableSecurity() {
-        try {
+      try {
         const response = await this.$axios.post('/security', {
           username: this.username,
           securityAnswer1: this.securityAnswer1,
@@ -387,10 +411,10 @@ export default {
         })
 
         if (response.data.validated === true) {
-          const disableSecurityResponse =  await this.$axios.patch('/security', {
-            username: this.username
+          const disableSecurityResponse = await this.$axios.patch('/security', {
+            username: this.username,
           })
-          if (disableSecurityResponse.data.successMessage){
+          if (disableSecurityResponse.data.successMessage) {
             this.responseSuccess = disableSecurityResponse.data.successMessage
             await this.$store.dispatch('user/setProfileData')
           }
@@ -413,10 +437,27 @@ export default {
       this.thirdAnswer = null
       this.enableSecurity = false
     },
-    submitSecurityQuestions() {
-      this.debugSec = true
+    async submitSecurityQuestions() {
       this.closeSecurityQuestions()
-      // TODO: add backend-logic for activation of 2FA
+      try {
+        const response = await this.$axios.post('/security/enable', {
+          username: this.username,
+          securityQuestion1: this.firstQuestion,
+          securityQuestion2: this.secondQuestion,
+          securityQuestion3: this.thirdQuestion,
+          securityAnswer1: this.firstAnswer,
+          securityAnswer2: this.secondAnswer,
+          securityAnswer3: this.thirdAnswer,
+        })
+        if (response.data.successMessage) {
+          this.responseSuccess = response.data.successMessage
+          await this.$store.dispatch('user/setProfileData')
+        } else {
+          this.responseError = response.data.errorMessage
+        }
+      } catch (e) {
+        alert(e.toString())
+      }
     },
     async updateProfile() {
       try {

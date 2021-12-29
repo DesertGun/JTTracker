@@ -114,4 +114,17 @@ public class UserServiceImpl implements UserService {
         user.setSecurityAnswer3(null);
         userRepository.save(user);
     }
+
+    @Override
+    public void enableEnhancedSecurity(UserDTO userDTO) {
+        final User user = userRepository.getById(userDTO.getUsername());
+        user.setSecurityEnabled(true);
+        user.setSecurityQuestion1(userDTO.getSecurityQuestion1());
+        user.setSecurityQuestion2(userDTO.getSecurityQuestion2());
+        user.setSecurityQuestion3(user.getSecurityQuestion3());
+        user.setSecurityAnswer1(user.getSecurityAnswer1());
+        user.setSecurityAnswer2(user.getSecurityAnswer2());
+        user.setSecurityAnswer3(user.getSecurityAnswer3());
+        userRepository.save(user);
+    }
 }

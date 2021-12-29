@@ -251,7 +251,16 @@ public class UserAccountController {
     public ValidationResponse disableSecurityQuestions(@RequestBody @Valid UserDTO userDTO) {
         ValidationResponse response = new ValidationResponse();
         userService.disableEnhancedSecurity(userDTO);
-        response.setSuccessMessage("Removed securityQuestions!");
+        response.setSuccessMessage("Disabled enhanced security!");
+        return response;
+    }
+
+    // TODO: Add E-Mail Notification for removal of security-questions
+    @PostMapping("/security/enable")
+    public ValidationResponse enableSecurityQuestions(@RequestBody @Valid UserDTO userDTO) {
+        ValidationResponse response = new ValidationResponse();
+        userService.enableEnhancedSecurity(userDTO);
+        response.setSuccessMessage("Enabled enhanced security");
         return response;
     }
 }
