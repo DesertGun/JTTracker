@@ -17,11 +17,27 @@ services:
             - ./init:/docker-entrypoint-initdb.d
         networks:
             - backendNetwork
+    nuxtjs:
+        container_name: nuxtjs
+        working_dir: /usr/src/jttracker
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+        command: [ "npm", "run", "start" ]
+        depends_on:
+            - database
+        expose:
+            - 3000
+        ports:
+            - "3000:3000"
+        networks:
+            - frontendNetwork
     springboot:
         container_name: springboot
         working_dir: /application
         depends_on:
             - database
+            - nuxtjs
         expose:
             - 8080
         ports:
@@ -30,29 +46,14 @@ services:
             context: ./
             dockerfile: Dockerfile
         command: ["java", "-jar", "application.jar"]
-        #volumes:
-        #    -  profile-pictures:/profile-pictures
+        volumes:
+            -  profile-pictures:/application/profile-pictures
         networks:
             - backendNetwork
             - frontendNetwork
-
-    nuxtjs:
-        container_name: nuxtjs
-        working_dir: /usr/src/jttracker
-        build:
-            context: ./frontend
-            dockerfile: Dockerfile
-        command: ["npm", "run", "start"]
-        depends_on:
-            - springboot
-        expose:
-            - 3000
-        ports:
-            - "3000:3000"
-        networks:
-            - frontendNetwork
 volumes:
     jttrackerdb:
+    profile-pictures:
 networks:
     backendNetwork:
         driver: bridge

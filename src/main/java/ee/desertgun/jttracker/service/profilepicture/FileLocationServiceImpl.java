@@ -41,7 +41,6 @@ class FileLocationServiceImpl implements FileLocationService {
     @Override
     public FileSystemResource find(UUID pictureID) {
         ProfilePicture profilePicture = profilePictureRepository.findById(pictureID).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-
         return fileSystemRepository.findInFileSystem(profilePicture.getLocation());
     }
 }

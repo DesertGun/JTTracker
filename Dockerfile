@@ -19,8 +19,6 @@ RUN ./mvnw --no-transfer-progress clean package
 FROM eclipse-temurin:17-jre-alpine as jre-build
 WORKDIR application
 COPY --from=builder /opt/build/target/jttracker-1.0.jar application.jar
-RUN mkdir -p /profile-pictures
-VOLUME ["/profile-pictures"]
 
 
 
