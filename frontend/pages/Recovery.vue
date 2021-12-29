@@ -130,7 +130,7 @@ export default {
     },
     async validateSecurityAnswer() {
       try {
-        const response = await this.$axios.post('/security', {
+        const response = await this.$axios.post('/security/reset', {
           username: this.recoveryEmail,
           securityAnswer1: this.securityAnswer1,
           securityAnswer2: this.securityAnswer2,

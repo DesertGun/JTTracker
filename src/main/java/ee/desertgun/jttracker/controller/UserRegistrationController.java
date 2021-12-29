@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -70,17 +68,7 @@ public class UserRegistrationController {
         try {
             if (Boolean.TRUE.equals(userDTO.getSecurityQuestionsAvailable())) {
                 userService.createUser(username, accountName, password, true, "ROLE_USER");
-                List<String> securityQuestions = new ArrayList<>();
-                securityQuestions.add(userDTO.getSecurityQuestion1());
-                securityQuestions.add(userDTO.getSecurityQuestion2());
-                securityQuestions.add(userDTO.getSecurityQuestion3());
-
-                List<String> securityAnswers = new ArrayList<>();
-                securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer1()));
-                securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer2()));
-                securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer3()));
-
-                userService.addSecurityQuestions(userDTO.getUsername(), securityQuestions, securityAnswers);
+                UserAccountController.extractEnhancedSecurityDetails(userDTO, passwordEncoder, userService);
             } else {
                 userService.createUser(username, accountName, password, false, "ROLE_USER");
             }

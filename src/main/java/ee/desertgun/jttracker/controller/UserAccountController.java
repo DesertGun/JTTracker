@@ -26,10 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.Principal;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @CrossOrigin
@@ -226,8 +223,8 @@ public class UserAccountController {
         return securityQuestions;
     }
 
-    @PostMapping("/security")
-    public ValidationResponse validateSecurityQuestions(@RequestBody @Valid UserDTO userDTO) throws MessagingException {
+    @PostMapping("/security/reset")
+    public ValidationResponse validateSecurityQuestionsForPasswordReset(@RequestBody @Valid UserDTO userDTO) throws MessagingException {
         ValidationResponse validationResponse = new ValidationResponse();
 
         final User user = userService.getUserByUsername(userDTO.getUsername());
@@ -246,21 +243,71 @@ public class UserAccountController {
         return validationResponse;
     }
 
-    // TODO: Add E-Mail Notification for removal of security-questions
-    @PatchMapping("/security")
-    public ValidationResponse disableSecurityQuestions(@RequestBody @Valid UserDTO userDTO) {
+    @PostMapping("/security/validate")
+    public ValidationResponse validateSecurityQuestions(@RequestBody @Valid UserDTO userDTO) {
+        ValidationResponse validationResponse = new ValidationResponse();
+
+        final User user = userService.getUserByUsername(userDTO.getUsername());
+
+        if ((passwordEncoder.matches(userDTO.getSecurityAnswer1(), user.getSecurityAnswer1()))
+                && (passwordEncoder.matches(userDTO.getSecurityAnswer2(), user.getSecurityAnswer2()))
+                && (passwordEncoder.matches(userDTO.getSecurityAnswer3(), user.getSecurityAnswer3()))) {
+
+            validationResponse.setValidated(true);
+            validationResponse.setSuccessMessage("Correct answers!");
+        } else {
+            validationResponse.setValidated(false);
+            validationResponse.setErrorMessage("Wrong answers!");
+        }
+        return validationResponse;
+    }
+
+    @PostMapping("/security/disable")
+    public ValidationResponse disableSecurityQuestions(@RequestBody @Valid UserDTO userDTO) throws MessagingException {
         ValidationResponse response = new ValidationResponse();
         userService.disableEnhancedSecurity(userDTO);
         response.setSuccessMessage("Disabled enhanced security!");
+
+        Mail disableSecurityMail = new Mail();
+        disableSecurityMail.setMailTo(userDTO.getUsername());
+        disableSecurityMail.setSubject("Enhanced security disabled");
+        Map<String, Object> propDisableSecurity = new HashMap<>();
+        propDisableSecurity.put(USER_NAME_TEMPLATE, userDTO.getUsername());
+        disableSecurityMail.setProps(propDisableSecurity);
+        emailService.sendComplexMail(disableSecurityMail, "enhanced_security_disabled");
+
         return response;
     }
 
-    // TODO: Add E-Mail Notification for removal of security-questions
     @PostMapping("/security/enable")
-    public ValidationResponse enableSecurityQuestions(@RequestBody @Valid UserDTO userDTO) {
+    public ValidationResponse enableSecurityQuestions(@RequestBody @Valid UserDTO userDTO) throws MessagingException {
         ValidationResponse response = new ValidationResponse();
-        userService.enableEnhancedSecurity(userDTO);
+
+        extractEnhancedSecurityDetails(userDTO, passwordEncoder, userService);
         response.setSuccessMessage("Enabled enhanced security");
+
+        Mail enableSecurityMail = new Mail();
+        enableSecurityMail.setMailTo(userDTO.getUsername());
+        enableSecurityMail.setSubject("Enhanced security enabled");
+        Map<String, Object> propEnableSecurity = new HashMap<>();
+        propEnableSecurity.put(USER_NAME_TEMPLATE, userDTO.getUsername());
+        enableSecurityMail.setProps(propEnableSecurity);
+        emailService.sendComplexMail(enableSecurityMail, "enhanced_security_enabled");
+
         return response;
+    }
+
+    public static void extractEnhancedSecurityDetails(@RequestBody @Valid UserDTO userDTO, PasswordEncoder passwordEncoder, UserService userService) {
+        List<String> securityQuestions = new ArrayList<>();
+        securityQuestions.add(userDTO.getSecurityQuestion1());
+        securityQuestions.add(userDTO.getSecurityQuestion2());
+        securityQuestions.add(userDTO.getSecurityQuestion3());
+
+        List<String> securityAnswers = new ArrayList<>();
+        securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer1()));
+        securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer2()));
+        securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer3()));
+
+        userService.addSecurityQuestions(userDTO.getUsername(), securityQuestions, securityAnswers);
     }
 }

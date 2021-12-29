@@ -192,7 +192,7 @@
                   class="mt-2"
                   @click="disableSecurity()"
                 >
-                  Disable enchanced security for my account !
+                  Yes, disable enchanced security for my account !
                 </b-button>
               </div>
             </div>
@@ -403,7 +403,7 @@ export default {
     },
     async disableSecurity() {
       try {
-        const response = await this.$axios.post('/security', {
+        const response = await this.$axios.post('/security/validate', {
           username: this.username,
           securityAnswer1: this.securityAnswer1,
           securityAnswer2: this.securityAnswer2,
@@ -411,7 +411,7 @@ export default {
         })
 
         if (response.data.validated === true) {
-          const disableSecurityResponse = await this.$axios.patch('/security', {
+          const disableSecurityResponse = await this.$axios.post('/security/disable', {
             username: this.username,
           })
           if (disableSecurityResponse.data.successMessage) {
@@ -438,7 +438,6 @@ export default {
       this.enableSecurity = false
     },
     async submitSecurityQuestions() {
-      this.closeSecurityQuestions()
       try {
         const response = await this.$axios.post('/security/enable', {
           username: this.username,
@@ -450,8 +449,14 @@ export default {
           securityAnswer3: this.thirdAnswer,
         })
         if (response.data.successMessage) {
+          this.closeSecurityQuestions()
+          this.securityAnswer1=null
+          this.securityAnswer2=null
+          this.securityAnswer3=null
+          this.removeSec = false
           this.responseSuccess = response.data.successMessage
           await this.$store.dispatch('user/setProfileData')
+
         } else {
           this.responseError = response.data.errorMessage
         }
