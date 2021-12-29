@@ -29,25 +29,23 @@
               </b-button>
               <div v-if="responseValidation">
                 Please enter the answer for the security question !
-                {{ securityQuestion_1 }}
+                {{ securityQuestion1 }}
                 <b-form-input
-                  v-model="securityAnswer_1"
+                  v-model="securityAnswer1"
                   class="mt-2"
                 ></b-form-input>
-                {{ securityQuestion_2 }}
+                {{ securityQuestion2 }}
                 <b-form-input
-                  v-model="securityAnswer_2"
+                  v-model="securityAnswer2"
                   class="mt-2"
                 ></b-form-input>
-                {{ securityQuestion_3 }}
+                {{ securityQuestion3 }}
                 <b-form-input
-                  v-model="securityAnswer_3"
+                  v-model="securityAnswer3"
                   class="mt-2"
                 ></b-form-input>
               </div>
-              <div
-                v-if="securityAnswer_1 && securityAnswer_2 && securityAnswer_3"
-              >
+              <div v-if="securityAnswer1 && securityAnswer2 && securityAnswer3">
                 <b-button
                   variant="primary"
                   class="mt-2"
@@ -85,18 +83,19 @@
 
 <script>
 export default {
+  name: 'RecoveryPage',
   asyncData() {
     return {
       recoveryEmail: '',
       responseSuccess: '',
       responseError: '',
       responseValidation: '',
-      securityQuestion_1: null,
-      securityQuestion_2: null,
-      securityQuestion_3: null,
-      securityAnswer_1: null,
-      securityAnswer_2: null,
-      securityAnswer_3: null,
+      securityQuestion1: null,
+      securityQuestion2: null,
+      securityQuestion3: null,
+      securityAnswer1: null,
+      securityAnswer2: null,
+      securityAnswer3: null,
     }
   },
   methods: {
@@ -121,9 +120,9 @@ export default {
           const securityResponse = await this.$axios.get(
             '/security/' + this.recoveryEmail
           )
-          this.securityQuestion_1 = securityResponse.data.securityQuestion_1
-          this.securityQuestion_2 = securityResponse.data.securityQuestion_2
-          this.securityQuestion_3 = securityResponse.data.securityQuestion_3
+          this.securityQuestion1 = securityResponse.data.securityQuestion1
+          this.securityQuestion2 = securityResponse.data.securityQuestion2
+          this.securityQuestion3 = securityResponse.data.securityQuestion3
         }
       } catch (e) {
         alert(e.toString())
@@ -133,9 +132,9 @@ export default {
       try {
         const response = await this.$axios.post('/security', {
           username: this.recoveryEmail,
-          securityAnswer_1: this.securityAnswer_1,
-          securityAnswer_2: this.securityAnswer_2,
-          securityAnswer_3: this.securityAnswer_3,
+          securityAnswer1: this.securityAnswer1,
+          securityAnswer2: this.securityAnswer2,
+          securityAnswer3: this.securityAnswer3,
         })
 
         if (response.data.validated === true) {

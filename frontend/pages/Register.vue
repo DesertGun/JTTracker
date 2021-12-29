@@ -194,6 +194,7 @@
 
 <script>
 export default {
+  name: 'RegisterPage',
   asyncData() {
     return {
       email: '',
@@ -278,12 +279,12 @@ export default {
               accountName: this.accountName,
               password: this.pw2,
               securityQuestionsAvailable: this.enableSecurity,
-              securityQuestion_1: this.firstQuestion,
-              securityQuestion_2: this.secondQuestion,
-              securityQuestion_3: this.thirdQuestion,
-              securityAnswer_1: this.firstAnswer,
-              securityAnswer_2: this.secondAnswer,
-              securityAnswer_3: this.thirdAnswer,
+              securityQuestion1: this.firstQuestion,
+              securityQuestion2: this.secondQuestion,
+              securityQuestion3: this.thirdQuestion,
+              securityAnswer1: this.firstAnswer,
+              securityAnswer2: this.secondAnswer,
+              securityAnswer3: this.thirdAnswer,
             }
           )
           if (responseWithSecurityQuestions.data.validated === true) {

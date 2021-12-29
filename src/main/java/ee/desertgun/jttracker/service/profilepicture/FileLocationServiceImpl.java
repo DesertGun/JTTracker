@@ -34,8 +34,6 @@ class FileLocationServiceImpl implements FileLocationService {
         User user = userRepository.getById(username);
         user.setProfilePictureID(profilePictureID);
         userRepository.save(user);
-
-
     }
 
     @Override

@@ -63,6 +63,7 @@
 <script>
 import { mapActions } from 'vuex'
 export default {
+  name: 'LoginPage',
   asyncData() {
     return {
       password: null,

@@ -122,13 +122,8 @@ import { mapGetters, mapActions } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
 
 export default {
+  name: 'ProjectPage',
   middleware: 'authenticated',
-  computed: {
-    validationPriority() {
-      return this.priority != null
-    },
-    ...mapGetters({ getProjects: 'project/projects' }),
-  },
   asyncData() {
     return {
       prioritySelect: [
@@ -145,6 +140,12 @@ export default {
       projectID: null,
       status: false,
     }
+  },
+  computed: {
+    validationPriority() {
+      return this.priority != null
+    },
+    ...mapGetters({ getProjects: 'project/projects' }),
   },
   mounted() {
     this.items = this.getProjects

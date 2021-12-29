@@ -5,8 +5,6 @@ import ee.desertgun.jttracker.dto.UserDTO;
 import ee.desertgun.jttracker.response.ValidationResponse;
 import ee.desertgun.jttracker.service.email.EmailService;
 import ee.desertgun.jttracker.service.user.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -28,7 +26,6 @@ public class UserRegistrationController {
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private final EmailService emailService;
-    Logger logger = LoggerFactory.getLogger(UserRegistrationController.class);
 
     public UserRegistrationController(PasswordEncoder passwordEncoder, UserService userService, EmailService emailService) {
         this.passwordEncoder = passwordEncoder;
@@ -74,14 +71,14 @@ public class UserRegistrationController {
             if (Boolean.TRUE.equals(userDTO.getSecurityQuestionsAvailable())) {
                 userService.createUser(username, accountName, password, true, "ROLE_USER");
                 List<String> securityQuestions = new ArrayList<>();
-                securityQuestions.add(userDTO.getSecurityQuestion_1());
-                securityQuestions.add(userDTO.getSecurityQuestion_2());
-                securityQuestions.add(userDTO.getSecurityQuestion_3());
+                securityQuestions.add(userDTO.getSecurityQuestion1());
+                securityQuestions.add(userDTO.getSecurityQuestion2());
+                securityQuestions.add(userDTO.getSecurityQuestion3());
 
                 List<String> securityAnswers = new ArrayList<>();
-                securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer_1()));
-                securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer_2()));
-                securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer_3()));
+                securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer1()));
+                securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer2()));
+                securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer3()));
 
                 userService.addSecurityQuestions(userDTO.getUsername(), securityQuestions, securityAnswers);
             } else {

@@ -155,7 +155,7 @@
                 Your profile was updated successfully!
               </b-alert>
             </div>
-            <div v-if="debugSec">
+            <div v-if="hasSecurityEnabled">
               <b-button
                 variant="danger"
                 class="mt-2"
@@ -163,6 +163,38 @@
               >
                 Disable enchanced Security for my Account !
               </b-button>
+              <div v-if="removeSec">
+                Please enter the answer for the security question !
+                <br/>
+                {{ securityQuestion1 }}
+                <b-form-input
+                  v-model="securityAnswer1"
+                  class="mt-2"
+                ></b-form-input>
+              <div v-if="securityAnswer1">
+                {{ securityQuestion2 }}
+                <b-form-input
+                  v-model="securityAnswer2"
+                  class="mt-2"
+                ></b-form-input>
+              </div>
+              <div v-if="securityAnswer2">
+                {{ securityQuestion3 }}
+                <b-form-input
+                  v-model="securityAnswer3"
+                  class="mt-2"
+                ></b-form-input>
+              </div>
+              </div>
+              <div v-if="securityAnswer1 && securityAnswer2 && securityAnswer3">
+                <b-button
+                  variant="danger"
+                  class="mt-2"
+                  @click="disableSecurity()"
+                >
+                  Disable enchanced security for my account !
+                </b-button>
+              </div>
             </div>
             <div v-else>
               <b-form-group id="input-group-2fa" label-for="choice-2fa">
@@ -246,6 +278,7 @@
 import { mapGetters } from 'vuex'
 
 export default {
+  name: 'ProfilePage',
   middleware: 'authenticated',
   asyncData() {
     return {
@@ -267,7 +300,14 @@ export default {
       firstAnswer: null,
       secondAnswer: null,
       thirdAnswer: null,
+      securityQuestion1: null,
+      securityQuestion2: null,
+      securityQuestion3: null,
+      securityAnswer1: null,
+      securityAnswer2: null,
+      securityAnswer3: null,
       debugSec: null,
+      removeSec: null,
       questions: [
         { value: null, text: 'Select a question !' },
         {
@@ -324,9 +364,42 @@ export default {
     }
   },
   methods: {
-    removeEnchancedSecurity() {
-      this.debugSec = false
-      // TODO: add backend-logic for removal of 2FA
+    async removeEnchancedSecurity() {
+      this.removeSec = true
+      try {
+        const securityResponse = await this.$axios.get(
+            '/security/' + this.username
+          )
+          this.securityQuestion1 = securityResponse.data.securityQuestion1
+          this.securityQuestion2 = securityResponse.data.securityQuestion2
+          this.securityQuestion3 = securityResponse.data.securityQuestion3
+      } catch (e) {
+        alert(e.toString())
+      }
+    },
+    async disableSecurity() {
+        try {
+        const response = await this.$axios.post('/security', {
+          username: this.username,
+          securityAnswer1: this.securityAnswer1,
+          securityAnswer2: this.securityAnswer2,
+          securityAnswer3: this.securityAnswer3,
+        })
+
+        if (response.data.validated === true) {
+          const disableSecurityResponse =  await this.$axios.patch('/security', {
+            username: this.username
+          })
+          if (disableSecurityResponse.data.successMessage){
+            this.responseSuccess = disableSecurityResponse.data.successMessage
+            await this.$store.dispatch('user/setProfileData')
+          }
+        } else if (response.data.errorMessage) {
+          this.responseError = response.data.errorMessage
+        }
+      } catch (e) {
+        alert(e.toString())
+      }
     },
     openQuestions() {
       this.enableSecurity = true
@@ -353,6 +426,8 @@ export default {
         })
         if (response.data.validated === true) {
           this.updated = true
+          this.accountName = this.getAccountname
+          this.initaccountName = this.accountName
         }
         await this.$store.dispatch('user/setProfileData')
       } catch (e) {

@@ -47,7 +47,7 @@
                 </b-col>
                 <b-col>
                   <b-nav-item-dropdown right>
-                    <template v-slot:button-content>
+                    <template #button-content>
                       <em>{{ getUsername }}</em>
                     </template>
                     <b-dropdown-item nuxt-link to="/profile">
@@ -71,7 +71,7 @@
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'Header',
+  name: 'HeaderComponent',
   computed: {
     ...mapGetters({
       getProfilePicture: 'user/getProfilePicture',

@@ -10,8 +10,6 @@ import ee.desertgun.jttracker.service.email.EmailService;
 import ee.desertgun.jttracker.service.password.PasswordTokenValidationService;
 import ee.desertgun.jttracker.service.profilepicture.FileLocationService;
 import ee.desertgun.jttracker.service.user.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -43,10 +41,9 @@ public class UserAccountController {
     private final PasswordTokenValidationService passwordTokenValidationService;
     private final FileLocationService fileLocationService;
 
-    private static final String BACKEND_PORT = "8080";
     private static final String FRONTEND_PORT = "3000";
-
-    Logger logger = LoggerFactory.getLogger(UserAccountController.class);
+    private static final String USER_NAME_TEMPLATE = "userName";
+    private static final String ACCOUNT_NAME_TEMPLATE = "accountName";
 
     public UserAccountController(PasswordEncoder passwordEncoder, UserService userService, EmailService emailService,
                                  PasswordTokenValidationService passwordTokenValidationService, FileLocationService fileLocationService) {
@@ -113,8 +110,8 @@ public class UserAccountController {
         passwordUpdateResetMail.setMailTo(user.getUsername());
         passwordUpdateResetMail.setSubject("Password-Reset completed");
         Map<String, Object> propUpdateReset = new HashMap<>();
-        propUpdateReset.put("userName", passwordUpdateResetMail.getMailTo());
-        propUpdateReset.put("displayName", user.getAccountName());
+        propUpdateReset.put(USER_NAME_TEMPLATE, passwordUpdateResetMail.getMailTo());
+        propUpdateReset.put(ACCOUNT_NAME_TEMPLATE, user.getAccountName());
         passwordUpdateResetMail.setProps(propUpdateReset);
         emailService.sendComplexMail(passwordUpdateResetMail, "password_changed");
 
@@ -138,8 +135,8 @@ public class UserAccountController {
             passwordUpdateMail.setMailTo(user.getUsername());
             passwordUpdateMail.setSubject("Password-Update");
             Map<String, Object> propPasswordUpdate = new HashMap<>();
-            propPasswordUpdate.put("userName", passwordUpdateMail.getMailTo());
-            propPasswordUpdate.put("displayName", user.getAccountName());
+            propPasswordUpdate.put(USER_NAME_TEMPLATE, passwordUpdateMail.getMailTo());
+            propPasswordUpdate.put(ACCOUNT_NAME_TEMPLATE, user.getAccountName());
             passwordUpdateMail.setProps(propPasswordUpdate);
             emailService.sendComplexMail(passwordUpdateMail, "password_changed");
 
@@ -161,8 +158,8 @@ public class UserAccountController {
         profileUpdateMail.setMailTo(userProfileDTO.getUsername());
         profileUpdateMail.setSubject("Profile-Update");
         Map<String, Object> propProfileUpdate = new HashMap<>();
-        propProfileUpdate.put("userName", profileUpdateMail.getMailTo());
-        propProfileUpdate.put("displayName", userProfileDTO.getAccountName());
+        propProfileUpdate.put(USER_NAME_TEMPLATE, profileUpdateMail.getMailTo());
+        propProfileUpdate.put(ACCOUNT_NAME_TEMPLATE, userProfileDTO.getAccountName());
         profileUpdateMail.setProps(propProfileUpdate);
         emailService.sendComplexMail(profileUpdateMail, "profile_updated");
 
@@ -179,7 +176,7 @@ public class UserAccountController {
     }
 
     @GetMapping(value = "/user/picture/")
-    public ResponseEntity<?> downloadImage(Principal principal) throws IOException {
+    public ResponseEntity<String> downloadImage(Principal principal) throws IOException {
         User user = userService.getUserByUsername(principal.getName());
         Path fileSystemResourcePath = Path.of(fileLocationService.find(user.getProfilePictureID()).getPath());
         ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(fileSystemResourcePath));
@@ -218,13 +215,13 @@ public class UserAccountController {
 
         HashMap<String, String> securityQuestions = new HashMap<>();
         final User user = userService.getUserByUsername(username);
-        String securityQuestion_1 = user.getSecurityQuestion_1();
-        String securityQuestion_2 = user.getSecurityQuestion_2();
-        String securityQuestion_3 = user.getSecurityQuestion_3();
+        String securityQuestion1 = user.getSecurityQuestion1();
+        String securityQuestion2 = user.getSecurityQuestion2();
+        String securityQuestion3 = user.getSecurityQuestion3();
 
-        securityQuestions.put("securityQuestion_1", securityQuestion_1);
-        securityQuestions.put("securityQuestion_2", securityQuestion_2);
-        securityQuestions.put("securityQuestion_3", securityQuestion_3);
+        securityQuestions.put("securityQuestion1", securityQuestion1);
+        securityQuestions.put("securityQuestion2", securityQuestion2);
+        securityQuestions.put("securityQuestion3", securityQuestion3);
 
         return securityQuestions;
     }
@@ -235,9 +232,9 @@ public class UserAccountController {
 
         final User user = userService.getUserByUsername(userDTO.getUsername());
 
-        if ((passwordEncoder.matches(userDTO.getSecurityAnswer_1(), user.getSecurityAnswer_1()))
-                && (passwordEncoder.matches(userDTO.getSecurityAnswer_2(), user.getSecurityAnswer_2()))
-                && (passwordEncoder.matches(userDTO.getSecurityAnswer_3(), user.getSecurityAnswer_3()))) {
+        if ((passwordEncoder.matches(userDTO.getSecurityAnswer1(), user.getSecurityAnswer1()))
+                && (passwordEncoder.matches(userDTO.getSecurityAnswer2(), user.getSecurityAnswer2()))
+                && (passwordEncoder.matches(userDTO.getSecurityAnswer3(), user.getSecurityAnswer3()))) {
 
             validationResponse.setValidated(true);
             validationResponse.setSuccessMessage("Correct answers!");
@@ -247,5 +244,14 @@ public class UserAccountController {
             validationResponse.setErrorMessage("Wrong answers!");
         }
         return validationResponse;
+    }
+
+    // TODO: Add E-Mail Notification for removal of security-questions
+    @PatchMapping("/security")
+    public ValidationResponse disableSecurityQuestions(@RequestBody @Valid UserDTO userDTO) {
+        ValidationResponse response = new ValidationResponse();
+        userService.disableEnhancedSecurity(userDTO);
+        response.setSuccessMessage("Removed securityQuestions!");
+        return response;
     }
 }

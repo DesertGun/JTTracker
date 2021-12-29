@@ -49,19 +49,19 @@
               striped
             >
               <col v-for="field in fields" :key="field.key" />
-              <template v-slot:cell(index)="data">
+              <template #cell(index)="data">
                 {{ data.index + 1 }}
               </template>
-              <template v-slot:cell(timeDesc)="data">
+              <template #cell(timeDesc)="data">
                 {{ data.item.timeDesc }}
               </template>
-              <template v-slot:cell(startTime)="data">
+              <template #cell(startTime)="data">
                 {{ formatTime(data.item.startTime) }}
               </template>
-              <template v-slot:cell(endTime)="data">
+              <template #cell(endTime)="data">
                 {{ formatTime(data.item.endTime) }}
               </template>
-              <template v-slot:cell(duration)="data">
+              <template #cell(duration)="data">
                 <div v-if="data.item.duration.asHours() < 24">
                   {{ data.item.duration.hours() }}h :
                   {{ data.item.duration.minutes() }}m :
@@ -79,7 +79,7 @@
                 </div>
                 <div v-else>Not a realistic track record!</div>
               </template>
-              <template v-slot:cell(showEdit)="data">
+              <template #cell(showEdit)="data">
                 <b-button variant="danger" @click="deleteRecord(data.index)">
                   <b-icon icon="trash-fill" />
                 </b-button>
@@ -107,11 +107,9 @@ import { v4 as uuidv4 } from 'uuid'
 import Clock from '@/components/Clock.vue'
 
 export default {
+  name: 'TimerPage',
   components: { Clock },
   middleware: 'authenticated',
-  computed: {
-    ...mapGetters({ getTimers: 'timer/timers' }),
-  },
   asyncData() {
     return {
       fields: [
@@ -132,6 +130,9 @@ export default {
       duration: null,
       isTracked: false,
     }
+  },
+  computed: {
+    ...mapGetters({ getTimers: 'timer/timers' }),
   },
   mounted() {
     this.currentDate = moment()

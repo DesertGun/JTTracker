@@ -58,6 +58,7 @@
 
 <script>
 export default {
+  name: 'ResetPage',
   asyncData() {
     return {
       token: '',

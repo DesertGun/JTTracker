@@ -89,16 +89,29 @@ public class UserServiceImpl implements UserService {
     public void addSecurityQuestions(String username, List<String> securityQuestions, List<String> securityAnswers) {
         User user = userRepository.findByUsername(username);
 
-        user.setSecurityQuestion_1(securityQuestions.get(0));
-        user.setSecurityQuestion_2(securityQuestions.get(1));
-        user.setSecurityQuestion_3(securityQuestions.get(2));
+        user.setSecurityQuestion1(securityQuestions.get(0));
+        user.setSecurityQuestion2(securityQuestions.get(1));
+        user.setSecurityQuestion3(securityQuestions.get(2));
 
-        user.setSecurityAnswer_1(securityAnswers.get(0));
-        user.setSecurityAnswer_2(securityAnswers.get(1));
-        user.setSecurityAnswer_3(securityAnswers.get(2));
+        user.setSecurityAnswer1(securityAnswers.get(0));
+        user.setSecurityAnswer2(securityAnswers.get(1));
+        user.setSecurityAnswer3(securityAnswers.get(2));
 
         user.setSecurityEnabled(true);
 
+        userRepository.save(user);
+    }
+
+    @Override
+    public void disableEnhancedSecurity(UserDTO userDTO) {
+        final User user = userRepository.getById(userDTO.getUsername());
+        user.setSecurityEnabled(false);
+        user.setSecurityQuestion1(null);
+        user.setSecurityQuestion2(null);
+        user.setSecurityQuestion3(null);
+        user.setSecurityAnswer1(null);
+        user.setSecurityAnswer2(null);
+        user.setSecurityAnswer3(null);
         userRepository.save(user);
     }
 }

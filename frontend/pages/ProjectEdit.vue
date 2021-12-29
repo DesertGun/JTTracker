@@ -153,12 +153,6 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
   middleware: 'authenticated',
-  computed: {
-    validationPriority() {
-      return this.priority != null
-    },
-    ...mapGetters({ getProjects: 'project/projects' }),
-  },
   asyncData({ from }) {
     return {
       prioritySelect: [
@@ -179,6 +173,12 @@ export default {
       projectTime: null,
       from,
     }
+  },
+  computed: {
+    validationPriority() {
+      return this.priority != null
+    },
+    ...mapGetters({ getProjects: 'project/projects' }),
   },
   async mounted() {
     try {

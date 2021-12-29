@@ -21,6 +21,7 @@
 
 <script>
 export default {
+  name: 'HelpPage',
   methods: {
     clickButton() {
       this.$router.push('/')

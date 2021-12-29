@@ -26,4 +26,5 @@ public interface UserService extends UserDetailsService {
 
     void addSecurityQuestions(String username, List<String> securityQuestions, List<String> securityAnswers);
 
+    void disableEnhancedSecurity(UserDTO userDTO);
 }

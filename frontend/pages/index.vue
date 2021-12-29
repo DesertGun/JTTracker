@@ -23,13 +23,14 @@ import { mapGetters } from 'vuex'
 import Logo from '~/components/Logo.vue'
 
 export default {
+  name: 'MainPage',
   components: {
     Logo,
   },
+  asyncData() {},
   computed: {
     ...mapGetters({ isLoggedIn: 'auth/isLoggedIn' }),
   },
-  asyncData() {},
   mounted() {},
 }
 </script>

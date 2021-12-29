@@ -22,6 +22,7 @@
 
 <script>
 export default {
+  name: 'AboutPage',
   methods: {
     clickButton() {
       this.$router.push('/')

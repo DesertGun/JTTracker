@@ -8,7 +8,7 @@
 import moment from 'moment'
 
 export default {
-  name: 'Clock',
+  name: 'ClockComponent',
   data() {
     return {
       currentTime: null,

@@ -177,19 +177,20 @@ import { mapGetters, mapActions } from 'vuex'
 import moment from 'moment'
 
 export default {
+  name: 'DashboardPage',
   middleware: 'authenticated',
+  asyncData() {
+    return {
+      timesUser: [],
+      projectsUser: [],
+    }
+  },
   computed: {
     ...mapGetters({
       getUserTimers: 'timer/timers',
       getUserProjects: 'project/projects',
       getProductivityLevel: 'statistics/getProductivityLevel',
     }),
-  },
-  asyncData() {
-    return {
-      timesUser: [],
-      projectsUser: [],
-    }
   },
   mounted() {
     try {

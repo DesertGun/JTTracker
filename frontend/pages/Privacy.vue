@@ -20,3 +20,9 @@
     </b-container>
   </div>
 </template>
+
+<script>
+export default {
+  name: 'PrivacyPage',
+}
+</script>
