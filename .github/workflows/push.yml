@@ -1,0 +1,11 @@
+name: docker-compose-actions-workflow
+on: push
+jobs:
+  app-deployment-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Dockercompose build
+        run: docker-compose up -d
+      - name: App deplayment test
+        run: docker run --network container:springboot appropriate/curl -s --retry 10 --retry-connrefused http://localhost:8080/

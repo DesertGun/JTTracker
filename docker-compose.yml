@@ -51,6 +51,7 @@ services:
         networks:
             - backendNetwork
             - frontendNetwork
+        restart: on-failure
 volumes:
     jttrackerdb:
     profile-pictures:
