@@ -7,5 +7,5 @@ jobs:
       - uses: actions/checkout@v2
       - name: Dockercompose build
         run: docker-compose up -d
-      - name: App deplayment test
-        run: docker run --network container:springboot appropriate/curl -s --retry 10 --retry-connrefused http://localhost:8080/
+      - name: App deployment test
+        run: docker run --network container:springboot
