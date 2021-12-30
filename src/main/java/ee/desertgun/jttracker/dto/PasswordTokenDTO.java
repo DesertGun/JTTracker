@@ -7,9 +7,9 @@ import javax.validation.constraints.NotNull;
 @Data
 public class PasswordTokenDTO {
 
-  @NotNull
-  private String passwordResetToken;
+    @NotNull
+    private String passwordResetToken;
 
-  @NotNull
-  private String username;
+    @NotNull
+    private String username;
 }

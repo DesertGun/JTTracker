@@ -57,6 +57,14 @@ public class User implements UserDetails {
 
     }
 
+    public User(final String username, final String accountName, final String password, final String hash, final Boolean securityEnabled) {
+        this.username = username;
+        this.accountName = accountName;
+        this.password = password;
+        this.hash = hash;
+        this.securityEnabled = securityEnabled;
+    }
+
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -85,14 +93,6 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    public User(final String username, final String accountName, final String password, final String hash, final Boolean securityEnabled) {
-        this.username = username;
-        this.accountName = accountName;
-        this.password = password;
-        this.hash = hash;
-        this.securityEnabled = securityEnabled;
     }
 
     public void addRole(String role) {

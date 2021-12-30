@@ -10,20 +10,20 @@ import java.util.Properties;
 @Configuration
 public class JavaMailConfig {
 
-  @Bean
-  public JavaMailSender getJavaMailSender(){
-    JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
-    javaMailSender.setHost("localhost");
-    javaMailSender.setPort(25);
+    @Bean
+    public JavaMailSender getJavaMailSender() {
+        JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
+        javaMailSender.setHost("localhost");
+        javaMailSender.setPort(25);
 
-    javaMailSender.setUsername("main@jttracker.de");
-    javaMailSender.setPassword("password");
+        javaMailSender.setUsername("main@jttracker.de");
+        javaMailSender.setPassword("password");
 
-    Properties props = javaMailSender.getJavaMailProperties();
-    props.put("mail.transport.protocol", "smtp");
-    props.put("mail.smtp.auth", "true");
-    props.put("mail.smtp.starttls.enable", "true");
-    return javaMailSender;
-  }
+        Properties props = javaMailSender.getJavaMailProperties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        return javaMailSender;
+    }
 
 }

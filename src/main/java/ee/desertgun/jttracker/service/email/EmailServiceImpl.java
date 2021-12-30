@@ -23,10 +23,9 @@ import java.nio.charset.StandardCharsets;
 @Primary
 public class EmailServiceImpl implements EmailService {
 
-    Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
-
     public final JavaMailSender javaMailSender;
     public final TemplateEngine templateEngine;
+    Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
 
     public EmailServiceImpl(@Qualifier("getJavaMailSender") JavaMailSender javaMailSender, TemplateEngine templateEngine) {
         this.javaMailSender = javaMailSender;

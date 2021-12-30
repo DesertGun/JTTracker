@@ -26,12 +26,12 @@ import java.util.*;
 @AutoConfigureBefore
 public class InitializeDatabase implements InitializingBean {
 
+    private static final String USERNAME_MAIN = "main@jttracker.de";
+    private static final String USERNAME_TEST = "test@jttracker.de";
     private final UserService userService;
     private final TrackedTimeService trackedTimeService;
     private final UserProjectService userProjectService;
     private final EmailServiceImpl emailService;
-    private static final String USERNAME_MAIN = "main@jttracker.de";
-    private static final String USERNAME_TEST = "test@jttracker.de";
 
     @Autowired
     public InitializeDatabase(final UserService userService, final EmailServiceImpl emailService,

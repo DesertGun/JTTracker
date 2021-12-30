@@ -20,7 +20,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-@ActiveProfiles("test")
+@ActiveProfiles("dev")
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class UserProjectTest {

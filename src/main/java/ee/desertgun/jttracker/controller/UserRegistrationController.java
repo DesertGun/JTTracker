@@ -73,7 +73,7 @@ public class UserRegistrationController {
                 userService.createUser(username, accountName, password, false, "ROLE_USER");
             }
         } catch (Exception e) {
-           e.printStackTrace();
+            e.printStackTrace();
         }
     }
 }

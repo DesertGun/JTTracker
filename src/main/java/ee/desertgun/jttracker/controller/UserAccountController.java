@@ -32,15 +32,14 @@ import java.util.*;
 @CrossOrigin
 public class UserAccountController {
 
+    private static final String FRONTEND_PORT = "3000";
+    private static final String USER_NAME_TEMPLATE = "userName";
+    private static final String ACCOUNT_NAME_TEMPLATE = "accountName";
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private final EmailService emailService;
     private final PasswordTokenValidationService passwordTokenValidationService;
     private final FileLocationService fileLocationService;
-
-    private static final String FRONTEND_PORT = "3000";
-    private static final String USER_NAME_TEMPLATE = "userName";
-    private static final String ACCOUNT_NAME_TEMPLATE = "accountName";
 
     public UserAccountController(PasswordEncoder passwordEncoder, UserService userService, EmailService emailService,
                                  PasswordTokenValidationService passwordTokenValidationService, FileLocationService fileLocationService) {
@@ -49,6 +48,20 @@ public class UserAccountController {
         this.emailService = emailService;
         this.passwordTokenValidationService = passwordTokenValidationService;
         this.fileLocationService = fileLocationService;
+    }
+
+    public static void extractEnhancedSecurityDetails(@RequestBody @Valid UserDTO userDTO, PasswordEncoder passwordEncoder, UserService userService) {
+        List<String> securityQuestions = new ArrayList<>();
+        securityQuestions.add(userDTO.getSecurityQuestion1());
+        securityQuestions.add(userDTO.getSecurityQuestion2());
+        securityQuestions.add(userDTO.getSecurityQuestion3());
+
+        List<String> securityAnswers = new ArrayList<>();
+        securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer1()));
+        securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer2()));
+        securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer3()));
+
+        userService.addSecurityQuestions(userDTO.getUsername(), securityQuestions, securityAnswers);
     }
 
     @PostMapping("/user/password/reset")
@@ -295,19 +308,5 @@ public class UserAccountController {
         emailService.sendComplexMail(enableSecurityMail, "enhanced_security_enabled");
 
         return response;
-    }
-
-    public static void extractEnhancedSecurityDetails(@RequestBody @Valid UserDTO userDTO, PasswordEncoder passwordEncoder, UserService userService) {
-        List<String> securityQuestions = new ArrayList<>();
-        securityQuestions.add(userDTO.getSecurityQuestion1());
-        securityQuestions.add(userDTO.getSecurityQuestion2());
-        securityQuestions.add(userDTO.getSecurityQuestion3());
-
-        List<String> securityAnswers = new ArrayList<>();
-        securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer1()));
-        securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer2()));
-        securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer3()));
-
-        userService.addSecurityQuestions(userDTO.getUsername(), securityQuestions, securityAnswers);
     }
 }

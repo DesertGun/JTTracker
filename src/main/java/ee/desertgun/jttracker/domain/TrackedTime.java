@@ -41,7 +41,7 @@ public class TrackedTime {
     private User user;
 
     public TrackedTime(final User user, final UUID timeID, final Instant startTime, final Instant endTime,
-            final String timeDesc, final Duration duration) {
+                       final String timeDesc, final Duration duration) {
         this.timeID = timeID;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -54,12 +54,12 @@ public class TrackedTime {
 
     }
 
-    public void addProject(UserProject userProject){
+    public void addProject(UserProject userProject) {
         this.projectList.add(userProject);
         userProject.getTrackedTimeList().add(this);
     }
 
-    public void removeProject(UserProject userProject){
+    public void removeProject(UserProject userProject) {
         this.projectList.remove(userProject);
         userProject.getTrackedTimeList().remove(this);
     }

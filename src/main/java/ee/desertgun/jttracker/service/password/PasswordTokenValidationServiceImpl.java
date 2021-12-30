@@ -15,15 +15,15 @@ import java.util.Collections;
 @Service
 public class PasswordTokenValidationServiceImpl implements PasswordTokenValidationService {
 
-  private final PasswordTokenRepository passwordTokenRepository;
+    private final PasswordTokenRepository passwordTokenRepository;
 
-  public PasswordTokenValidationServiceImpl(final PasswordTokenRepository passwordTokenRepository) {
-    this.passwordTokenRepository = passwordTokenRepository;
-  }
+    public PasswordTokenValidationServiceImpl(final PasswordTokenRepository passwordTokenRepository) {
+        this.passwordTokenRepository = passwordTokenRepository;
+    }
 
-  public String validatePasswordResetToken(String username, String token) {
-    PasswordResetToken passToken =
-      passwordTokenRepository.findByToken(token);
+    public String validatePasswordResetToken(String username, String token) {
+        PasswordResetToken passToken =
+                passwordTokenRepository.findByToken(token);
         if ((passToken == null) || (!passToken.getUser().getUsername().equals(username))) {
             return "invalidToken";
         }

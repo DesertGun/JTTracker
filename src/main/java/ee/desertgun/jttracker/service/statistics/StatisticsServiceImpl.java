@@ -36,7 +36,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         if (!userProjectList.isEmpty()) {
             for (UserProject userProject : userProjectList) {
                 if (Boolean.TRUE.equals(userProject.getStatus()) && userProject.getProjectTime() != null) {
-                        durationListProject.add((userProject.getProjectTime()));
+                    durationListProject.add((userProject.getProjectTime()));
                 }
             }
             userProjectDuration = durationListProject.stream().reduce(Duration.ZERO, Duration::plus);

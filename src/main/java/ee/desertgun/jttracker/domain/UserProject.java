@@ -47,6 +47,10 @@ public class UserProject {
 
     }
 
+    public UserProject() {
+
+    }
+
     public void addTime(TrackedTime trackedTime) {
         this.trackedTimeList.add(trackedTime);
         trackedTime.getProjectList().add(this);
@@ -57,7 +61,6 @@ public class UserProject {
         trackedTime.getProjectList().remove(this);
     }
 
-
     public void countDuration(List<TrackedTime> trackedTimes) {
         projectTime = Duration.ZERO;
         List<Duration> durationList = new ArrayList<>();
@@ -65,10 +68,5 @@ public class UserProject {
             durationList.add((trackedTime.getDuration()));
         }
         projectTime = durationList.stream().reduce(Duration.ZERO, Duration::plus);
-    }
-
-
-    public UserProject() {
-
     }
 }
