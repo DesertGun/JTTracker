@@ -411,9 +411,12 @@ export default {
         })
 
         if (response.data.validated === true) {
-          const disableSecurityResponse = await this.$axios.post('/security/disable', {
-            username: this.username,
-          })
+          const disableSecurityResponse = await this.$axios.post(
+            '/security/disable',
+            {
+              username: this.username,
+            }
+          )
           if (disableSecurityResponse.data.successMessage) {
             this.responseSuccess = disableSecurityResponse.data.successMessage
             await this.$store.dispatch('user/setProfileData')
@@ -450,13 +453,12 @@ export default {
         })
         if (response.data.successMessage) {
           this.closeSecurityQuestions()
-          this.securityAnswer1=null
-          this.securityAnswer2=null
-          this.securityAnswer3=null
+          this.securityAnswer1 = null
+          this.securityAnswer2 = null
+          this.securityAnswer3 = null
           this.removeSec = false
           this.responseSuccess = response.data.successMessage
           await this.$store.dispatch('user/setProfileData')
-
         } else {
           this.responseError = response.data.errorMessage
         }

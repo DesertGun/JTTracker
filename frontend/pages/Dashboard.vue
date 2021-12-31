@@ -19,7 +19,7 @@
                     </b-col>
                   </b-row>
                 </b-card-text>
-                <b-button variant="primary" @click="timer()">
+                <b-button variant="primary" @click="goToTimer()">
                   Go To Timer
                 </b-button>
               </b-card>
@@ -33,7 +33,7 @@
                     </b-col>
                   </b-row>
                 </b-card-text>
-                <b-button variant="primary" @click="project()">
+                <b-button variant="primary" @click="goToProject()">
                   Go To Project
                 </b-button>
               </b-card>
@@ -229,10 +229,10 @@ export default {
     editTimer(timeID) {
       this.$router.push(`timeEdit?timeID=${timeID}`)
     },
-    timer() {
+    goToTimer() {
       this.$router.push('/timer')
     },
-    project() {
+    goToProject() {
       this.$router.push('/project')
     },
     countDuration(startTime, endTime) {

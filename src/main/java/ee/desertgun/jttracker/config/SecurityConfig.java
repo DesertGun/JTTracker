@@ -58,7 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -75,7 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests().antMatchers("/login", "/register", "/user/password/reset",
                         "/user/password/reset/validate", "/user/password/reset/change",
-                        "/security/*", "/security", "h2-console").permitAll().and()
+                        "/security/*", "/security").permitAll().and()
                 .authorizeRequests()
                 .antMatchers("/**").authenticated()
                 .and()

@@ -9,9 +9,7 @@ export const state = () => ({
 
 export const mutations = {
   setProfilePicture(state, profilePicture) {
-    localStorage.setItem('user-profile-picture', profilePicture)
-    const profilePictureLocal = localStorage.getItem('user-profile-picture')
-    state.profilePicture = profilePictureLocal
+    state.profilePicture = profilePicture
     state.hasProfilePicture = true
   },
   setProfileHash(state, hash) {

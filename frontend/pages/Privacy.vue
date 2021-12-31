@@ -5,7 +5,7 @@
         <b-col />
         <b-col>
           <div style="text-align: center">
-            <h3>These are your Privacy-Regulation!</h3>
+            <h3>Privacy-Regulations</h3>
           </div>
         </b-col>
         <b-col />

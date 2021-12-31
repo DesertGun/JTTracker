@@ -5,7 +5,7 @@
         <b-col />
         <b-col>
           <div style="text-align: center">
-            <h3>These are your Terms of Service!</h3>
+            <h3>Terms of Service</h3>
           </div>
         </b-col>
         <b-col />

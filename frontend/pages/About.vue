@@ -8,9 +8,10 @@
             <h3>About JTTracker</h3>
           </div>
           <h5 class="desc">
-            JTTracker is a Time tracking-Web-Application which is designed to
-            help developers track their spend time, in order to to measure their
-            efficiency and to order their work-time for more productivity
+            JTTracker is an open source time tracking web application that helps you increase your
+            productivity by reflecting on your time.
+            <br />
+            Whether it's breaks or work, hourly, daily or monthly, JTTracker helps you keep track of your time.
           </h5>
           <b-button @click="clickButton()"> Go back to homepage </b-button>
         </b-col>

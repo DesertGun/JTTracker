@@ -42,7 +42,6 @@ public class ProfilePictureTest {
         ProfilePicture profilePicture = new ProfilePicture("Landscape_Forest_Test",
                 "../test_resources/Landscape_Forest_Test.jpg");
         profilePicture.setId(pictureID);
-        profilePicture.setUsername(user.getUsername());
         profilePicture = entityManager.merge(profilePicture);
 
         this.profilePicture = profilePicture;

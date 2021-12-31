@@ -82,8 +82,10 @@ export default {
     }),
   },
   methods: {
-    logout() {
-      this.$store.dispatch('auth/logout')
+    async logout() {
+      await this.$store.dispatch('auth/logout')
+      this.$forceUpdate()
+      window.location.reload()
     },
     toProfile() {
       this.$router.push('/profile')

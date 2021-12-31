@@ -49,7 +49,7 @@ public class InitializeDatabase implements InitializingBean {
         } catch (UsernameNotFoundException ex) {
 
             final User user = userService.createUser(USERNAME_MAIN,
-                    "Bob",
+                    "Main",
                     "$2a$10$WoG5Z4YN9Z37EWyNCkltyeFr6PtrSXSLMeFWOeDUwcanht5CIJgPa", true, "ROLE_USER");
 
             user.addRole("ROLE_USER");
@@ -112,7 +112,7 @@ public class InitializeDatabase implements InitializingBean {
             Mail adminMail = new Mail();
             adminMail.setFrom(USERNAME_MAIN);
             adminMail.setMailTo(USERNAME_MAIN);
-            adminMail.setSubject("Init-Confirmation-Admin");
+            adminMail.setSubject("Init-Confirmation-Main");
             Map<String, Object> propAdmin = new HashMap<>();
             propAdmin.put("userName", adminMail.getMailTo());
             adminMail.setProps(propAdmin);
