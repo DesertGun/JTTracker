@@ -1,5 +1,6 @@
 package ee.desertgun.jttracker.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -10,13 +11,16 @@ import java.util.Properties;
 @Configuration
 public class JavaMailConfig {
 
+    @Value("${mail.host}")
+    private String mailHostName;
+
     @Bean
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
-        javaMailSender.setHost("localhost");
-        javaMailSender.setPort(25);
+        javaMailSender.setHost(mailHostName);
+        javaMailSender.setPort(3025);
 
-        javaMailSender.setUsername("main@jttracker.de");
+        javaMailSender.setUsername("no-reply@jttracker.de");
         javaMailSender.setPassword("password");
 
         Properties props = javaMailSender.getJavaMailProperties();

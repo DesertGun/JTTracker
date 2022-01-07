@@ -2,7 +2,7 @@ package ee.desertgun.jttracker.startup;
 
 
 import com.icegreen.greenmail.util.GreenMail;
-import com.icegreen.greenmail.util.ServerSetup;
+import com.icegreen.greenmail.util.ServerSetupTest;
 import ee.desertgun.jttracker.domain.Mail;
 import ee.desertgun.jttracker.domain.User;
 import ee.desertgun.jttracker.dto.TrackedTimeDTO;
@@ -28,6 +28,7 @@ public class InitializeDatabase implements InitializingBean {
 
     private static final String USERNAME_MAIN = "main@jttracker.de";
     private static final String USERNAME_TEST = "test@jttracker.de";
+    private static final String DEV_PASSWORD = "password";
     private final UserService userService;
     private final TrackedTimeService trackedTimeService;
     private final UserProjectService userProjectService;
@@ -104,13 +105,13 @@ public class InitializeDatabase implements InitializingBean {
 
             userProjectService.createUserProject(userProjectDTO, user.getUsername());
 
-            GreenMail greenMail = new GreenMail(ServerSetup.ALL);
-            greenMail.setUser(USERNAME_MAIN, "password");
-            greenMail.setUser(USERNAME_TEST, "password");
+            GreenMail greenMail = new GreenMail(ServerSetupTest.ALL);
+            greenMail.setUser(USERNAME_MAIN, DEV_PASSWORD);
+            greenMail.setUser(USERNAME_TEST, DEV_PASSWORD);
+            greenMail.setUser("no-reply@jttracker.de", DEV_PASSWORD);
             greenMail.start();
 
             Mail adminMail = new Mail();
-            adminMail.setFrom(USERNAME_MAIN);
             adminMail.setMailTo(USERNAME_MAIN);
             adminMail.setSubject("Init-Confirmation-Main");
             Map<String, Object> propAdmin = new HashMap<>();
@@ -119,7 +120,6 @@ public class InitializeDatabase implements InitializingBean {
             emailService.sendComplexMail(adminMail, "init");
 
             Mail testMail = new Mail();
-            testMail.setFrom(USERNAME_MAIN);
             testMail.setMailTo(USERNAME_TEST);
             testMail.setSubject("Init-Confirmation-Test");
             Map<String, Object> propTest = new HashMap<>();

@@ -68,7 +68,7 @@ public class UserRegistrationController {
         try {
             if (Boolean.TRUE.equals(userDTO.getSecurityQuestionsAvailable())) {
                 userService.createUser(username, accountName, password, true, "ROLE_USER");
-                UserAccountController.extractEnhancedSecurityDetails(userDTO, passwordEncoder, userService);
+                userService.extractEnhancedSecurityDetails(userDTO, passwordEncoder, userService);
             } else {
                 userService.createUser(username, accountName, password, false, "ROLE_USER");
             }

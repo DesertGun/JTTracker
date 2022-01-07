@@ -15,8 +15,6 @@ services:
             - "3306:3306"
         volumes:  
             - ./init:/docker-entrypoint-initdb.d
-        networks:
-            - backendNetwork
     nuxtjs:
         container_name: nuxtjs
         working_dir: /usr/src/jttracker
@@ -30,8 +28,45 @@ services:
             - 3000
         ports:
             - "3000:3000"
-        networks:
-            - frontendNetwork
+    greenmail:
+        container_name: greenmail
+        image: greenmail/standalone:1.6.5
+        environment:
+                - JAVA_OPTS=-Dgreenmail.verbose -Djava.net.preferIPv4Stack=true
+                - GREENMAIL_OPTS=-Dgreenmail.setup.test.all -Dgreenmail.api.port=8095 -Dgreenmail.hostname=0.0.0.0 -Dgreenmail.auth.disabled
+        depends_on:
+            - springboot
+            - database
+        expose:
+            - 3025
+            - 3143
+            - 3110
+            - 8095
+            - 3465
+            - 3993
+            - 3995
+        ports:
+            - "3025:3025" # SMTP
+            - "3110:3110" # POP3
+            - "3143:3143" # IMAP
+            - "3465:3465" # SMTPS
+            - "3993:3993" # IMAPS
+            - "3995:3995" # POP3S
+            - "8095:8095" # API
+    roundcube:
+        container_name: roundcube
+        image: roundcube/roundcubemail:latest
+        depends_on:
+            - greenmail
+        expose:
+            - 8000
+        ports:
+            - "8000:80"
+        environment:
+            - ROUNDCUBEMAIL_DEFAULT_HOST=greenmail
+            - ROUNDCUBEMAIL_DEFAULT_PORT=3143
+            - ROUNDCUBEMAIL_SMTP_SERVER=greenmail
+            - ROUNDCUBEMAIL_SMTP_PORT=3025
     springboot:
         container_name: springboot
         working_dir: /application
@@ -48,15 +83,7 @@ services:
         command: ["java", "-jar", "application.jar"]
         volumes:
             -  profile-pictures:/application/profile-pictures
-        networks:
-            - backendNetwork
-            - frontendNetwork
         restart: on-failure
 volumes:
     jttrackerdb:
     profile-pictures:
-networks:
-    backendNetwork:
-        driver: bridge
-    frontendNetwork:
-        driver: bridge

@@ -48,7 +48,7 @@ public class EmailServiceImpl implements EmailService {
             helper.setTo(mail.getMailTo());
             helper.setText(html, true);
             helper.setSubject(mail.getSubject());
-            helper.setFrom("noreply@jttracker.de");
+            helper.setFrom("no-reply@jttracker.de");
 
             javaMailSender.send(message);
         } catch (MailSendException | MessagingException e) {

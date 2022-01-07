@@ -26,7 +26,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.Principal;
-import java.util.*;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin
@@ -48,20 +51,6 @@ public class UserAccountController {
         this.emailService = emailService;
         this.passwordTokenValidationService = passwordTokenValidationService;
         this.fileLocationService = fileLocationService;
-    }
-
-    public static void extractEnhancedSecurityDetails(@RequestBody @Valid UserDTO userDTO, PasswordEncoder passwordEncoder, UserService userService) {
-        List<String> securityQuestions = new ArrayList<>();
-        securityQuestions.add(userDTO.getSecurityQuestion1());
-        securityQuestions.add(userDTO.getSecurityQuestion2());
-        securityQuestions.add(userDTO.getSecurityQuestion3());
-
-        List<String> securityAnswers = new ArrayList<>();
-        securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer1()));
-        securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer2()));
-        securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer3()));
-
-        userService.addSecurityQuestions(userDTO.getUsername(), securityQuestions, securityAnswers);
     }
 
     @PostMapping("/user/password/reset")
@@ -296,7 +285,7 @@ public class UserAccountController {
     public ValidationResponse enableSecurityQuestions(@RequestBody @Valid UserDTO userDTO) throws MessagingException {
         ValidationResponse response = new ValidationResponse();
 
-        extractEnhancedSecurityDetails(userDTO, passwordEncoder, userService);
+        userService.extractEnhancedSecurityDetails(userDTO, passwordEncoder, userService);
         response.setSuccessMessage("Enabled enhanced security");
 
         Mail enableSecurityMail = new Mail();

@@ -11,9 +11,12 @@ import ee.desertgun.jttracker.response.ValidationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -113,5 +116,20 @@ public class UserServiceImpl implements UserService {
         user.setSecurityAnswer2(null);
         user.setSecurityAnswer3(null);
         userRepository.save(user);
+    }
+
+    @Override
+    public void extractEnhancedSecurityDetails(@RequestBody @Valid UserDTO userDTO, PasswordEncoder passwordEncoder, UserService userService) {
+        List<String> securityQuestions = new ArrayList<>();
+        securityQuestions.add(userDTO.getSecurityQuestion1());
+        securityQuestions.add(userDTO.getSecurityQuestion2());
+        securityQuestions.add(userDTO.getSecurityQuestion3());
+
+        List<String> securityAnswers = new ArrayList<>();
+        securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer1()));
+        securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer2()));
+        securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer3()));
+
+        userService.addSecurityQuestions(userDTO.getUsername(), securityQuestions, securityAnswers);
     }
 }
