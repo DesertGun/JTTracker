@@ -22,6 +22,10 @@ export const mutations = {
     state.accountname = userdata.accountname
     state.securityenabled = userdata.securityenabled
   },
+  deleteProfilePicture(state) {
+    state.hasProfilePicture = false
+    state.profilePicture = null
+  },
 }
 
 export const actions = {
@@ -65,6 +69,9 @@ export const actions = {
       alert(e.toString())
     }
   },
+  deleteProfilePicture({ commit }) {
+    commit('deleteProfilePicture')
+  }
 }
 
 export const getters = {

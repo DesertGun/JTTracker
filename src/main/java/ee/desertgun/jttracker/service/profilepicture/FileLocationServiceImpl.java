@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.UUID;
 
 @Service
@@ -40,5 +42,14 @@ class FileLocationServiceImpl implements FileLocationService {
     public FileSystemResource find(UUID pictureID) {
         ProfilePicture profilePicture = profilePictureRepository.findById(pictureID).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return fileSystemRepository.findInFileSystem(profilePicture.getLocation());
+    }
+
+    @Override
+    public void deleteImage(UUID pictureID, String username) throws IOException {
+        Files.delete(find(pictureID).getFile().toPath());
+        profilePictureRepository.deleteById(pictureID);
+        User user = userRepository.getById(username);
+        user.setProfilePictureID(null);
+        userRepository.save(user);
     }
 }

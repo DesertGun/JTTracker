@@ -168,9 +168,24 @@ public class UserAccountController {
     @PostMapping("/user/picture")
     public ValidationResponse uploadImage(@RequestParam MultipartFile profilePicture, Principal principal) throws Exception {
         ValidationResponse validationResponse = new ValidationResponse();
+
+        if (userService.getUserByUsername(principal.getName()).getProfilePictureID() != null) {
+            fileLocationService.deleteImage(userService.getUserByUsername(principal.getName()).getProfilePictureID(),
+                    principal.getName());
+        }
+
         fileLocationService.save(profilePicture.getBytes(), profilePicture.getOriginalFilename(), principal.getName());
         validationResponse.setValidated(true);
         validationResponse.setSuccessMessage("Your profile picture was successfully uploaded!");
+        return validationResponse;
+    }
+
+    @DeleteMapping("/user/picture")
+    public ValidationResponse deleteImage(Principal principal) throws IOException {
+        ValidationResponse validationResponse = new ValidationResponse();
+        fileLocationService.deleteImage(userService.getUserByUsername(principal.getName()).getProfilePictureID(),
+                principal.getName());
+        validationResponse.setSuccessMessage("Profile picture was successfully deleted!");
         return validationResponse;
     }
 

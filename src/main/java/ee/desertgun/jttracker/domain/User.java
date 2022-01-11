@@ -37,10 +37,13 @@ public class User implements UserDetails {
 
     private String securityQuestion3;
 
+    @JsonIgnore
     private String securityAnswer1;
 
+    @JsonIgnore
     private String securityAnswer2;
 
+    @JsonIgnore
     private String securityAnswer3;
 
     private Boolean securityEnabled;

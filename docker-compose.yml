@@ -67,6 +67,9 @@ services:
             - ROUNDCUBEMAIL_DEFAULT_PORT=3143
             - ROUNDCUBEMAIL_SMTP_SERVER=greenmail
             - ROUNDCUBEMAIL_SMTP_PORT=3025
+
+        # The integration was done thanks to the outstanding example from Jens Knipper
+        # Original source: https://github.com/JensKnipper/greenmail-example/blob/main/docker-compose.yml
     springboot:
         container_name: springboot
         working_dir: /application

@@ -26,7 +26,7 @@
             <div v-if="isLoggedIn">
               <b-row>
                 <b-col>
-                  <b-avatar button @click="toProfile()">
+                  <b-avatar button @click="toProfile">
                     <div v-if="hasProfilePicture">
                       <b-img-lazy
                         :src="getProfilePicture"

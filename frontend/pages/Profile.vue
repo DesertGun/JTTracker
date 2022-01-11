@@ -108,6 +108,15 @@
                         Upload my profile picture !
                       </b-button>
                     </div>
+                    <div v-if="hasProfilePicture">
+                      <b-button
+                        variant="danger"
+                        class="mt-2"
+                        @click="deleteProfilePicture"
+                      >
+                        Delete my profile picture !
+                      </b-button>
+                    </div>
                   </b-col>
                   <b-col cols="3" />
                 </b-row>
@@ -506,6 +515,17 @@ export default {
         } else {
           this.responseError = response.data.errorMessage
         }
+      } catch (e) {
+        alert(e.toString())
+      }
+    },
+    async deleteProfilePicture() {
+      try {
+        const response = await this.$axios.delete('/user/picture')
+      if (response.data.successMessage) {
+        this.responseSuccess = response.data.successMessage
+        this.$store.dispatch('user/deleteProfilePicture')
+      }
       } catch (e) {
         alert(e.toString())
       }
