@@ -73,25 +73,32 @@
       <b-col cols="9">
         <h3>Existing projects:</h3>
         <b-pagination
-      v-model="currentPage"
-      :total-rows="rows"
-      :per-page="perPage"
-      aria-controls="project-table"
-    ></b-pagination>
+          v-model="currentPage"
+          :total-rows="rows"
+          :per-page="perPage"
+          aria-controls="project-table"
+        ></b-pagination>
         <b-table
-id="project-table" :fields="fields" :items="items" :per-page="perPage"
-      :current-page="currentPage" hover responsive striped>
+          id="project-table"
+          :fields="fields"
+          :items="items"
+          :per-page="perPage"
+          :current-page="currentPage"
+          hover
+          responsive
+          striped
+        >
           <col v-for="field in fields" :key="field.key" />
           <template #cell(projectName)="data">
             {{ data.item.projectName }}
           </template>
           <template #cell(projectDesc)="data">
             <div v-if="data.item.projectDesc === null">
-                      No description available
-                  </div>
-                  <div v-else>
-                    {{ data.item.projectDesc }}
-                  </div>
+              No description available
+            </div>
+            <div v-else>
+              {{ data.item.projectDesc }}
+            </div>
           </template>
           <template #cell(priority)="data">
             {{ data.item.priority }}
@@ -161,8 +168,8 @@ export default {
       return this.priority != null
     },
     rows() {
-        return this.items.length
-      },
+      return this.items.length
+    },
     ...mapGetters({ getProjects: 'project/projects' }),
   },
   mounted() {

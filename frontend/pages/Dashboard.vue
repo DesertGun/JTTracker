@@ -82,9 +82,7 @@
               <b-card class="cards">
                 <b-card-text>
                   <div v-if="time.timeDesc === null">
-                    <h4>
-                      No description available
-                    </h4>
+                    <h4>No description available</h4>
                   </div>
                   <div v-else>
                     <h4>{{ time.timeDesc }}</h4>
@@ -94,22 +92,26 @@
                   <br />
                   <div v-if="time.duration.asHours() < 24">
                     Recording time:
-                    {{ formatTime(time.startTime) }} - {{ formatTime(time.endTime) }}
+                    {{ formatTime(time.startTime) }} -
+                    {{ formatTime(time.endTime) }}
                     <br />
                   </div>
                   <div v-else>
                     Recording time:
-                    {{ formatTime(time.startTime) }} - {{ formatTime(time.endTime) }} +1
+                    {{ formatTime(time.startTime) }} -
+                    {{ formatTime(time.endTime) }} +1
                     <br />
                   </div>
                   <div v-if="time.duration.asHours() < 24">
                     Total duration:
-                    {{ time.duration.hours() }}h : {{ time.duration.minutes() }}m
-                  : {{ time.duration.seconds() }}s
+                    {{ time.duration.hours() }}h :
+                    {{ time.duration.minutes() }}m :
+                    {{ time.duration.seconds() }}s
                   </div>
                   <div v-else>
                     Total duration:
-                    {{ time.duration.days() }}D : {{ time.duration.hours() }}h : {{ time.duration.minutes() }}m
+                    {{ time.duration.days() }}D : {{ time.duration.hours() }}h :
+                    {{ time.duration.minutes() }}m
                   </div>
                 </b-card-text>
                 <b-button variant="secondary" @click="editTimer(time.timeID)">
