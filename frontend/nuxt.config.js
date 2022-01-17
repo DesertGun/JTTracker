@@ -63,7 +63,7 @@ export default {
   },
   pwa: {
     manifest: {
-      name: 'JTTracker 1.0 RC_1',
+      name: 'JTTracker 1.1.0',
       lang: 'en',
       useWebmanifestExtension: false,
     },
