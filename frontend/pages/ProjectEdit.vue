@@ -8,7 +8,7 @@
               <b-col />
               <b-col cols="5">
                 <div style="text-align: center">
-                  <h3>Project-Edition</h3>
+                  <h3>Project-Settings</h3>
                 </div>
                 <b-form-group
                   id="inputProjectName"
@@ -63,7 +63,7 @@
                   </b-form-checkbox>
                 </b-form-group>
                 <b-button variant="primary" @click="editProject">
-                  Submit
+                  Update
                 </b-button>
               </b-col>
               <b-col />

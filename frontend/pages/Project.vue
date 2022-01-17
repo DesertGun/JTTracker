@@ -62,7 +62,7 @@
               </b-form-checkbox>
             </b-form-group>
             <b-button variant="primary" @click="createProject()">
-              Submit
+              Create
             </b-button>
           </b-form>
         </div>
@@ -70,15 +70,28 @@
     </b-row>
     <b-row class="pt-2">
       <b-col />
-      <b-col cols="8">
+      <b-col cols="9">
         <h3>Existing projects:</h3>
-        <b-table :fields="fields" :items="items" hover responsive striped>
+        <b-pagination
+      v-model="currentPage"
+      :total-rows="rows"
+      :per-page="perPage"
+      aria-controls="project-table"
+    ></b-pagination>
+        <b-table
+id="project-table" :fields="fields" :items="items" :per-page="perPage"
+      :current-page="currentPage" hover responsive striped>
           <col v-for="field in fields" :key="field.key" />
-          <template #cell(index)="data">
-            {{ data.index + 1 }}
-          </template>
           <template #cell(projectName)="data">
             {{ data.item.projectName }}
+          </template>
+          <template #cell(projectDesc)="data">
+            <div v-if="data.item.projectDesc === null">
+                      No description available
+                  </div>
+                  <div v-else>
+                    {{ data.item.projectDesc }}
+                  </div>
           </template>
           <template #cell(priority)="data">
             {{ data.item.priority }}
@@ -100,7 +113,6 @@
               @click="editRecord(data.item.projectID)"
             >
               <b-icon icon="gear-fill" />
-              Edit
             </b-button>
           </template>
         </b-table>
@@ -121,10 +133,10 @@ export default {
   asyncData() {
     return {
       fields: [
-        'index',
         { key: 'projectName', label: 'Name' },
+        { key: 'projectDesc', label: 'Description' },
         { key: 'priority', label: 'Priority' },
-        { key: 'projectTime', label: 'Time' },
+        { key: 'projectTime', label: 'Duration' },
         { key: 'showEdit', label: 'Options' },
       ],
       prioritySelect: [
@@ -140,12 +152,17 @@ export default {
       projectDesc: null,
       projectID: null,
       status: false,
+      perPage: 5,
+      currentPage: 1,
     }
   },
   computed: {
     validationPriority() {
       return this.priority != null
     },
+    rows() {
+        return this.items.length
+      },
     ...mapGetters({ getProjects: 'project/projects' }),
   },
   mounted() {

@@ -41,25 +41,44 @@
             <h4>There are no records currently avalible!</h4>
           </div>
           <div v-else>
+            <b-pagination
+      v-model="currentPage"
+      :total-rows="rows"
+      :per-page="perPage"
+      aria-controls="timer-table"
+    ></b-pagination>
             <b-table
+            id="timer-table"
               :fields="fields"
               :items="items"
+              :per-page="perPage"
+      :current-page="currentPage"
               hover
               responsive="sm"
               striped
             >
               <col v-for="field in fields" :key="field.key" />
-              <template #cell(index)="data">
-                {{ data.index + 1 }}
-              </template>
               <template #cell(timeDesc)="data">
-                {{ data.item.timeDesc }}
+                <div v-if="data.item.timeDesc === null">
+                      No description available
+                  </div>
+                  <div v-else>
+                    {{ data.item.timeDesc }}
+                  </div>
+              </template>
+              <template #cell(date)="data">
+                {{ formatDate(data.item.startTime) }}
               </template>
               <template #cell(startTime)="data">
                 {{ formatTime(data.item.startTime) }}
               </template>
               <template #cell(endTime)="data">
-                {{ formatTime(data.item.endTime) }}
+                <div v-if="data.item.duration.asHours() < 24">
+                  {{ formatTime(data.item.endTime) }}
+                  </div>
+                  <div v-else>
+                    {{ formatTime(data.item.endTime) }} +1
+                  </div>
               </template>
               <template #cell(duration)="data">
                 <div v-if="data.item.duration.asHours() < 24">
@@ -88,7 +107,6 @@
                   @click="editRecord(data.item.timeID)"
                 >
                   <b-icon icon="gear-fill" />
-                  Edit
                 </b-button>
               </template>
             </b-table>
@@ -113,8 +131,8 @@ export default {
   asyncData() {
     return {
       fields: [
-        'index',
         { key: 'timeDesc', label: 'Description' },
+        { key: 'date', label: 'Date' },
         { key: 'startTime', label: 'Start' },
         { key: 'endTime', label: 'End' },
         { key: 'duration', label: 'Duration' },
@@ -129,10 +147,15 @@ export default {
       timeID: null,
       duration: null,
       isTracked: false,
+      perPage: 8,
+      currentPage: 1,
     }
   },
   computed: {
     ...mapGetters({ getTimers: 'timer/timers' }),
+    rows() {
+        return this.items.length
+      }
   },
   mounted() {
     this.currentDate = moment()
@@ -156,6 +179,9 @@ export default {
     },
     formatTime(time) {
       return time.format('HH:mm:ss')
+    },
+    formatDate(time) {
+      return time.format('ll')
     },
     countDuration(startTime, endTime) {
       const diffTime = endTime.diff(startTime)

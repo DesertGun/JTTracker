@@ -3,18 +3,17 @@
     <b-container class="dashboardContainer justify-content-center" fluid>
       <b-row class="infoRow">
         <b-col />
-        <b-col cols="10">
+        <b-col cols="8">
           <div style="text-align: center">
             <h3>Modules:</h3>
           </div>
-          <br />
           <b-row class="moduleCardRow">
             <b-card-group deck>
-              <b-card>
+              <b-card class="cards">
                 <b-card-text>
                   <b-row>
                     <b-col>
-                      <h3>Timer-Module:</h3>
+                      <h3>Timers:</h3>
                       Start tracking your time for better organization!
                     </b-col>
                   </b-row>
@@ -23,13 +22,13 @@
                   Go To Timer
                 </b-button>
               </b-card>
-              <b-card>
+              <b-card class="cards">
                 <b-card-text>
                   <b-row>
                     <b-col>
-                      <h3>Project-Module:</h3>
+                      <h3>Projects:</h3>
                       Create a project which will help you in keeping better
-                      track on your recordings!
+                      track on your timers!
                     </b-col>
                   </b-row>
                 </b-card-text>
@@ -37,7 +36,7 @@
                   Go To Project
                 </b-button>
               </b-card>
-              <b-card>
+              <b-card class="cards">
                 <b-card-text>
                   <b-row>
                     <b-col>
@@ -71,11 +70,11 @@
         <b-col />
       </b-row>
     </b-container>
-    <b-container fluid>
+    <b-container fluid class="timeContainer">
       <div style="text-align: center">
         <h3>Your latest times and projects:</h3>
       </div>
-      <h4>Latest times logged:</h4>
+      <h4>Latest timers logged:</h4>
       <b-row>
         <div v-if="timesUser.length !== 0" class="flexElementFix">
           <b-card-group deck>
@@ -84,24 +83,34 @@
                 <b-card-text>
                   <div v-if="time.timeDesc === null">
                     <h4>
-                      Sadly, there is no description for the current record.
+                      No description available
                     </h4>
                   </div>
                   <div v-else>
                     <h4>{{ time.timeDesc }}</h4>
                   </div>
-                  Recorded on: {{ formatDate(time.startTime) }}
+                  Recording date:
+                  {{ formatDate(time.startTime) }}
                   <br />
-                  at {{ formatTime(time.startTime) }}
-                  <br />
-                  recording ended on: {{ formatDate(time.endTime) }}
-                  <br />
-                  at {{ formatTime(time.endTime) }}
-                  <br />
-                  With total duration of
-                  <br />
-                  {{ time.duration.hours() }}h : {{ time.duration.minutes() }}m
+                  <div v-if="time.duration.asHours() < 24">
+                    Recording time:
+                    {{ formatTime(time.startTime) }} - {{ formatTime(time.endTime) }}
+                    <br />
+                  </div>
+                  <div v-else>
+                    Recording time:
+                    {{ formatTime(time.startTime) }} - {{ formatTime(time.endTime) }} +1
+                    <br />
+                  </div>
+                  <div v-if="time.duration.asHours() < 24">
+                    Total duration:
+                    {{ time.duration.hours() }}h : {{ time.duration.minutes() }}m
                   : {{ time.duration.seconds() }}s
+                  </div>
+                  <div v-else>
+                    Total duration:
+                    {{ time.duration.days() }}D : {{ time.duration.hours() }}h : {{ time.duration.minutes() }}m
+                  </div>
                 </b-card-text>
                 <b-button variant="secondary" @click="editTimer(time.timeID)">
                   <b-icon icon="gear-fill" />
@@ -116,7 +125,7 @@
         </div>
       </b-row>
     </b-container>
-    <b-container fluid>
+    <b-container fluid class="projectContainer">
       <br />
       <h4>Latest projects created:</h4>
       <b-row>
@@ -129,25 +138,21 @@
                     <h4>{{ project.projectName }}</h4>
                     <h5>
                       <div v-if="project.projectDesc === null">
-                        Sadly, there is no description for the current project.
+                        No description available
                       </div>
                       <div v-else>
                         {{ project.projectDesc }}
                       </div>
                     </h5>
-                    Following project was marked with priority:
-                    <br />
+                    Priority for this project is:
                     {{ project.priority }}
                     <br />
-                    It has
+                    Timers logged:
                     {{ project.trackedTimeList.length }}
-                    timers logged
                     <br />
                     Time allocated in total:
-                    <br />
                     {{ formatTotalTime(project.projectTime).hours() }}h:
-                    {{ formatTotalTime(project.projectTime).minutes() }}m:
-                    {{ formatTotalTime(project.projectTime).seconds() }}s
+                    {{ formatTotalTime(project.projectTime).minutes() }}m
                   </b-card-text>
                   <b-button
                     variant="secondary"
@@ -157,9 +162,6 @@
                     Edit
                   </b-button>
                 </b-card>
-              </div>
-              <div v-else>
-                <h5>No Projects avalible !</h5>
               </div>
             </b-col>
           </b-card-group>
@@ -240,7 +242,7 @@ export default {
       return moment.duration(diffTime)
     },
     formatTime(time) {
-      return time.format('HH:mm:ss')
+      return time.format('HH:mm')
     },
     formatDate(time) {
       return time.format('ll')
@@ -273,5 +275,15 @@ export default {
 
 .rating-level {
   background-color: #f8f8ff;
+}
+
+.timeContainer {
+  padding-left: 5vh;
+  padding-right: 5vh;
+}
+
+.projectContainer {
+  padding-left: 5vh;
+  padding-right: 5vh;
 }
 </style>

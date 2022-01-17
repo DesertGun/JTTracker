@@ -4,7 +4,7 @@
       <b-col />
       <b-col cols="6">
         <div style="text-align: center">
-          <h3>Time-Record-Edit</h3>
+          <h3>Timer-Settings</h3>
         </div>
         <div class="editDesc">
           <b-row>
@@ -69,7 +69,7 @@
         </div>
 
         <b-button type="submit" variant="primary" @click="onSubmit">
-          Submit
+          Update
         </b-button>
       </b-col>
       <b-col />
