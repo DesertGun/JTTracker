@@ -522,10 +522,10 @@ export default {
     async deleteProfilePicture() {
       try {
         const response = await this.$axios.delete('/user/picture')
-      if (response.data.successMessage) {
-        this.responseSuccess = response.data.successMessage
-        this.$store.dispatch('user/deleteProfilePicture')
-      }
+        if (response.data.successMessage) {
+          this.responseSuccess = response.data.successMessage
+          this.$store.dispatch('user/deleteProfilePicture')
+        }
       } catch (e) {
         alert(e.toString())
       }

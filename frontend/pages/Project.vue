@@ -3,7 +3,7 @@
     <b-row class="formRow justify-content-center">
       <b-col class="projectCol" cols="5">
         <div style="text-align: center">
-          <h3>Project-creation</h3>
+          <h3>Project</h3>
         </div>
         <div class="projectForm">
           <b-form class="forms">
@@ -68,50 +68,44 @@
         </div>
       </b-col>
     </b-row>
-    <b-row class="tableRow justify-content-center">
-      <b-col class="tableCol" cols="8">
-        <h3>Created-Projects:</h3>
-        <b-table-simple
-          bordered
-          caption-top
-          class="projectTable"
-          hover
-          outlined
-          small
-          striped
-        >
-          <b-thead head-variant="dark">
-            <b-tr>
-              <b-th>Index</b-th>
-              <b-th>Name</b-th>
-              <b-th>Priority</b-th>
-              <b-th>Time</b-th>
-              <b-th>Options</b-th>
-            </b-tr>
-          </b-thead>
-          <b-tbody v-for="(item, index) in items" :key="item.projectID">
-            <b-td>{{ index + 1 }}</b-td>
-            <b-td>{{ item.projectName }}</b-td>
-            <b-td>{{ item.priority }}</b-td>
-            <b-td>
-              <div v-if="item.projectTime === 0">None</div>
-              <div v-else>
-                {{ formatTime(item.projectTime).hours() }}h:
-                {{ formatTime(item.projectTime).minutes() }}m:
-                {{ formatTime(item.projectTime).seconds() }}s
-              </div>
-            </b-td>
-            <b-td>
-              <b-button variant="danger" @click="deleteProject(index)">
-                X
-              </b-button>
-              <b-button variant="secondary" @click="editRecord(item.projectID)">
-                Edit
-              </b-button>
-            </b-td>
-          </b-tbody>
-        </b-table-simple>
+    <b-row class="pt-2">
+      <b-col />
+      <b-col cols="8">
+        <h3>Existing projects:</h3>
+        <b-table :fields="fields" :items="items" hover responsive striped>
+          <col v-for="field in fields" :key="field.key" />
+          <template #cell(index)="data">
+            {{ data.index + 1 }}
+          </template>
+          <template #cell(projectName)="data">
+            {{ data.item.projectName }}
+          </template>
+          <template #cell(priority)="data">
+            {{ data.item.priority }}
+          </template>
+          <template #cell(projectTime)="data">
+            <div v-if="data.item.projectTime === 0">None</div>
+            <div v-else>
+              {{ formatTime(data.item.projectTime).hours() }}h:
+              {{ formatTime(data.item.projectTime).minutes() }}m:
+              {{ formatTime(data.item.projectTime).seconds() }}s
+            </div>
+          </template>
+          <template #cell(showEdit)="data">
+            <b-button variant="danger" @click="deleteProject(data.index)">
+              <b-icon icon="trash-fill" />
+            </b-button>
+            <b-button
+              variant="secondary"
+              @click="editRecord(data.item.projectID)"
+            >
+              <b-icon icon="gear-fill" />
+              Edit
+            </b-button>
+          </template>
+        </b-table>
       </b-col>
+      <b-col />
     </b-row>
   </b-container>
 </template>
@@ -126,6 +120,13 @@ export default {
   middleware: 'authenticated',
   asyncData() {
     return {
+      fields: [
+        'index',
+        { key: 'projectName', label: 'Name' },
+        { key: 'priority', label: 'Priority' },
+        { key: 'projectTime', label: 'Time' },
+        { key: 'showEdit', label: 'Options' },
+      ],
       prioritySelect: [
         { text: 'Select priority', value: null },
         'Low',

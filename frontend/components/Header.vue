@@ -2,14 +2,14 @@
   <div>
     <b-container class="headerCont" fluid>
       <div id="nav">
-        <b-navbar class="navBar fixed-top" type="light">
-          <b-navbar-nav>
-            <b-nav-item nuxt-link to="/"> Home </b-nav-item>
+        <b-navbar class="navBar fixed-top navbar-expand" type="light">
+          <b-navbar-nav class="left-navbar-element">
+            <b-navbar-brand nuxt-link to="/"> JTTracker </b-navbar-brand>
+            <div v-if="isLoggedIn">
+              <b-nav-item nuxt-link to="/dashboard"> Dashboard </b-nav-item>
+            </div>
             <div v-if="isLoggedIn">
               <b-nav-item-dropdown right text="Modules">
-                <b-dropdown-item nuxt-link to="/dashboard">
-                  Main-Dashboard
-                </b-dropdown-item>
                 <b-dropdown-item nuxt-link to="/timer"> Timer </b-dropdown-item>
                 <b-dropdown-item nuxt-link to="/project">
                   Project
@@ -22,43 +22,35 @@
             <b-nav-item nuxt-link to="/about"> About </b-nav-item>
             <b-nav-item nuxt-link to="/help"> Help </b-nav-item>
           </b-navbar-nav>
-          <b-navbar-nav class="ml-auto">
+          <b-navbar-nav class="ml-auto right-navbar-element">
             <div v-if="isLoggedIn">
-              <b-row>
-                <b-col>
-                  <b-avatar button @click="toProfile">
-                    <div v-if="hasProfilePicture">
-                      <b-img-lazy
-                        :src="getProfilePicture"
-                        height="150px"
-                        width="150px"
-                      />
-                    </div>
-                    <div v-else>
-                      <b-img-lazy
-                        :src="
-                          'https://gravatar.com/avatar/' +
-                          getHash +
-                          '?d=identicon'
-                        "
-                      />
-                    </div>
-                  </b-avatar>
-                </b-col>
-                <b-col>
-                  <b-nav-item-dropdown right>
-                    <template #button-content>
-                      <em>{{ getUsername }}</em>
-                    </template>
-                    <b-dropdown-item nuxt-link to="/profile">
-                      Profile
-                    </b-dropdown-item>
-                    <b-dropdown-item @click="logout">
-                      Sign Out
-                    </b-dropdown-item>
-                  </b-nav-item-dropdown>
-                </b-col>
-              </b-row>
+              <b-avatar button @click="toProfile">
+                <div v-if="hasProfilePicture">
+                  <b-img-lazy
+                    :src="getProfilePicture"
+                    height="150px"
+                    width="150px"
+                  />
+                </div>
+                <div v-else>
+                  <b-img-lazy
+                    :src="
+                      'https://gravatar.com/avatar/' + getHash + '?d=identicon'
+                    "
+                  />
+                </div>
+              </b-avatar>
+            </div>
+            <div v-if="isLoggedIn">
+              <b-nav-item-dropdown right>
+                <template #button-content>
+                  <em>{{ getUsername }}</em>
+                </template>
+                <b-dropdown-item nuxt-link to="/profile">
+                  Profile
+                </b-dropdown-item>
+                <b-dropdown-item @click="logout"> Sign Out </b-dropdown-item>
+              </b-nav-item-dropdown>
             </div>
           </b-navbar-nav>
         </b-navbar>
@@ -96,7 +88,7 @@ export default {
 
 <style scoped>
 .navBar {
-  background: #8fd19e;
+  background: #71c837;
 }
 
 #nav {
@@ -109,5 +101,13 @@ export default {
 
 .headerCont {
   margin-bottom: 5vh;
+}
+
+.left-navbar-element {
+  margin-left: 10vh;
+}
+
+.right-navbar-element {
+  margin-right: 10vh;
 }
 </style>

@@ -71,7 +71,7 @@ export const actions = {
   },
   deleteProfilePicture({ commit }) {
     commit('deleteProfilePicture')
-  }
+  },
 }
 
 export const getters = {

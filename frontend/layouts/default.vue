@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="app-view">
     <Header />
     <b-container class="contentContainer" fluid>
       <nuxt />

@@ -31,10 +31,13 @@ public class User implements UserDetails {
 
     private UUID profilePictureID;
 
+    @JsonIgnore
     private String securityQuestion1;
 
+    @JsonIgnore
     private String securityQuestion2;
 
+    @JsonIgnore
     private String securityQuestion3;
 
     @JsonIgnore

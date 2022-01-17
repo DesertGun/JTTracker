@@ -1,11 +1,10 @@
 <template>
-  <div>
+  <div id="nav">
     <b-container class="footerCont" fluid>
       <b-row>
-        <b-col />
         <b-col>
-          <h5>Pages</h5>
-          <b-nav type="light" vertical>
+          <b-nav vertical>
+            <h5>Pages</h5>
             <div v-if="$store.state.auth.jwtToken">
               <b-nav-item nuxt-link to="/dashboard"> Dashboard </b-nav-item>
             </div>
@@ -16,8 +15,8 @@
         <b-col />
         <div v-if="$store.state.auth.jwtToken">
           <b-col>
-            <h5>Modules</h5>
-            <b-nav type="light" vertical>
+            <b-nav vertical>
+              <h5>Modules</h5>
               <b-nav-item nuxt-link to="/timer"> Timer </b-nav-item>
               <b-nav-item nuxt-link to="/project"> Project </b-nav-item>
               <b-nav-item nuxt-link to="/statistics"> Statistics </b-nav-item>
@@ -26,13 +25,12 @@
         </div>
         <b-col />
         <b-col>
-          <h5>Terms</h5>
-          <b-nav type="light" vertical>
+          <b-nav vertical>
+            <h5>Terms</h5>
             <b-nav-item nuxt-link to="/terms"> Terms of Service </b-nav-item>
             <b-nav-item nuxt-link to="/privacy"> Privacy-Terms </b-nav-item>
           </b-nav>
         </b-col>
-        <b-col />
       </b-row>
     </b-container>
   </div>
@@ -44,9 +42,18 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .footerCont {
-  background-color: #8fd19e;
+  background-color: #71c837;
   padding: 5vh;
+}
+
+.nav {
+  margin-left: 10vh;
+  margin-right: 10vh;
+}
+
+.nav-link {
+  color: #39651c;
 }
 </style>
