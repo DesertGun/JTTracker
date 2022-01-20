@@ -1,31 +1,47 @@
 <template>
   <div class="timerContainer">
-    <b-row style="text-align: center">
-      <b-col />
-      <b-col><h3>Timer</h3></b-col>
-      <b-col />
-    </b-row>
-    <b-container fluid>
+    <b-container fluid class="mt-3">
       <b-row>
-        <b-col cols="2">
-          <h4>Tracking:</h4>
-        </b-col>
-        <b-col cols="8">
-          <h3>
-            <Clock />
-          </h3>
-          <b-button v-if="isTracked === false" variant="success" @click="rec()">
-            <b-icon icon="play-fill" />
-            Record Time
-          </b-button>
-          <b-button
-            v-if="isTracked === true"
-            variant="danger"
-            @click="stopRec()"
-          >
-            <b-icon icon="stop-fill" />
-            Save Time
-          </b-button>
+        <b-col />
+        <b-col style="max-width: fit-content">
+          <b-card>
+            <b-card-body>
+              <b-row style="text-align: center">
+                <b-col><h3>Current Timer</h3></b-col>
+              </b-row>
+              <b-row>
+                <b-col />
+                <b-col>
+                  <div class="display-4">
+                    <Clock style="font-size: 32px" />
+                  </div>
+                </b-col>
+                <b-col />
+              </b-row>
+              <b-row class="mt-4">
+                <b-col />
+                <b-col style="min-width: fit-content">
+                  <b-button
+                    v-if="isTracked === false"
+                    variant="success"
+                    @click="rec()"
+                  >
+                    <b-icon icon="play-fill" />
+                    Record
+                  </b-button>
+                  <b-button
+                    v-if="isTracked === true"
+                    variant="danger"
+                    @click="stopRec()"
+                  >
+                    <b-icon icon="stop-fill" />
+                    Save
+                  </b-button>
+                </b-col>
+                <b-col />
+              </b-row>
+            </b-card-body>
+          </b-card>
         </b-col>
         <b-col />
       </b-row>
@@ -33,20 +49,13 @@
 
     <b-container class="timeTableContainer" fluid>
       <b-row>
-        <b-col cols="2">
-          <h4>Saved recording/s:</h4>
-        </b-col>
-        <b-col cols="10">
+        <b-col />
+        <b-col cols="9">
+          <h4>Timers:</h4>
           <div v-if="items.length === 0">
             <h4>There are no records currently avalible!</h4>
           </div>
           <div v-else>
-            <b-pagination
-              v-model="currentPage"
-              :total-rows="rows"
-              :per-page="perPage"
-              aria-controls="timer-table"
-            ></b-pagination>
             <b-table
               id="timer-table"
               :fields="fields"
@@ -97,17 +106,32 @@
                 <div v-else>Not a realistic track record!</div>
               </template>
               <template #cell(showEdit)="data">
-                <b-button variant="danger" @click="deleteRecord(data.index)">
-                  <b-icon icon="trash-fill" />
-                </b-button>
                 <b-button
-                  variant="secondary"
+                  variant="outline-secondary"
                   @click="editRecord(data.item.timeID)"
                 >
                   <b-icon icon="gear-fill" />
                 </b-button>
+                <b-button
+                  variant="outline-danger"
+                  @click="deleteRecord(data.index)"
+                >
+                  <b-icon icon="trash-fill" />
+                </b-button>
               </template>
             </b-table>
+            <b-row>
+              <b-col />
+              <b-col style="max-width: fit-content">
+                <b-pagination
+                  v-model="currentPage"
+                  :total-rows="rows"
+                  :per-page="perPage"
+                  aria-controls="timer-table"
+                ></b-pagination>
+              </b-col>
+              <b-col />
+            </b-row>
           </div>
         </b-col>
         <b-col />
@@ -209,10 +233,12 @@ export default {
       this.setStatistics()
     },
     async deleteRecord(index) {
+
       await this.$axios.delete(
         '/timer/' + this.$store.state.timer.timers[index].timeID
       )
-      this.deleteTimer(index)
+      await this.updateTimers()
+      this.items = this.getTimers
       this.updateProjects()
       this.setStatistics()
     },
@@ -222,10 +248,10 @@ export default {
 
 <style>
 .timerContainer {
-  padding-top: 30px;
+  padding-top: 5vh;
 }
 
 .timeTableContainer {
-  padding-top: 30px;
+  padding-top: 5vh;
 }
 </style>

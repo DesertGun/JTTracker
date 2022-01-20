@@ -1,63 +1,67 @@
 <template>
   <div>
-    <b-container class="dashboardContainer justify-content-center" fluid>
-      <b-row class="infoRow">
+    <b-container class="dashboardContainer" fluid>
+      <b-row>
         <b-col />
-        <b-col cols="8">
+        <b-col>
           <div style="text-align: center">
             <h3>Modules:</h3>
           </div>
-          <b-row class="moduleCardRow">
-            <b-card-group deck>
-              <b-card class="cards">
-                <b-card-text>
-                  <b-row>
-                    <b-col>
-                      <h3>Timers:</h3>
-                      Start tracking your time for better organization!
-                    </b-col>
-                  </b-row>
-                </b-card-text>
-                <b-button variant="primary" @click="goToTimer()">
-                  Go To Timer
-                </b-button>
-              </b-card>
-              <b-card class="cards">
-                <b-card-text>
-                  <b-row>
-                    <b-col>
-                      <h3>Projects:</h3>
-                      Create a project which will help you in keeping better
-                      track on your timers!
-                    </b-col>
-                  </b-row>
-                </b-card-text>
-                <b-button variant="primary" @click="goToProject()">
-                  Go To Project
-                </b-button>
-              </b-card>
-              <b-card class="cards">
-                <b-card-text>
-                  <b-row>
-                    <b-col>
-                      <h3>Statistics:</h3>
-                      Want to know how productive you are? View your statistics!
-                    </b-col>
-                  </b-row>
-                </b-card-text>
-                <b-button variant="primary"> Go To Stats </b-button>
-              </b-card>
-            </b-card-group>
-          </b-row>
+        </b-col>
+        <b-col />
+      </b-row>
+      <b-row class="infoRow">
+        <b-col />
+        <b-col style="min-width: fit-content">
+          <b-card-group deck>
+            <b-card class="cards">
+              <b-card-text>
+                <b-row>
+                  <b-col>
+                    <h3>Timers:</h3>
+                    Start tracking your time for better organization!
+                  </b-col>
+                </b-row>
+              </b-card-text>
+              <b-button variant="primary" @click="goToTimer()">
+                Go To Timer
+              </b-button>
+            </b-card>
+            <b-card class="cards">
+              <b-card-text>
+                <b-row>
+                  <b-col>
+                    <h3>Projects:</h3>
+                    Create a project which will help you in keeping better track
+                    on your timers!
+                  </b-col>
+                </b-row>
+              </b-card-text>
+              <b-button variant="primary" @click="goToProject()">
+                Go To Project
+              </b-button>
+            </b-card>
+            <b-card class="cards">
+              <b-card-text>
+                <b-row>
+                  <b-col>
+                    <h3>Statistics:</h3>
+                    Want to know how productive you are? View your statistics!
+                  </b-col>
+                </b-row>
+              </b-card-text>
+              <b-button variant="primary"> Go To Stats </b-button>
+            </b-card>
+          </b-card-group>
         </b-col>
         <b-col />
       </b-row>
     </b-container>
-    <b-container fluid>
+    <b-container fluid class="mt-5">
       <div style="text-align: center">
         <h3>Your productivity level:</h3>
       </div>
-      <b-row>
+      <b-row class="mt-3">
         <b-col />
         <b-col>
           <b-form-rating
@@ -70,16 +74,21 @@
         <b-col />
       </b-row>
     </b-container>
-    <b-container fluid class="timeContainer">
+    <b-container fluid class="timeContainer mt-5">
       <div style="text-align: center">
         <h3>Your latest times and projects:</h3>
       </div>
-      <h4>Latest timers logged:</h4>
+      <h4 class="mt-5">Latest timers logged:</h4>
       <b-row>
-        <div v-if="timesUser.length !== 0" class="flexElementFix">
-          <b-card-group deck>
-            <b-col v-for="time in timesUser" :key="time.timeID">
-              <b-card class="cards">
+        <b-col />
+        <b-col style="min-width: fit-content">
+          <div v-if="timesUser.length !== 0" class="flexElementFix">
+            <b-card-group deck>
+              <b-card
+                v-for="time in timesUser"
+                :key="time.timeID"
+                class="cards"
+              >
                 <b-card-text>
                   <div v-if="time.timeDesc === null">
                     <h4>No description available</h4>
@@ -114,28 +123,36 @@
                     {{ time.duration.minutes() }}m
                   </div>
                 </b-card-text>
-                <b-button variant="secondary" @click="editTimer(time.timeID)">
+                <b-button
+                  variant="outline-secondary"
+                  @click="editTimer(time.timeID)"
+                >
                   <b-icon icon="gear-fill" />
-                  Edit
                 </b-button>
               </b-card>
-            </b-col>
-          </b-card-group>
-        </div>
-        <div v-else>
-          <h5>No timers avalible !</h5>
-        </div>
+            </b-card-group>
+          </div>
+          <div v-else>
+            <h5>No timers avalible !</h5>
+          </div>
+        </b-col>
+        <b-col />
       </b-row>
     </b-container>
     <b-container fluid class="projectContainer">
       <br />
       <h4>Latest projects created:</h4>
       <b-row>
-        <div v-if="projectsUser.length !== 0" class="flexElementFix">
-          <b-card-group deck>
-            <b-col v-for="project in projectsUser" :key="project.projectID">
-              <div v-if="project.status === true">
-                <b-card class="cards">
+        <b-col />
+        <b-col style="min-width: fit-content">
+          <div v-if="projectsUser.length !== 0" class="flexElementFix">
+            <b-card-group deck>
+              <b-card
+                v-for="project in projectsUser"
+                :key="project.projectID"
+                class="cards"
+              >
+                <div v-if="project.status === true">
                   <b-card-text>
                     <h4>{{ project.projectName }}</h4>
                     <h5>
@@ -149,28 +166,27 @@
                     Priority for this project is:
                     {{ project.priority }}
                     <br />
-                    Timers logged:
-                    {{ project.trackedTimeList.length }}
+                    {{ project.trackedTimeList.length }} timers logged
                     <br />
-                    Time allocated in total:
+                    Project time:
                     {{ formatTotalTime(project.projectTime).hours() }}h:
                     {{ formatTotalTime(project.projectTime).minutes() }}m
                   </b-card-text>
                   <b-button
-                    variant="secondary"
+                    variant="outline-secondary"
                     @click="editProject(project.projectID)"
                   >
                     <b-icon icon="gear-fill" />
-                    Edit
                   </b-button>
-                </b-card>
-              </div>
-            </b-col>
-          </b-card-group>
-        </div>
-        <div v-else>
-          <h5>No Projects avalible !</h5>
-        </div>
+                </div>
+              </b-card>
+            </b-card-group>
+          </div>
+          <div v-else>
+            <h5>No Projects avalible !</h5>
+          </div>
+        </b-col>
+        <b-col />
       </b-row>
     </b-container>
   </div>

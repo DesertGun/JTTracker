@@ -1,12 +1,12 @@
 <template>
   <div class="container">
     <div>
-      <logo />
+      <logo class="pb-3" />
       <div v-if="!isLoggedIn">
-        <h2 class="subtitle">
+        <h2 class="subtitle pb-3">
           Welcome and thank you for your interest in my App!
         </h2>
-        <h3 class="subsubtitle">
+        <h3 class="subsubtitle pb-3">
           JTTracker is an open source time tracking web application that helps
           you increase your productivity by reflecting on your time
         </h3>
@@ -18,7 +18,7 @@
         </div>
       </div>
       <div v-else>
-        <h4 class="subtitle">Thank you for signing up!</h4>
+        <h4 class="subtitle pb-3">Thank you for signing up!</h4>
         <p class="subsubtitle">
           To get a better overview, navigate to the Dashboard.
         </p>

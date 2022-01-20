@@ -1,7 +1,8 @@
 <template>
   <b-container class="projectMain" fluid>
     <b-row class="formRow justify-content-center">
-      <b-col class="projectCol" cols="5">
+      <b-col />
+      <b-col class="projectCol">
         <div style="text-align: center">
           <h3>Project</h3>
         </div>
@@ -67,17 +68,12 @@
           </b-form>
         </div>
       </b-col>
+      <b-col />
     </b-row>
-    <b-row class="pt-2">
+    <b-row class="projectOverview">
       <b-col />
       <b-col cols="9">
         <h3>Existing projects:</h3>
-        <b-pagination
-          v-model="currentPage"
-          :total-rows="rows"
-          :per-page="perPage"
-          aria-controls="project-table"
-        ></b-pagination>
         <b-table
           id="project-table"
           :fields="fields"
@@ -112,17 +108,32 @@
             </div>
           </template>
           <template #cell(showEdit)="data">
-            <b-button variant="danger" @click="deleteProject(data.index)">
-              <b-icon icon="trash-fill" />
-            </b-button>
             <b-button
-              variant="secondary"
+              variant="outline-secondary"
               @click="editRecord(data.item.projectID)"
             >
               <b-icon icon="gear-fill" />
             </b-button>
+            <b-button
+              variant="outline-danger"
+              @click="deleteProject(data.index)"
+            >
+              <b-icon icon="trash-fill" />
+            </b-button>
           </template>
         </b-table>
+        <b-row>
+          <b-col />
+          <b-col style="max-width: fit-content">
+            <b-pagination
+              v-model="currentPage"
+              :total-rows="rows"
+              :per-page="perPage"
+              aria-controls="project-table"
+            ></b-pagination>
+          </b-col>
+          <b-col />
+        </b-row>
       </b-col>
       <b-col />
     </b-row>
@@ -213,9 +224,20 @@ export default {
       await this.$axios.delete(
         '/project/' + this.$store.state.project.projects[index].projectID
       )
-      this.$store.dispatch('project/deleteProjectAction', index)
+      await this.updateProjects()
+      this.items = this.getProjects
       await this.updateStatistics()
     },
   },
 }
 </script>
+
+<style>
+.projectMain {
+  padding-top: 5vh;
+}
+
+.projectOverview {
+  padding-top: 5vh;
+}
+</style>

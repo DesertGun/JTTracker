@@ -2,11 +2,9 @@
   <div>
     <b-container class="projectEditContainer" fluid>
       <b-form>
-        <b-row class="projectDataRow">
-          <b-col cols="12">
             <b-row>
               <b-col />
-              <b-col cols="5">
+              <b-col style="min-width: fit-content">
                 <div style="text-align: center">
                   <h3>Project-Settings</h3>
                 </div>
@@ -68,80 +66,83 @@
               </b-col>
               <b-col />
             </b-row>
-          </b-col>
-        </b-row>
+
       </b-form>
     </b-container>
     <b-container fluid class="card-container">
       <h3>Your recorded times:</h3>
       <b-row>
+        <b-col />
+        <b-col style="min-width: fit-content">
         <div v-if="timesUser.length === 0">
           It seems you have no time-records...
         </div>
         <div v-else class="flexElementFix">
-          <b-card-group deck>
-            <b-col
-              v-for="(timeUser, index) in timesUser"
-              :key="timeUser.timeID"
-              class="timeCardCol"
-            >
-              <b-card class="cards">
-                <b-card-title>
-                  <h4 v-if="timeUser.timeDesc === null">
-                    No description available
-                  </h4>
-                  <h4 v-else>
-                    {{ timeUser.timeDesc }}
-                  </h4>
-                </b-card-title>
-                <b-card-body>
-                  Time-record Nr.{{ index + 1 }}
-                  <br />
-                  From: {{ formatTime(timeUser.startTime) }}
-                  <br />
-                  Until: {{ formatTime(timeUser.endTime) }}
-                  <br />
-                  Duration:
-                  <br />
-                  {{ timeUser.duration.hours() }}h :
-                  {{ timeUser.duration.minutes() }}m :
-                  {{ timeUser.duration.seconds() }}s
-                  <br />
-                  Recorded on:
-                  <br />
-                  {{ formatDate(timeUser.startTime) }}
-                </b-card-body>
-                <b-row>
-                  <b-col cols="5">
-                    <b-button
-                      v-if="timeUser.assigned === true"
-                      variant="danger"
-                      @click="removeTimeFromProject(timeUser)"
-                    >
-                      <b-icon icon="clipboard-minus" />
-                      Del
-                    </b-button>
-                    <b-button
-                      v-if="timeUser.assigned === false"
-                      variant="primary"
-                      @click="addTimeToProject(timeUser)"
-                    >
-                      <b-icon icon="clipboard-plus" />
-                      Add
-                    </b-button>
-                  </b-col>
-                  <b-col />
-                  <b-col cols="5">
-                    <b-button variant="secondary" @click="editTime(timeUser)">
-                      <b-icon icon="clock-history" />
-                      Edit
-                    </b-button>
-                  </b-col>
-                </b-row>
-              </b-card>
-            </b-col>
-          </b-card-group>
+
+            <b-card-group deck>
+
+                <b-card
+v-for="(timeUser, index) in timesUser"
+                :key="timeUser.timeID"
+                 class="cards" >
+                  <b-card-title>
+                    <h4 v-if="timeUser.timeDesc === null">
+                      No description available
+                    </h4>
+                    <h4 v-else>
+                      {{ timeUser.timeDesc }}
+                    </h4>
+                  </b-card-title>
+                  <b-card-body>
+                    Time-record Nr.{{ index + 1 }}
+                    <br />
+                    From: {{ formatTime(timeUser.startTime) }}
+                    <br />
+                    Until: {{ formatTime(timeUser.endTime) }}
+                    <br />
+                    Duration:
+                    <br />
+                    {{ timeUser.duration.hours() }}h :
+                    {{ timeUser.duration.minutes() }}m :
+                    {{ timeUser.duration.seconds() }}s
+                    <br />
+                    Recorded on:
+                    <br />
+                    {{ formatDate(timeUser.startTime) }}
+                  </b-card-body>
+                  <b-row>
+                    <b-col cols="5">
+                      <b-button
+                        v-if="timeUser.assigned === true"
+                        variant="danger"
+                        @click="removeTimeFromProject(timeUser)"
+                      >
+                        <b-icon icon="clipboard-minus" />
+                        Del
+                      </b-button>
+                      <b-button
+                        v-if="timeUser.assigned === false"
+                        variant="primary"
+                        @click="addTimeToProject(timeUser)"
+                      >
+                        <b-icon icon="clipboard-plus" />
+                        Add
+                      </b-button>
+                    </b-col>
+                    <b-col />
+                    <b-col cols="5">
+                      <b-button variant="secondary" @click="editTime(timeUser)">
+                        <b-icon icon="clock-history" />
+                        Edit
+                      </b-button>
+                    </b-col>
+                  </b-row>
+                </b-card>
+            </b-card-group>
+
         </div>
+        </b-col>
+        <b-col />
       </b-row>
     </b-container>
   </div>
@@ -252,6 +253,7 @@ export default {
       })
       await this.updateProjects()
       await this.updateStatistics()
+      await this.updateStatistics()
       this.$router.push(this.from.fullPath)
     },
     async addTimeToProject(time) {
@@ -312,5 +314,9 @@ export default {
 
 .flexElementFix {
   max-width: 100%;
+}
+
+.projectEditContainer {
+  padding-top: 5vh;
 }
 </style>

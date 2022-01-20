@@ -3,7 +3,7 @@
     <b-form>
       <b-row>
         <b-col />
-        <b-col>
+        <b-col cols="3" style="min-width: max-content">
           <div style="text-align: center">
             <h3>Login</h3>
           </div>
@@ -32,12 +32,12 @@
               type="password"
             />
           </b-form-group>
-          <b-row>
+          <b-row cols="8">
             <b-col>
               <b-button variant="primary" @click="submit()"> Login </b-button>
             </b-col>
-            <b-col>
-              <b-button variant="danger" @click="submitRecovery()">
+            <b-col style="min-width: fit-content">
+              <b-button variant="outline-danger" @click="submitRecovery()">
                 I forgot my Password!
               </b-button>
             </b-col>

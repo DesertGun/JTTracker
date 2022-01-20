@@ -1,35 +1,26 @@
 <template>
-  <b-container class="timeEditContainer" fluid>
+  <b-container class="timeEditContainer mt-3" fluid>
     <b-row>
       <b-col />
-      <b-col cols="6">
+       <b-card>
+      <b-col >
         <div style="text-align: center">
           <h3>Timer-Settings</h3>
         </div>
+
         <div class="editDesc">
-          <b-row>
-            <b-col sm="2">
+
               <label for="timeDesc">Time-description:</label>
-            </b-col>
-            <b-col>
               <b-input-group class="mb-2">
-                <b-form-textarea
+                <b-form-input
                   id="timeDesc"
                   v-model="timeDesc"
-                  max-rows="4"
-                  rows="1"
                 />
               </b-input-group>
-            </b-col>
-          </b-row>
         </div>
 
         <div class="editStart">
-          <b-row>
-            <b-col sm="2">
               <label for="startTimeEdit">Start-Time:</label>
-            </b-col>
-            <b-col>
               <b-input-group id="startTimeEdit" class="mb-2">
                 <b-form-datepicker
                   v-model="startTimeDate"
@@ -42,16 +33,11 @@
                   size="sm"
                 />
               </b-input-group>
-            </b-col>
-          </b-row>
+
         </div>
 
         <div class="editEnd">
-          <b-row>
-            <b-col sm="2">
               <label for="endTimeEdit">End-Time:</label>
-            </b-col>
-            <b-col>
               <b-input-group id="endTimeEdit" class="mb-2">
                 <b-form-datepicker
                   v-model="endTimeDate"
@@ -64,16 +50,16 @@
                   size="sm"
                 />
               </b-input-group>
-            </b-col>
-          </b-row>
         </div>
 
         <b-button type="submit" variant="primary" @click="onSubmit">
           Update
         </b-button>
       </b-col>
+      </b-card>
       <b-col />
     </b-row>
+
   </b-container>
 </template>
 
@@ -130,7 +116,7 @@ export default {
       })
       await this.updateProjects()
       await this.setUserTimers()
-      this.updateStatistics()
+      await this.updateStatistics()
       this.$router.push(this.from.fullPath)
     },
     ...mapActions({

@@ -2,7 +2,7 @@
   <div id="nav">
     <b-container class="footerCont" fluid>
       <b-row>
-        <b-col>
+        <b-col style="max-width: fit-content">
           <b-nav vertical>
             <h5>Pages</h5>
             <div v-if="$store.state.auth.jwtToken">
@@ -12,8 +12,8 @@
             <b-nav-item nuxt-link to="/help"> Help </b-nav-item>
           </b-nav>
         </b-col>
-        <b-col />
         <div v-if="$store.state.auth.jwtToken">
+          <b-col />
           <b-col>
             <b-nav vertical>
               <h5>Modules</h5>
@@ -22,9 +22,12 @@
               <b-nav-item nuxt-link to="/statistics"> Statistics </b-nav-item>
             </b-nav>
           </b-col>
+          <b-col />
         </div>
-        <b-col />
-        <b-col>
+        <div v-else>
+          <b-col />
+        </div>
+        <b-col style="max-width: fit-content">
           <b-nav vertical>
             <h5>Terms</h5>
             <b-nav-item nuxt-link to="/terms"> Terms of Service </b-nav-item>
