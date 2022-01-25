@@ -116,7 +116,7 @@
             </b-button>
             <b-button
               variant="outline-danger"
-              @click="deleteProject(data.index)"
+              @click="deleteProject(data.item.projectID)"
             >
               <b-icon icon="trash-fill" />
             </b-button>
@@ -192,7 +192,7 @@ export default {
     },
     ...mapActions({
       updateProjects: 'project/setProjectsAction',
-      updateStatistics: 'statistics/setStatisticsData',
+      deleteProjectAction: 'project/deleteProjectAction',
     }),
     formatTime(time) {
       return moment.duration(time)
@@ -207,10 +207,8 @@ export default {
           projectDesc: this.projectDesc,
           status: this.status,
         }
-        await this.$axios.post('/project', project)
-        await this.$store.dispatch('project/setProjectsAction', project)
+        await this.$store.dispatch('project/addProjectAction', project)
         this.items = this.getProjects
-        await this.updateStatistics()
       } else {
         alert('Invalid-Data')
       }
@@ -220,13 +218,16 @@ export default {
       this.status = false
       this.priority = null
     },
-    async deleteProject(index) {
-      await this.$axios.delete(
-        '/project/' + this.$store.state.project.projects[index].projectID
+    async deleteProject(projectID) {
+      await this.$axios.delete('/project/' + projectID)
+      const storeProjects = this.$store.state.project.projects
+
+      const indexInStore = storeProjects.findIndex(
+        (storeProject) => storeProject.projectID === projectID
       )
-      await this.updateProjects()
+      this.deleteProjectAction(indexInStore)
+
       this.items = this.getProjects
-      await this.updateStatistics()
     },
   },
 }

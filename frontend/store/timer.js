@@ -10,6 +10,10 @@ export const mutations = {
   setTimers(state, timers) {
     state.timers = timers
   },
+  deleteTimer(state, index) {
+    // console.log(timerID)
+    state.timers.splice(index, 1)
+  },
   addTimer(state, timer) {
     state.timers.push(timer)
   },
@@ -35,6 +39,13 @@ export const actions = {
         }
       })
       commit('setTimers', timers)
+    } catch (e) {
+      alert(e.toString())
+    }
+  },
+  deleteTimerAction({ commit }, index) {
+    try {
+      commit('deleteTimer', index)
     } catch (e) {
       alert(e.toString())
     }

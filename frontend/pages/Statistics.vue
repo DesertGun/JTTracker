@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import moment from 'moment'
 
 export default {
@@ -126,7 +126,9 @@ export default {
       getUsername: 'user/getUsername',
     }),
   },
-  mounted() {},
+  mounted() {
+    this.updateStatistics()
+  },
   methods: {
     formatTime(time) {
       return time.format('LTS')
@@ -137,6 +139,7 @@ export default {
     formatTotalTime(time) {
       return moment.duration(time)
     },
+    ...mapActions({ updateStatistics: 'statistics/setStatisticsData' }),
   },
 }
 </script>

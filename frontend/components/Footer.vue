@@ -1,7 +1,7 @@
 <template>
   <div id="nav">
     <b-container class="footerCont" fluid>
-      <b-row>
+      <b-row style="justify-content: center">
         <b-col style="max-width: fit-content">
           <b-nav vertical>
             <h5>Pages</h5>

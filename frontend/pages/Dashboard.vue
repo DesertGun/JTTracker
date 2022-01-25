@@ -238,6 +238,7 @@ export default {
           }
         })
         .splice(this.timesUser.length - 4, 4)
+      this.updateStatistics()
     } catch (e) {
       alert(e.toString())
     }
@@ -271,6 +272,7 @@ export default {
     ...mapActions({
       updateProjects: 'project/setProjectsAction',
       updateTimers: 'timer/setTimersAction',
+      updateStatistics: 'statistics/setStatisticsData',
     }),
   },
 }

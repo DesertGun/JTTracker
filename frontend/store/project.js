@@ -8,6 +8,9 @@ export const mutations = {
   setProjects(state, projects) {
     state.projects = projects
   },
+  deleteProject(state, index) {
+    state.projects.splice(index, 1)
+  },
   addProject(state, project) {
     state.projects.push(project)
   },
@@ -39,6 +42,17 @@ export const actions = {
     } catch (e) {
       alert(e.toString())
     }
+  },
+  deleteProjectAction({ commit }, index) {
+    try {
+      commit('deleteProject', index)
+    } catch (e) {
+      alert(e.toString())
+    }
+  },
+  async addProjectAction({ commit }, project) {
+    await this.$axios.post('/project', project)
+    commit('addProject', project)
   },
 }
 export const getters = {

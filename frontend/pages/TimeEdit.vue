@@ -2,64 +2,54 @@
   <b-container class="timeEditContainer mt-3" fluid>
     <b-row>
       <b-col />
-       <b-card>
-      <b-col >
-        <div style="text-align: center">
-          <h3>Timer-Settings</h3>
-        </div>
+      <b-card>
+        <b-col>
+          <div style="text-align: center">
+            <h3>Timer-Settings</h3>
+          </div>
 
-        <div class="editDesc">
+          <div class="editDesc">
+            <label for="timeDesc">Time-description:</label>
+            <b-input-group class="mb-2">
+              <b-form-input id="timeDesc" v-model="timeDesc" />
+            </b-input-group>
+          </div>
 
-              <label for="timeDesc">Time-description:</label>
-              <b-input-group class="mb-2">
-                <b-form-input
-                  id="timeDesc"
-                  v-model="timeDesc"
-                />
-              </b-input-group>
-        </div>
+          <div class="editStart">
+            <label for="startTimeEdit">Start-Time:</label>
+            <b-input-group id="startTimeEdit" class="mb-2">
+              <b-form-datepicker
+                v-model="startTimeDate"
+                class="mr-2"
+                size="sm"
+              />
+              <b-form-timepicker
+                v-model="startTimeTimer"
+                show-seconds
+                size="sm"
+              />
+            </b-input-group>
+          </div>
 
-        <div class="editStart">
-              <label for="startTimeEdit">Start-Time:</label>
-              <b-input-group id="startTimeEdit" class="mb-2">
-                <b-form-datepicker
-                  v-model="startTimeDate"
-                  class="mr-2"
-                  size="sm"
-                />
-                <b-form-timepicker
-                  v-model="startTimeTimer"
-                  show-seconds
-                  size="sm"
-                />
-              </b-input-group>
+          <div class="editEnd">
+            <label for="endTimeEdit">End-Time:</label>
+            <b-input-group id="endTimeEdit" class="mb-2">
+              <b-form-datepicker v-model="endTimeDate" class="mr-2" size="sm" />
+              <b-form-timepicker
+                v-model="endTimeTimer"
+                show-seconds
+                size="sm"
+              />
+            </b-input-group>
+          </div>
 
-        </div>
-
-        <div class="editEnd">
-              <label for="endTimeEdit">End-Time:</label>
-              <b-input-group id="endTimeEdit" class="mb-2">
-                <b-form-datepicker
-                  v-model="endTimeDate"
-                  class="mr-2"
-                  size="sm"
-                />
-                <b-form-timepicker
-                  v-model="endTimeTimer"
-                  show-seconds
-                  size="sm"
-                />
-              </b-input-group>
-        </div>
-
-        <b-button type="submit" variant="primary" @click="onSubmit">
-          Update
-        </b-button>
-      </b-col>
+          <b-button type="submit" variant="primary" @click="onSubmit">
+            Update
+          </b-button>
+        </b-col>
       </b-card>
       <b-col />
     </b-row>
-
   </b-container>
 </template>
 
@@ -116,13 +106,11 @@ export default {
       })
       await this.updateProjects()
       await this.setUserTimers()
-      await this.updateStatistics()
       this.$router.push(this.from.fullPath)
     },
     ...mapActions({
       setUserTimers: 'timer/setTimersAction',
       updateProjects: 'project/setProjectsAction',
-      updateStatistics: 'statistics/setStatisticsData',
     }),
     countDuration(startTime, endTime) {
       const diffTime = endTime.diff(startTime)

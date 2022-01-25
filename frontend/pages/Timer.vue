@@ -114,7 +114,7 @@
                 </b-button>
                 <b-button
                   variant="outline-danger"
-                  @click="deleteRecord(data.index)"
+                  @click="deleteRecord(data.item.timeID)"
                 >
                   <b-icon icon="trash-fill" />
                 </b-button>
@@ -191,7 +191,6 @@ export default {
       updateTimers: 'timer/setTimersAction',
       updateProjects: 'project/setProjectsAction',
       addTimer: 'timer/addTimerAction',
-      setStatistics: 'statistics/setStatisticsData',
       deleteTimer: 'timer/deleteTimerAction',
     }),
     rec() {
@@ -230,17 +229,16 @@ export default {
       this.timeID = null
       this.isTracked = false
       this.duration = null
-      this.setStatistics()
     },
-    async deleteRecord(index) {
+    async deleteRecord(timeID) {
+      await this.$axios.delete('/timer/' + timeID)
+      const storeTimers = this.$store.state.timer.timers
 
-      await this.$axios.delete(
-        '/timer/' + this.$store.state.timer.timers[index].timeID
+      const indexInStore = storeTimers.findIndex(
+        (storeTimer) => storeTimer.timeID === timeID
       )
-      await this.updateTimers()
+      this.deleteTimer(indexInStore)
       this.items = this.getTimers
-      this.updateProjects()
-      this.setStatistics()
     },
   },
 }

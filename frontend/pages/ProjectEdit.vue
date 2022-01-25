@@ -2,71 +2,68 @@
   <div>
     <b-container class="projectEditContainer" fluid>
       <b-form>
-            <b-row>
-              <b-col />
-              <b-col style="min-width: fit-content">
-                <div style="text-align: center">
-                  <h3>Project-Settings</h3>
-                </div>
-                <b-form-group
-                  id="inputProjectName"
-                  description="Change the name if needed."
-                  label="Project-name:"
-                  label-for="projectName"
-                >
-                  <b-form-input
-                    id="projectName"
-                    v-model="projectName"
-                    placeholder="Project-name"
-                    required
-                    type="text"
-                  />
-                </b-form-group>
-                <b-form-group
-                  id="inputProjectDesc"
-                  description="Modify or add a description to your project"
-                  label="Project-desc:"
-                  label-for="projectDesc"
-                >
-                  <b-form-textarea
-                    id="projectDesc"
-                    v-model="projectDesc"
-                    max-rows="6"
-                    placeholder="Project-desc"
-                    rows="3"
-                    type="text"
-                  />
-                </b-form-group>
-                <b-form-group
-                  id="projectPriority"
-                  label="Priority"
-                  label-for="inputProjectPriority"
-                >
-                  <b-form-select
-                    id="inputProjectPriority"
-                    v-model="priority"
-                    :options="prioritySelect"
-                    required
-                  />
-                  <b-form-invalid-feedback :state="validationPriority">
-                    You need to select one priority!
-                  </b-form-invalid-feedback>
-                </b-form-group>
-                <b-form-group
-                  id="projectStatus"
-                  description="If a project is not active, it will not be followed in statistics and in the dashboard"
-                >
-                  <b-form-checkbox v-model="status">
-                    This project is active
-                  </b-form-checkbox>
-                </b-form-group>
-                <b-button variant="primary" @click="editProject">
-                  Update
-                </b-button>
-              </b-col>
-              <b-col />
-            </b-row>
-
+        <b-row>
+          <b-col />
+          <b-col style="min-width: fit-content">
+            <div style="text-align: center">
+              <h3>Project-Settings</h3>
+            </div>
+            <b-form-group
+              id="inputProjectName"
+              description="Change the name if needed."
+              label="Project-name:"
+              label-for="projectName"
+            >
+              <b-form-input
+                id="projectName"
+                v-model="projectName"
+                placeholder="Project-name"
+                required
+                type="text"
+              />
+            </b-form-group>
+            <b-form-group
+              id="inputProjectDesc"
+              description="Modify or add a description to your project"
+              label="Project-desc:"
+              label-for="projectDesc"
+            >
+              <b-form-textarea
+                id="projectDesc"
+                v-model="projectDesc"
+                max-rows="6"
+                placeholder="Project-desc"
+                rows="3"
+                type="text"
+              />
+            </b-form-group>
+            <b-form-group
+              id="projectPriority"
+              label="Priority"
+              label-for="inputProjectPriority"
+            >
+              <b-form-select
+                id="inputProjectPriority"
+                v-model="priority"
+                :options="prioritySelect"
+                required
+              />
+              <b-form-invalid-feedback :state="validationPriority">
+                You need to select one priority!
+              </b-form-invalid-feedback>
+            </b-form-group>
+            <b-form-group
+              id="projectStatus"
+              description="If a project is not active, it will not be followed in statistics and in the dashboard"
+            >
+              <b-form-checkbox v-model="status">
+                This project is active
+              </b-form-checkbox>
+            </b-form-group>
+            <b-button variant="primary" @click="editProject"> Update </b-button>
+          </b-col>
+          <b-col />
+        </b-row>
       </b-form>
     </b-container>
     <b-container fluid class="card-container">
@@ -74,73 +71,141 @@
       <b-row>
         <b-col />
         <b-col style="min-width: fit-content">
-        <div v-if="timesUser.length === 0">
-          It seems you have no time-records...
-        </div>
-        <div v-else class="flexElementFix">
+          <div v-if="timesUser.length === 0">
+            It seems you have no time-records...
+          </div>
+          <div v-else class="flexElementFix">
+            <div v-if="timesUser.length > 12">
+              <b-table
+                id="timer-table-project-edit"
+                :fields="fields"
+                :items="timesUser"
+                :per-page="perPage"
+                :current-page="currentPage"
+                hover
+                responsive="sm"
+                striped
+              >
+                <col v-for="field in fields" :key="field.key" />
+                <template #cell(timeDesc)="data">
+                  <div v-if="data.item.timeDesc === null">
+                    No description available
+                  </div>
+                  <div v-else>
+                    {{ data.item.timeDesc }}
+                  </div>
+                </template>
+                <template #cell(date)="data">
+                  {{ formatDate(data.item.startTime) }}
+                </template>
+                <template #cell(duration)="data">
+                  <div v-if="data.item.duration.asHours() < 24">
+                    {{ formatTime(data.item.startTime) }} -
+                    {{ formatTime(data.item.endTime) }}
+                  </div>
+                  <div v-else>
+                    {{ formatTime(data.item.startTime) }} -
+                    {{ formatTime(data.item.endTime) }} +1
+                  </div>
+                </template>
+                <template #cell(showEdit)="data">
+                  <b-button
+                    v-if="data.item.assigned === true"
+                    variant="outline-danger"
+                    @click="removeTimeFromProject(data.item)"
+                  >
+                    <b-icon icon="clipboard-minus" />
+                    Del
+                  </b-button>
+                  <b-button
+                    v-if="data.item.assigned === false"
+                    variant="outline-primary"
+                    @click="addTimeToProject(data.item)"
+                  >
+                    <b-icon icon="clipboard-plus" />
+                    Add
+                  </b-button>
+                  <b-button
+                    variant="outline-secondary"
+                    @click="editTime(data.item)"
+                  >
+                    <b-icon icon="clock-history" />
+                    Edit
+                  </b-button>
+                </template>
+              </b-table>
+              <b-pagination
+                v-model="currentPage"
+                :total-rows="rows"
+                :per-page="perPage"
+                aria-controls="timer-table-project-edit"
+              ></b-pagination>
+            </div>
+            <div v-else>
+              <ul>
+                <b-card-group deck>
+                  <b-card
+                    v-for="timeUser in timesUser"
+                    :key="timeUser.timeID"
+                    :per-page="perPage"
+                    :current-page="currentPage"
+                    class="cards"
+                  >
+                    <b-card-title>
+                      <h4 v-if="timeUser.timeDesc === null">
+                        No description available
+                      </h4>
+                      <h4 v-else>
+                        {{ timeUser.timeDesc }}
+                      </h4>
+                    </b-card-title>
+                    <b-card-body>
+                      {{ formatDate(timeUser.startTime) }}
 
-            <b-card-group deck>
-
-                <b-card
-v-for="(timeUser, index) in timesUser"
-                :key="timeUser.timeID"
-                 class="cards" >
-                  <b-card-title>
-                    <h4 v-if="timeUser.timeDesc === null">
-                      No description available
-                    </h4>
-                    <h4 v-else>
-                      {{ timeUser.timeDesc }}
-                    </h4>
-                  </b-card-title>
-                  <b-card-body>
-                    Time-record Nr.{{ index + 1 }}
-                    <br />
-                    From: {{ formatTime(timeUser.startTime) }}
-                    <br />
-                    Until: {{ formatTime(timeUser.endTime) }}
-                    <br />
-                    Duration:
-                    <br />
-                    {{ timeUser.duration.hours() }}h :
-                    {{ timeUser.duration.minutes() }}m :
-                    {{ timeUser.duration.seconds() }}s
-                    <br />
-                    Recorded on:
-                    <br />
-                    {{ formatDate(timeUser.startTime) }}
-                  </b-card-body>
-                  <b-row>
-                    <b-col cols="5">
-                      <b-button
-                        v-if="timeUser.assigned === true"
-                        variant="danger"
-                        @click="removeTimeFromProject(timeUser)"
-                      >
-                        <b-icon icon="clipboard-minus" />
-                        Del
-                      </b-button>
-                      <b-button
-                        v-if="timeUser.assigned === false"
-                        variant="primary"
-                        @click="addTimeToProject(timeUser)"
-                      >
-                        <b-icon icon="clipboard-plus" />
-                        Add
-                      </b-button>
-                    </b-col>
-                    <b-col />
-                    <b-col cols="5">
-                      <b-button variant="secondary" @click="editTime(timeUser)">
-                        <b-icon icon="clock-history" />
-                        Edit
-                      </b-button>
-                    </b-col>
-                  </b-row>
-                </b-card>
-            </b-card-group>
-
-        </div>
+                      <div v-if="timeUser.duration.asHours() < 24">
+                        {{ formatTime(timeUser.startTime) }} -
+                        {{ formatTime(timeUser.endTime) }}
+                      </div>
+                      <div v-else>
+                        {{ formatTime(timeUser.startTime) }} -
+                        {{ formatTime(timeUser.endTime) }} +1
+                      </div>
+                    </b-card-body>
+                    <b-row>
+                      <b-col cols="5">
+                        <b-button
+                          v-if="timeUser.assigned === true"
+                          variant="outline-danger"
+                          @click="removeTimeFromProject(timeUser)"
+                        >
+                          <b-icon icon="clipboard-minus" />
+                          Del
+                        </b-button>
+                        <b-button
+                          v-if="timeUser.assigned === false"
+                          variant="outline-primary"
+                          @click="addTimeToProject(timeUser)"
+                        >
+                          <b-icon icon="clipboard-plus" />
+                          Add
+                        </b-button>
+                      </b-col>
+                      <b-col />
+                      <b-col cols="5">
+                        <b-button
+                          variant="outline-secondary"
+                          @click="editTime(timeUser)"
+                        >
+                          <b-icon icon="clock-history" />
+                          Edit
+                        </b-button>
+                      </b-col>
+                    </b-row>
+                  </b-card>
+                </b-card-group>
+              </ul>
+            </div>
+          </div>
         </b-col>
         <b-col />
       </b-row>
@@ -156,6 +221,12 @@ export default {
   middleware: 'authenticated',
   asyncData({ from }) {
     return {
+      fields: [
+        { key: 'timeDesc', label: 'Description' },
+        { key: 'date', label: 'Date' },
+        { key: 'duration', label: 'Recording time' },
+        { key: 'showEdit', label: 'Options' },
+      ],
       prioritySelect: [
         { text: 'Select priority', value: null },
         'Low',
@@ -172,6 +243,8 @@ export default {
       status: false,
       assigned: false,
       projectTime: null,
+      perPage: 12,
+      currentPage: 1,
       from,
     }
   },
@@ -180,6 +253,9 @@ export default {
       return this.priority != null
     },
     ...mapGetters({ getProjects: 'project/projects' }),
+    rows() {
+      return this.timesUser.length
+    },
   },
   async mounted() {
     try {
@@ -232,7 +308,6 @@ export default {
     },
     ...mapActions({
       updateProjects: 'project/setProjectsAction',
-      updateStatistics: 'statistics/setStatisticsData',
     }),
     formatTime(time) {
       return time.format('HH:mm:ss')
@@ -252,8 +327,6 @@ export default {
         priority: this.priority,
       })
       await this.updateProjects()
-      await this.updateStatistics()
-      await this.updateStatistics()
       this.$router.push(this.from.fullPath)
     },
     async addTimeToProject(time) {
@@ -279,8 +352,6 @@ export default {
           projectTime: this.projectTime.toISOString(),
         })
         await this.updateProjects()
-        await this.updateStatistics()
-
         time.assigned = true
       }
     },
@@ -297,8 +368,6 @@ export default {
         projectTime: this.projectTime.toISOString(),
       })
       await this.updateProjects()
-      await this.updateStatistics()
-
       time.assigned = false
     },
   },
