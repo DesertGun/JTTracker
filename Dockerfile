@@ -3,6 +3,7 @@ FROM eclipse-temurin:17-jdk-alpine as builder
 RUN apk update && apk upgrade
 RUN apk add git
 
+
 RUN mkdir -p /opt/build/
 COPY mvnw /opt/build/mvnw
 COPY .mvn/ /opt/build/.mvn/
@@ -15,10 +16,11 @@ RUN chmod +x /opt/build/mvnw
 WORKDIR /opt/build/
 RUN ./mvnw --no-transfer-progress clean package
 
-
 FROM eclipse-temurin:17-jre-alpine as jre-build
 WORKDIR application
+RUN addgroup -S backendgroup && adduser -S backenduser -G backendgroup -D
 COPY --from=builder /opt/build/target/jttracker-1.1.0.jar application.jar
+USER backenduser
 
 
 

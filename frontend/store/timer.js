@@ -11,7 +11,6 @@ export const mutations = {
     state.timers = timers
   },
   deleteTimer(state, index) {
-    // console.log(timerID)
     state.timers.splice(index, 1)
   },
   addTimer(state, timer) {

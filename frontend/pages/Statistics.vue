@@ -13,44 +13,54 @@
     </b-container>
     <div>
       <b-container fluid>
+
+
+
         <b-row>
-          <b-col>
-            <br />
+          <b-col  class="pt-3" style="min-width: fit-content;">
+
+            <b-card style="min-height: 100%;">
+          <b-card-body>
             <div class="timer-data">
-              <h4>Timer-related statistics:</h4>
+              <h4>Timer statistics:</h4>
+              <br />
               <br />
               <h5>{{ getNumberOfTimers }} timer/s logged</h5>
               <br />
               <h5>Minimal-time logged:</h5>
               <h6>
                 {{ formatTotalTime(getMinDuration).hours() }}h:
-                {{ formatTotalTime(getMinDuration).minutes() }}m:
-                {{ formatTotalTime(getMinDuration).seconds() }}s
+                {{ formatTotalTime(getMinDuration).minutes() }}m
               </h6>
               <br />
               <h5>Average-time logged:</h5>
               <h6>
                 {{ formatTotalTime(getAvgTimeTracked).hours() }}h:
-                {{ formatTotalTime(getAvgTimeTracked).minutes() }}m:
-                {{ formatTotalTime(getAvgTimeTracked).seconds() }}s
+                {{ formatTotalTime(getAvgTimeTracked).minutes() }}m
               </h6>
               <br />
               <h5>Maximal-time logged:</h5>
               <h6>
                 {{ formatTotalTime(getMaxDuration).hours() }}h:
-                {{ formatTotalTime(getMaxDuration).minutes() }}m:
-                {{ formatTotalTime(getMaxDuration).seconds() }}s
+                {{ formatTotalTime(getMaxDuration).minutes() }}m
               </h6>
               <br />
             </div>
+            </b-card-body>
+        </b-card>
           </b-col>
-          <b-col>
-            <br />
+
+          <b-col class="pt-3" style="min-width: fit-content;">
+
+            <b-card style="min-height: 100%;">
+              <b-card-body>
+
+
             <div class="rating">
               <h4>General overview:</h4>
               <br />
+              <br/>
               <h5>Your productivity rating:</h5>
-              <br />
               <b-form-rating
                 v-model="getProductivityLevel"
                 no-border
@@ -67,15 +77,18 @@
               <h5>Total time logged:</h5>
               <h6>
                 {{ formatTotalTime(getTotalTimeTracked).hours() }}h:
-                {{ formatTotalTime(getTotalTimeTracked).minutes() }}m:
-                {{ formatTotalTime(getTotalTimeTracked).seconds() }}s
+                {{ formatTotalTime(getTotalTimeTracked).minutes() }}m
               </h6>
             </div>
+            </b-card-body>
+            </b-card>
           </b-col>
-          <b-col>
-            <br />
+          <b-col class="pt-3" style="min-width: fit-content;">
+            <b-card style="min-height: 100%;">
+              <b-card-body>
             <div class="project-data">
-              <h4>Project-related statistics:</h4>
+              <h4>Project statistics:</h4>
+              <br />
               <br />
               <h5>{{ getNumberOfProjects }} project/s created</h5>
               <br />
@@ -88,10 +101,11 @@
               <h5>Total time logged in project/s:</h5>
               <h6>
                 {{ formatTotalTime(getTotalTimeTrackedInProjects).hours() }}h:
-                {{ formatTotalTime(getTotalTimeTrackedInProjects).minutes() }}m:
-                {{ formatTotalTime(getTotalTimeTrackedInProjects).seconds() }}s
+                {{ formatTotalTime(getTotalTimeTrackedInProjects).minutes() }}m
               </h6>
             </div>
+            </b-card-body>
+            </b-card>
           </b-col>
         </b-row>
       </b-container>
@@ -158,6 +172,6 @@ export default {
   padding-top: 3%;
 }
 .rating-level {
-  background-color: #f8f8ff;
+  background-color: #ffffff;
 }
 </style>

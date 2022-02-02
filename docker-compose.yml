@@ -1,6 +1,7 @@
 version: '3.8'
 services:
     database:
+        privileged: false
         container_name: database
         image: mariadb
         command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci --innodb-flush-log-at-trx-commit=0
@@ -13,9 +14,11 @@ services:
             - 3306
         ports:
             - "3306:3306"
-        volumes:  
+        volumes:
             - ./init:/docker-entrypoint-initdb.d
     nuxtjs:
+        user: frontenduser
+        privileged: false
         container_name: nuxtjs
         working_dir: /usr/src/jttracker
         build:
@@ -71,6 +74,8 @@ services:
         # The integration was done thanks to the outstanding example from Jens Knipper
         # Original source: https://github.com/JensKnipper/greenmail-example/blob/main/docker-compose.yml
     springboot:
+        user: backenduser
+        privileged: false
         container_name: springboot
         working_dir: /application
         depends_on:
@@ -80,7 +85,7 @@ services:
             - 8080
         ports:
             - "8080:8080"
-        build: 
+        build:
             context: ./
             dockerfile: Dockerfile
         command: ["java", "-jar", "application.jar"]
