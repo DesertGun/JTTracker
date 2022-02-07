@@ -53,7 +53,7 @@
         <b-col cols="9">
           <h4>Timers:</h4>
           <div v-if="items.length === 0">
-            <h4>There are no records currently avalible!</h4>
+            <h4>No records available!</h4>
           </div>
           <div v-else>
             <b-table

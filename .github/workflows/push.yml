@@ -7,9 +7,3 @@ jobs:
       - uses: actions/checkout@v2
       - name: Dockercompose build
         run: docker-compose up -d
-      # - name: Database deployment test
-      #   run: docker run --network container:database appropriate/curl -s --retry 10 --retry-connrefused http://localhost:3306/
-      # - name: Frontend deployment test
-      #   run: docker run --network container:nuxtjs appropriate/curl -s --retry 10 --retry-connrefused http://localhost:3000/
-      # - name: Backend deployment test
-      #   run: docker run --network container:springboot appropriate/curl -s --retry 10 --retry-connrefused http://localhost:8080/

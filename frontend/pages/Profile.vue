@@ -14,284 +14,321 @@
     <b-container class="profileContentContainer" fluid>
       <b-row>
         <b-col />
-        <b-col>
-          <b-form>
-            <b-form-group
-              id="usernameFormGroup"
-              description="Keep in mind, that your Username is your contact adress!"
-              label="Username:"
-              label-for="username"
-            >
-              <b-form-input
-                id="username"
-                v-model="username"
-                disabled="true"
-                type="text"
-              />
-            </b-form-group>
-            <b-form-group
-              id="accountNameFormGroup"
-              description="With the following name you will be visible for other users. The choice is up to you. Default is your username."
-              label="Account name:"
-              label-for="accountName"
-            >
-              <b-form-input
-                id="accountName"
-                v-model="accountName"
-                placeholder="None"
-                type="text"
-              />
-              <b-form-invalid-feedback :state="validationaccountNameChange">
-                Your global name cannot be empty!
-              </b-form-invalid-feedback>
-              <b-form-invalid-feedback :state="validationaccountNameNew">
-                No changes detected !
-              </b-form-invalid-feedback>
-              <b-form-valid-feedback :state="validationaccountNameChange" />
-            </b-form-group>
-            <b-row>
-              <b-col />
-              <b-col>
-                <b-form-group
-                  id="avatarFormGroup"
-                  description="Your personal Account-Avatar"
-                  label="Avatar:"
-                  label-for="avatar"
-                >
-                  <div v-if="!hasProfilePicture">
-                    <b-img-lazy
-                      :src="
-                        'https://gravatar.com/avatar/' +
-                        getHash +
-                        '?d=identicon'
-                      "
-                      rounded="circle"
-                    />
-                  </div>
-                  <div v-else>
-                    <b-img-lazy
-                      :src="getProfilePicture"
-                      height="150px"
-                      width="150px"
-                      rounded="circle"
-                    />
-                  </div>
-                </b-form-group>
-              </b-col>
-              <b-col />
-            </b-row>
-            <b-row>
-              <b-col />
-              <b-col cols="12">
-                <b-form-file
-                  v-model="profilePictureUpload"
-                  class="mb-2"
-                  accept=".jpg"
-                ></b-form-file>
-                <div v-if="uploadCurrent > 0">
-                  <b-progress
-                    :value="uploadCurrent"
-                    :max="uploadMax"
-                    show-progress
-                    animated
-                  ></b-progress>
-                </div>
+        <b-col style="min-width: fit-content">
+          <b-card>
+            <b-card-body>
+              <b-form>
                 <b-row>
-                  <b-col cols="3" />
+                  <b-col />
                   <b-col>
-                    <div v-if="profilePictureUpload">
-                      <b-button
-                        variant="secondary"
-                        class="mt-2"
-                        @click="uploadProfilePicture"
-                      >
-                        Upload my profile picture !
-                      </b-button>
-                    </div>
-                    <div v-if="hasProfilePicture">
-                      <b-button
-                        variant="danger"
-                        class="mt-2"
-                        @click="deleteProfilePicture"
-                      >
-                        Delete my profile picture !
-                      </b-button>
-                    </div>
+                    <b-form-group
+                      id="usernameFormGroup"
+                      description="Unique username for yor account"
+                      label="Username:"
+                      label-for="username"
+                    >
+                      <b-form-input
+                        id="username"
+                        v-model="username"
+                        disabled="true"
+                        type="text"
+                      />
+                    </b-form-group>
                   </b-col>
-                  <b-col cols="3" />
+                  <b-col />
+                </b-row>
+
+                <b-row>
+                  <b-col />
+                  <b-col>
+                    <b-form-group
+                      id="accountNameFormGroup"
+                      description="Name linked to your account"
+                      label="Account name:"
+                      label-for="accountName"
+                    >
+                      <b-form-input
+                        id="accountName"
+                        v-model="accountName"
+                        placeholder="None"
+                        type="text"
+                      />
+                      <b-form-invalid-feedback
+                        :state="validationaccountNameChange"
+                      >
+                        Your global name cannot be empty!
+                      </b-form-invalid-feedback>
+                      <b-form-invalid-feedback
+                        :state="validationaccountNameNew"
+                      >
+                        No changes detected !
+                      </b-form-invalid-feedback>
+                      <b-form-valid-feedback
+                        :state="validationaccountNameChange"
+                      />
+                    </b-form-group>
+                  </b-col>
+                  <b-col />
+                </b-row>
+
+                <b-row>
+                  <b-col />
+                  <b-col class="avatar-content">
+                    <b-form-group
+                      id="avatarFormGroup"
+                      label="Avatar:"
+                      label-for="avatar"
+                    >
+                      <div v-if="!hasProfilePicture">
+                        <b-img-lazy
+                          :src="
+                            'https://gravatar.com/avatar/' +
+                            getHash +
+                            '?d=identicon'
+                          "
+                          rounded="circle"
+                        />
+                      </div>
+                      <div v-else>
+                        <b-img-lazy
+                          :src="getProfilePicture"
+                          height="150px"
+                          width="150px"
+                          rounded="circle"
+                        />
+                      </div>
+                    </b-form-group>
+                  </b-col>
+                  <b-col />
                 </b-row>
                 <b-row>
                   <b-col />
-                  <b-col cols="10">
-                    <div
-                      v-if="responseSuccess"
-                      class="pt-2"
-                      style="text-align: center"
-                    >
-                      <b-alert dismissible show variant="success">
-                        {{ responseSuccess }}
-                      </b-alert>
+                  <b-col style="min-width: fit-content">
+                    <b-form-file
+                      v-model="profilePictureUpload"
+                      class="mb-2"
+                      accept=".jpg"
+                    ></b-form-file>
+                    <div v-if="uploadCurrent > 0">
+                      <b-progress
+                        :value="uploadCurrent"
+                        :max="uploadMax"
+                        show-progress
+                        animated
+                      ></b-progress>
                     </div>
-                  </b-col>
-                  <b-col />
-                </b-row>
-              </b-col>
-            </b-row>
-            <b-form-group
-              id="passwordFormGroup"
-              description="You will receive a password-reset link to the adress (username) provided above"
-              label="Password:"
-              label-for="password"
-            >
-            </b-form-group>
-            <b-button variant="secondary" @click="changePassword">
-              Change current password
-            </b-button>
-            <div
-              v-if="
-                validationaccountNameChange &&
-                accountName !== username &&
-                validationaccountNameNew
-              "
-              class="pt-2"
-            >
-              <b-button variant="success" @click="updateProfile">
-                Update my profile
-              </b-button>
-            </div>
-            <div v-if="updated" class="pt-2" style="text-align: center">
-              <b-alert dismissible show variant="success">
-                Your profile was updated successfully!
-              </b-alert>
-            </div>
-            <div v-if="hasSecurityEnabled">
-              <b-button
-                variant="danger"
-                class="mt-2"
-                @click="removeEnchancedSecurity"
-              >
-                Disable enchanced Security for my Account !
-              </b-button>
-              <div v-if="removeSec">
-                Please enter the answer for the security question !
-                <br />
-                {{ securityQuestion1 }}
-                <b-form-input
-                  v-model="securityAnswer1"
-                  class="mt-2"
-                ></b-form-input>
-                <div v-if="securityAnswer1">
-                  {{ securityQuestion2 }}
-                  <b-form-input
-                    v-model="securityAnswer2"
-                    class="mt-2"
-                  ></b-form-input>
-                </div>
-                <div v-if="securityAnswer2">
-                  {{ securityQuestion3 }}
-                  <b-form-input
-                    v-model="securityAnswer3"
-                    class="mt-2"
-                  ></b-form-input>
-                </div>
-              </div>
-              <div v-if="securityAnswer1 && securityAnswer2 && securityAnswer3">
-                <b-button
-                  variant="danger"
-                  class="mt-2"
-                  @click="disableSecurity()"
-                >
-                  Yes, disable enchanced security for my account !
-                </b-button>
-              </div>
-            </div>
-            <div v-else>
-              <b-form-group id="input-group-2fa" label-for="choice-2fa">
-                <b-button variant="primary" class="mt-2" @click="openQuestions">
-                  Enable enchanced Security for my Account !
-                </b-button>
-                <div v-if="enableSecurity">
-                  <b-form-select
-                    v-model="firstQuestion"
-                    :options="questions"
-                    class="mt-2"
-                  ></b-form-select>
-                  <div v-if="firstQuestion">
-                    <b-form-input
-                      v-model="firstAnswer"
-                      class="mt-2"
-                    ></b-form-input>
-                  </div>
-                  <div v-if="firstAnswer">
-                    <b-form-select
-                      v-model="secondQuestion"
-                      :options="questions"
-                      class="mt-2"
-                    ></b-form-select>
-                  </div>
-                  <div v-if="secondQuestion">
-                    <b-form-input
-                      v-model="secondAnswer"
-                      class="mt-2"
-                    ></b-form-input>
-                  </div>
-                  <div v-if="secondAnswer">
-                    <b-form-select
-                      v-model="thirdQuestion"
-                      :options="questions"
-                      class="mt-2"
-                    ></b-form-select>
-                  </div>
-                  <div v-if="thirdQuestion">
-                    <b-form-input
-                      v-model="thirdAnswer"
-                      class="mt-2"
-                    ></b-form-input>
-                  </div>
-                  <b-form-invalid-feedback :state="validationSecurityQuestions">
-                    You need to select 3 unique questions and answer them !
-                  </b-form-invalid-feedback>
-                  <b-form-valid-feedback :state="validationSecurityQuestions">
-                    Security questions are answered and valid !
-                  </b-form-valid-feedback>
-                  <div v-if="thirdAnswer">
-                    <div
-                      v-if="
-                        enableSecurity &&
-                        firstAnswer &&
-                        secondAnswer &&
-                        thirdAnswer &&
-                        validationSecurityQuestions
-                      "
-                    >
-                      Now you can enable enchanced security for your account !
-                      <b-row>
-                        <b-col>
+                    <b-row>
+                      <b-col cols="3" />
+                      <b-col>
+                        <div v-if="profilePictureUpload">
                           <b-button
-                            variant="success"
+                            variant="secondary"
                             class="mt-2"
-                            @click="submitSecurityQuestions"
+                            @click="uploadProfilePicture"
                           >
-                            Submit
+                            Upload my profile picture !
                           </b-button>
-                        </b-col>
-                        <b-col />
-                        <b-col>
+                        </div>
+                        <div v-if="hasProfilePicture">
                           <b-button
                             variant="danger"
                             class="mt-2"
-                            @click="closeSecurityQuestions"
+                            @click="deleteProfilePicture"
                           >
-                            Forget it
+                            Delete my profile picture !
                           </b-button>
-                        </b-col>
-                      </b-row>
+                        </div>
+                      </b-col>
+                      <b-col cols="3" />
+                    </b-row>
+                    <b-row>
+                      <b-col />
+                      <b-col cols="10">
+                        <div
+                          v-if="responseSuccess"
+                          class="pt-2"
+                          style="text-align: center"
+                        >
+                          <b-alert dismissible show variant="success">
+                            {{ responseSuccess }}
+                          </b-alert>
+                        </div>
+                      </b-col>
+                      <b-col />
+                    </b-row>
+                  </b-col>
+                  <b-col />
+                </b-row>
+                <br />
+                <b-row>
+                  <b-col />
+                  <b-col style="min-width: fit-content">
+                    <b-button variant="secondary" @click="changePassword">
+                      Change password
+                    </b-button>
+                    <div
+                      v-if="
+                        validationaccountNameChange &&
+                        accountName !== username &&
+                        validationaccountNameNew
+                      "
+                      class="pt-2"
+                    >
+                      <b-button variant="success" @click="updateProfile">
+                        Update profile
+                      </b-button>
                     </div>
-                  </div>
-                </div>
-              </b-form-group>
-            </div>
-          </b-form>
+                    <div v-if="updated" class="pt-2" style="text-align: center">
+                      <b-alert dismissible show variant="success">
+                        Your profile was updated successfully!
+                      </b-alert>
+                    </div>
+                    <div v-if="hasSecurityEnabled">
+                      <b-button
+                        variant="danger"
+                        class="mt-2"
+                        @click="removeEnchancedSecurity"
+                      >
+                        Disable 2FA !
+                      </b-button>
+                      <div v-if="removeSec">
+                        Please enter the answer for the security question !
+                        <br />
+                        {{ securityQuestion1 }}
+                        <b-form-input
+                          v-model="securityAnswer1"
+                          class="mt-2"
+                        ></b-form-input>
+                        <div v-if="securityAnswer1">
+                          {{ securityQuestion2 }}
+                          <b-form-input
+                            v-model="securityAnswer2"
+                            class="mt-2"
+                          ></b-form-input>
+                        </div>
+                        <div v-if="securityAnswer2">
+                          {{ securityQuestion3 }}
+                          <b-form-input
+                            v-model="securityAnswer3"
+                            class="mt-2"
+                          ></b-form-input>
+                        </div>
+                      </div>
+                      <div
+                        v-if="
+                          securityAnswer1 && securityAnswer2 && securityAnswer3
+                        "
+                      >
+                        <b-button
+                          variant="danger"
+                          class="mt-2"
+                          @click="disableSecurity()"
+                        >
+                          Yes, disable 2FA !
+                        </b-button>
+                      </div>
+                    </div>
+                    <div v-else>
+                      <b-form-group id="input-group-2fa" label-for="choice-2fa">
+                        <b-button
+                          variant="primary"
+                          class="mt-2"
+                          @click="openQuestions"
+                        >
+                          Enable 2FA !
+                        </b-button>
+                        <div v-if="enableSecurity">
+                          <b-form-select
+                            v-model="firstQuestion"
+                            :options="questions"
+                            class="mt-2"
+                          ></b-form-select>
+                          <div v-if="firstQuestion">
+                            <b-form-input
+                              v-model="firstAnswer"
+                              class="mt-2"
+                            ></b-form-input>
+                          </div>
+                          <div v-if="firstAnswer">
+                            <b-form-select
+                              v-model="secondQuestion"
+                              :options="questions"
+                              class="mt-2"
+                            ></b-form-select>
+                          </div>
+                          <div v-if="secondQuestion">
+                            <b-form-input
+                              v-model="secondAnswer"
+                              class="mt-2"
+                            ></b-form-input>
+                          </div>
+                          <div v-if="secondAnswer">
+                            <b-form-select
+                              v-model="thirdQuestion"
+                              :options="questions"
+                              class="mt-2"
+                            ></b-form-select>
+                          </div>
+                          <div v-if="thirdQuestion">
+                            <b-form-input
+                              v-model="thirdAnswer"
+                              class="mt-2"
+                            ></b-form-input>
+                          </div>
+                          <b-form-invalid-feedback
+                            :state="validationSecurityQuestions"
+                          >
+                            You need to select 3 unique questions and answer
+                            them !
+                          </b-form-invalid-feedback>
+                          <b-form-valid-feedback
+                            :state="validationSecurityQuestions"
+                          >
+                            Security questions are OK !
+                          </b-form-valid-feedback>
+                          <div v-if="thirdAnswer">
+                            <div
+                              v-if="
+                                enableSecurity &&
+                                firstAnswer &&
+                                secondAnswer &&
+                                thirdAnswer &&
+                                validationSecurityQuestions
+                              "
+                            >
+                              2FA can be activated !
+                              <b-row>
+                                <b-col>
+                                  <b-button
+                                    variant="success"
+                                    class="mt-2"
+                                    @click="submitSecurityQuestions"
+                                  >
+                                    Submit
+                                  </b-button>
+                                </b-col>
+                                <b-col />
+                                <b-col>
+                                  <b-button
+                                    variant="danger"
+                                    class="mt-2"
+                                    @click="closeSecurityQuestions"
+                                  >
+                                    Forget it
+                                  </b-button>
+                                </b-col>
+                              </b-row>
+                            </div>
+                          </div>
+                        </div>
+                      </b-form-group>
+                    </div>
+                  </b-col>
+                  <b-col />
+                </b-row>
+              </b-form>
+            </b-card-body>
+          </b-card>
         </b-col>
         <b-col />
       </b-row>
@@ -536,3 +573,9 @@ export default {
   },
 }
 </script>
+
+<style>
+.avatar-content {
+  text-align: center;
+}
+</style>

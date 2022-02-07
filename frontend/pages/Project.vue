@@ -74,66 +74,71 @@
       <b-col />
       <b-col cols="9">
         <h3>Existing projects:</h3>
-        <b-table
-          id="project-table"
-          :fields="fields"
-          :items="items"
-          :per-page="perPage"
-          :current-page="currentPage"
-          hover
-          responsive
-          striped
-        >
-          <col v-for="field in fields" :key="field.key" />
-          <template #cell(projectName)="data">
-            {{ data.item.projectName }}
-          </template>
-          <template #cell(projectDesc)="data">
-            <div v-if="data.item.projectDesc === null">
-              No description available
-            </div>
-            <div v-else>
-              {{ data.item.projectDesc }}
-            </div>
-          </template>
-          <template #cell(priority)="data">
-            {{ data.item.priority }}
-          </template>
-          <template #cell(projectTime)="data">
-            <div v-if="data.item.projectTime === 0">None</div>
-            <div v-else>
-              {{ formatTime(data.item.projectTime).hours() }}h:
-              {{ formatTime(data.item.projectTime).minutes() }}m:
-              {{ formatTime(data.item.projectTime).seconds() }}s
-            </div>
-          </template>
-          <template #cell(showEdit)="data">
-            <b-button
-              variant="outline-secondary"
-              @click="editRecord(data.item.projectID)"
-            >
-              <b-icon icon="gear-fill" />
-            </b-button>
-            <b-button
-              variant="outline-danger"
-              @click="deleteProject(data.item.projectID)"
-            >
-              <b-icon icon="trash-fill" />
-            </b-button>
-          </template>
-        </b-table>
-        <b-row>
-          <b-col />
-          <b-col style="max-width: fit-content">
-            <b-pagination
-              v-model="currentPage"
-              :total-rows="rows"
-              :per-page="perPage"
-              aria-controls="project-table"
-            ></b-pagination>
-          </b-col>
-          <b-col />
-        </b-row>
+        <div v-if="items.length === 0">
+          <h4>No records available!</h4>
+        </div>
+        <div v-else>
+          <b-table
+            id="project-table"
+            :fields="fields"
+            :items="items"
+            :per-page="perPage"
+            :current-page="currentPage"
+            hover
+            responsive
+            striped
+          >
+            <col v-for="field in fields" :key="field.key" />
+            <template #cell(projectName)="data">
+              {{ data.item.projectName }}
+            </template>
+            <template #cell(projectDesc)="data">
+              <div v-if="data.item.projectDesc === null">
+                No description available
+              </div>
+              <div v-else>
+                {{ data.item.projectDesc }}
+              </div>
+            </template>
+            <template #cell(priority)="data">
+              {{ data.item.priority }}
+            </template>
+            <template #cell(projectTime)="data">
+              <div v-if="data.item.projectTime === 0">None</div>
+              <div v-else>
+                {{ formatTime(data.item.projectTime).hours() }}h:
+                {{ formatTime(data.item.projectTime).minutes() }}m:
+                {{ formatTime(data.item.projectTime).seconds() }}s
+              </div>
+            </template>
+            <template #cell(showEdit)="data">
+              <b-button
+                variant="outline-secondary"
+                @click="editRecord(data.item.projectID)"
+              >
+                <b-icon icon="gear-fill" />
+              </b-button>
+              <b-button
+                variant="outline-danger"
+                @click="deleteProject(data.item.projectID)"
+              >
+                <b-icon icon="trash-fill" />
+              </b-button>
+            </template>
+          </b-table>
+          <b-row>
+            <b-col />
+            <b-col style="max-width: fit-content">
+              <b-pagination
+                v-model="currentPage"
+                :total-rows="rows"
+                :per-page="perPage"
+                aria-controls="project-table"
+              ></b-pagination>
+            </b-col>
+            <b-col />
+          </b-row>
+        </div>
       </b-col>
       <b-col />
     </b-row>

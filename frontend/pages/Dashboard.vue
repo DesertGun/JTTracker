@@ -81,9 +81,9 @@
       <h4 class="mt-5">Latest timers logged:</h4>
       <b-row>
         <b-col />
-        <b-col style="min-width: fit-content;">
+        <b-col style="min-width: fit-content">
           <div v-if="timesUser.length !== 0" class="flexElementFix">
-            <b-card-group deck style="justify-content: center;">
+            <b-card-group deck style="justify-content: center">
               <b-card
                 v-for="time in timesUser"
                 :key="time.timeID"
@@ -146,7 +146,7 @@
         <b-col />
         <b-col style="min-width: fit-content">
           <div v-if="projectsUser.length !== 0" class="flexElementFix">
-            <b-card-group deck style="justify-content: center;">
+            <b-card-group deck style="justify-content: center">
               <b-card
                 v-for="project in projectsUser"
                 :key="project.projectID"
