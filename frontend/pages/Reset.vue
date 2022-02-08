@@ -99,7 +99,6 @@ export default {
   },
   methods: {
     async submit() {
-      // TODO: change API-Links in accordance to best-practise!
       try {
         const response = await this.$axios.post('/user/password/reset/change', {
           username: this.user,

@@ -19,7 +19,6 @@
             <b-card-body>
               <b-form>
                 <b-row>
-                  <b-col />
                   <b-col>
                     <b-form-group
                       id="usernameFormGroup"
@@ -35,11 +34,6 @@
                       />
                     </b-form-group>
                   </b-col>
-                  <b-col />
-                </b-row>
-
-                <b-row>
-                  <b-col />
                   <b-col>
                     <b-form-group
                       id="accountNameFormGroup"
@@ -68,9 +62,7 @@
                       />
                     </b-form-group>
                   </b-col>
-                  <b-col />
                 </b-row>
-
                 <b-row>
                   <b-col />
                   <b-col class="avatar-content">
@@ -86,14 +78,16 @@
                             getHash +
                             '?d=identicon'
                           "
+                          height="100px"
+                          width="100px"
                           rounded="circle"
                         />
                       </div>
                       <div v-else>
                         <b-img-lazy
                           :src="getProfilePicture"
-                          height="150px"
-                          width="150px"
+                          height="100px"
+                          width="100px"
                           rounded="circle"
                         />
                       </div>
@@ -118,8 +112,8 @@
                       ></b-progress>
                     </div>
                     <b-row>
-                      <b-col cols="3" />
-                      <b-col>
+                      <b-col />
+                      <b-col style="min-width: fit-content">
                         <div v-if="profilePictureUpload">
                           <b-button
                             variant="secondary"
@@ -139,7 +133,7 @@
                           </b-button>
                         </div>
                       </b-col>
-                      <b-col cols="3" />
+                      <b-col />
                     </b-row>
                     <b-row>
                       <b-col />
@@ -160,21 +154,23 @@
                   <b-col />
                 </b-row>
                 <br />
+
                 <b-row>
                   <b-col />
-                  <b-col style="min-width: fit-content">
-                    <b-button variant="secondary" @click="changePassword">
-                      Change password
-                    </b-button>
+                  <b-col>
                     <div
                       v-if="
                         validationaccountNameChange &&
                         accountName !== username &&
                         validationaccountNameNew
                       "
-                      class="pt-2"
+                      class="pb-2"
                     >
-                      <b-button variant="success" @click="updateProfile">
+                      <b-button
+                        class="w-100"
+                        variant="success"
+                        @click="updateProfile"
+                      >
                         Update profile
                       </b-button>
                     </div>
@@ -183,148 +179,174 @@
                         Your profile was updated successfully!
                       </b-alert>
                     </div>
+                  </b-col>
+                  <b-col />
+                </b-row>
+
+                <b-row>
+                  <b-col />
+                  <b-col style="min-width: fit-content">
+                    <b-button
+                      class="w-100"
+                      variant="secondary"
+                      @click="changePassword"
+                    >
+                      Change password
+                    </b-button>
+                  </b-col>
+                  <b-col />
+                </b-row>
+
+                <b-row>
+                  <b-col />
+                  <b-col>
                     <div v-if="hasSecurityEnabled">
                       <b-button
                         variant="danger"
-                        class="mt-2"
+                        class="mt-2 w-100"
                         @click="removeEnchancedSecurity"
                       >
                         Disable 2FA !
                       </b-button>
-                      <div v-if="removeSec">
-                        Please enter the answer for the security question !
-                        <br />
-                        {{ securityQuestion1 }}
-                        <b-form-input
-                          v-model="securityAnswer1"
-                          class="mt-2"
-                        ></b-form-input>
-                        <div v-if="securityAnswer1">
-                          {{ securityQuestion2 }}
-                          <b-form-input
-                            v-model="securityAnswer2"
-                            class="mt-2"
-                          ></b-form-input>
-                        </div>
-                        <div v-if="securityAnswer2">
-                          {{ securityQuestion3 }}
-                          <b-form-input
-                            v-model="securityAnswer3"
-                            class="mt-2"
-                          ></b-form-input>
-                        </div>
-                      </div>
-                      <div
-                        v-if="
-                          securityAnswer1 && securityAnswer2 && securityAnswer3
-                        "
-                      >
-                        <b-button
-                          variant="danger"
-                          class="mt-2"
-                          @click="disableSecurity()"
-                        >
-                          Yes, disable 2FA !
-                        </b-button>
-                      </div>
                     </div>
                     <div v-else>
-                      <b-form-group id="input-group-2fa" label-for="choice-2fa">
-                        <b-button
-                          variant="primary"
+                      <b-button
+                        variant="primary"
+                        class="mt-2 w-100"
+                        @click="openQuestions"
+                      >
+                        Enable 2FA !
+                      </b-button>
+                    </div>
+                  </b-col>
+                  <b-col />
+                </b-row>
+                <b-row>
+                  <b-col>
+                    <div v-if="removeSec">
+                      Please enter the answer for the security question !
+                      <br />
+                      {{ securityQuestion1 }}
+                      <b-form-input
+                        v-model="securityAnswer1"
+                        class="mt-2"
+                      ></b-form-input>
+                      <div v-if="securityAnswer1">
+                        {{ securityQuestion2 }}
+                        <b-form-input
+                          v-model="securityAnswer2"
                           class="mt-2"
-                          @click="openQuestions"
-                        >
-                          Enable 2FA !
-                        </b-button>
-                        <div v-if="enableSecurity">
+                        ></b-form-input>
+                      </div>
+                      <div v-if="securityAnswer2">
+                        {{ securityQuestion3 }}
+                        <b-form-input
+                          v-model="securityAnswer3"
+                          class="mt-2"
+                        ></b-form-input>
+                      </div>
+                    </div>
+                    <div
+                      v-if="
+                        securityAnswer1 && securityAnswer2 && securityAnswer3
+                      "
+                      style="text-align: center"
+                    >
+                      <b-button
+                        variant="danger"
+                        class="mt-2"
+                        @click="disableSecurity()"
+                      >
+                        Yes, disable 2FA !
+                      </b-button>
+                    </div>
+                    <div v-if="enableSecurity">
+                      <b-form-group id="input-group-2fa" label-for="choice-2fa">
+                        <b-form-select
+                          v-model="firstQuestion"
+                          :options="questions"
+                          class="mt-2"
+                        ></b-form-select>
+                        <div v-if="firstQuestion">
+                          <b-form-input
+                            v-model="firstAnswer"
+                            class="mt-2"
+                          ></b-form-input>
+                        </div>
+                        <div v-if="firstAnswer">
                           <b-form-select
-                            v-model="firstQuestion"
+                            v-model="secondQuestion"
                             :options="questions"
                             class="mt-2"
                           ></b-form-select>
-                          <div v-if="firstQuestion">
-                            <b-form-input
-                              v-model="firstAnswer"
-                              class="mt-2"
-                            ></b-form-input>
-                          </div>
-                          <div v-if="firstAnswer">
-                            <b-form-select
-                              v-model="secondQuestion"
-                              :options="questions"
-                              class="mt-2"
-                            ></b-form-select>
-                          </div>
-                          <div v-if="secondQuestion">
-                            <b-form-input
-                              v-model="secondAnswer"
-                              class="mt-2"
-                            ></b-form-input>
-                          </div>
-                          <div v-if="secondAnswer">
-                            <b-form-select
-                              v-model="thirdQuestion"
-                              :options="questions"
-                              class="mt-2"
-                            ></b-form-select>
-                          </div>
-                          <div v-if="thirdQuestion">
-                            <b-form-input
-                              v-model="thirdAnswer"
-                              class="mt-2"
-                            ></b-form-input>
-                          </div>
-                          <b-form-invalid-feedback
-                            :state="validationSecurityQuestions"
+                        </div>
+                        <div v-if="secondQuestion">
+                          <b-form-input
+                            v-model="secondAnswer"
+                            class="mt-2"
+                          ></b-form-input>
+                        </div>
+                        <div v-if="secondAnswer">
+                          <b-form-select
+                            v-model="thirdQuestion"
+                            :options="questions"
+                            class="mt-2"
+                          ></b-form-select>
+                        </div>
+                        <div v-if="thirdQuestion">
+                          <b-form-input
+                            v-model="thirdAnswer"
+                            class="mt-2"
+                          ></b-form-input>
+                        </div>
+                        <b-form-invalid-feedback
+                          :state="validationSecurityQuestions"
+                        >
+                          You need to select 3 unique questions and answer them
+                          !
+                        </b-form-invalid-feedback>
+                        <b-form-valid-feedback
+                          :state="validationSecurityQuestions"
+                        >
+                          Security questions are OK !
+                        </b-form-valid-feedback>
+                        <div v-if="thirdAnswer">
+                          <div
+                            v-if="
+                              enableSecurity &&
+                              firstAnswer &&
+                              secondAnswer &&
+                              thirdAnswer &&
+                              validationSecurityQuestions
+                            "
                           >
-                            You need to select 3 unique questions and answer
-                            them !
-                          </b-form-invalid-feedback>
-                          <b-form-valid-feedback
-                            :state="validationSecurityQuestions"
-                          >
-                            Security questions are OK !
-                          </b-form-valid-feedback>
-                          <div v-if="thirdAnswer">
-                            <div
-                              v-if="
-                                enableSecurity &&
-                                firstAnswer &&
-                                secondAnswer &&
-                                thirdAnswer &&
-                                validationSecurityQuestions
-                              "
-                            >
-                              2FA can be activated !
-                              <b-row>
-                                <b-col>
-                                  <b-button
-                                    variant="success"
-                                    class="mt-2"
-                                    @click="submitSecurityQuestions"
-                                  >
-                                    Submit
-                                  </b-button>
-                                </b-col>
-                                <b-col />
-                                <b-col>
-                                  <b-button
-                                    variant="danger"
-                                    class="mt-2"
-                                    @click="closeSecurityQuestions"
-                                  >
-                                    Forget it
-                                  </b-button>
-                                </b-col>
-                              </b-row>
-                            </div>
+                            2FA can be activated !
+                            <b-row>
+                              <b-col style="text-align: left">
+                                <b-button
+                                  variant="success"
+                                  class="mt-2"
+                                  @click="submitSecurityQuestions"
+                                >
+                                  Submit
+                                </b-button>
+                              </b-col>
+                              <b-col />
+                              <b-col style="text-align: right">
+                                <b-button
+                                  variant="danger"
+                                  class="mt-2"
+                                  @click="closeSecurityQuestions"
+                                >
+                                  Forget it
+                                </b-button>
+                              </b-col>
+                            </b-row>
                           </div>
                         </div>
                       </b-form-group>
                     </div>
                   </b-col>
-                  <b-col />
                 </b-row>
               </b-form>
             </b-card-body>
@@ -465,6 +487,12 @@ export default {
           )
           if (disableSecurityResponse.data.successMessage) {
             this.responseSuccess = disableSecurityResponse.data.successMessage
+            this.firstQuestion = null
+            this.secondQuestion = null
+            this.thirdQuestion = null
+            this.firstAnswer = null
+            this.secondAnswer = null
+            this.thirdAnswer = null
             await this.$store.dispatch('user/setProfileData')
           }
         } else if (response.data.errorMessage) {
