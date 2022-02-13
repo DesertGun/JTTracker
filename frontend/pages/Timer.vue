@@ -239,6 +239,7 @@ export default {
       )
       this.deleteTimer(indexInStore)
       this.items = this.getTimers
+      this.updateProjects()
     },
   },
 }

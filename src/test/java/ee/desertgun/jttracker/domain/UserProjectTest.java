@@ -60,8 +60,8 @@ public class UserProjectTest {
 
         TrackedTime trackedTime = new TrackedTime(user, timeID, start, end, timeDesc, duration);
 
-        ArrayList<UserProject> userProjects = new ArrayList<>();
-        trackedTime.setProjectList(userProjects);
+        ArrayList<UUID> userProjectsIDs = new ArrayList<>();
+        trackedTime.setProjectIDs(userProjectsIDs);
 
         trackedTime = entityManager.persistAndFlush(trackedTime);
 
@@ -77,9 +77,8 @@ public class UserProjectTest {
 
         TrackedTime secondTrackedTime = new TrackedTime(user, timeID, start, end, timeDesc, duration);
 
-        ArrayList<UserProject> userProjects = new ArrayList<>();
-        secondTrackedTime.setProjectList(userProjects);
-
+        ArrayList<UUID> userProjectIDs = new ArrayList<>();
+        secondTrackedTime.setProjectIDs(userProjectIDs);
         secondTrackedTime = entityManager.persistAndFlush(secondTrackedTime);
 
         this.secondTrackedTime = secondTrackedTime;

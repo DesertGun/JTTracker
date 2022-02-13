@@ -42,38 +42,39 @@ public class TrackedTimeServiceImpl implements TrackedTimeService {
     @Override
     public void deleteTimeByID(UUID timeID) {
         TrackedTime trackedTime = trackedTimeRepository.getTrackedTimeByTimeID(timeID);
-        User user = trackedTimeRepository.getTrackedTimeByTimeID(timeID).getUser();
-
-        List<UserProject> userProjects = projectRepository.getAllByUser(user);
+        List<UserProject> userProjects = projectRepository.getAllByUser(trackedTime.getUser());
         for (UserProject userProject : userProjects) {
-            if (userProject.getTrackedTimeList().contains(trackedTime)) {
-                userProject.removeTime(trackedTime);
-                userProject.countDuration(userProject.getTrackedTimeList());
+            List<TrackedTime> trackedTimeList = userProject.getTrackedTimeList();
+            if(trackedTimeList.contains(trackedTime)) {
+                userProject.setProjectTime(userProject.getProjectTime().minus(trackedTime.getDuration()));
                 projectRepository.save(userProject);
+                trackedTimeList.remove(trackedTime);
+                userProject.setTrackedTimeList(trackedTimeList);
             }
         }
         trackedTimeRepository.deleteById(timeID);
     }
 
     @Override
-    public void updateTime(UUID timeID, TrackedTimeDTO timer) {
-        TrackedTime time = trackedTimeRepository.getTrackedTimeByTimeID(timeID);
-        time.setEndTime(timer.getEndTime());
-        time.setStartTime(timer.getStartTime());
-        time.setTimeDesc(timer.getTimeDesc());
-        time.setDuration(timer.getDuration());
+    public void updateTime(UUID timeID, TrackedTimeDTO timerNew) {
+        TrackedTime timerCurrent = trackedTimeRepository.getTrackedTimeByTimeID(timeID);
 
-        setZoneDateTimeOfTrackedTime(time);
-
-        User user = trackedTimeRepository.getTrackedTimeByTimeID(timeID).getUser();
-
-        List<UserProject> userProjects = projectRepository.getAllByUser(user);
-        for (UserProject userProject : userProjects) {
-            if (userProject.getTrackedTimeList().contains(time)) {
-                userProject.countDuration(userProject.getTrackedTimeList());
+        if (timerNew.getDuration() != timerCurrent.getDuration()) {
+            List<UserProject> projectsInTrackedTime = projectRepository.getProjectsByProjectIDs(timerCurrent.getProjectIDs());
+            for (UserProject userProject : projectsInTrackedTime) {
+                Duration currentTimerDuration = timerCurrent.getDuration();
+                Duration newTimerDuration = timerNew.getDuration();
+                // subtract old duration from project and add the new one
+                userProject.setProjectTime(userProject.getProjectTime().minus(currentTimerDuration).plus(newTimerDuration));
                 projectRepository.save(userProject);
             }
         }
+
+        timerCurrent.setEndTime(timerNew.getEndTime());
+        timerCurrent.setStartTime(timerNew.getStartTime());
+        timerCurrent.setTimeDesc(timerNew.getTimeDesc());
+        timerCurrent.setDuration(timerNew.getDuration());
+        setZoneDateTimeOfTrackedTime(timerCurrent);
     }
 
     @Override
@@ -87,6 +88,7 @@ public class TrackedTimeServiceImpl implements TrackedTimeService {
         TrackedTime trackedTime = createNewTrackedTime(trackedTimeDTO, user);
         trackedTime.setDuration(countDuration(trackedTime.getStartTime(), trackedTime.getEndTime()));
         setZoneDateTimeOfTrackedTime(trackedTime);
+        trackedTime.setInProject(false);
     }
 
     private void setZoneDateTimeOfTrackedTime(TrackedTime trackedTime) {

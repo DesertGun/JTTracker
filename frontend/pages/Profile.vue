@@ -23,7 +23,7 @@
                     <b-form-group
                       id="usernameFormGroup"
                       description="Unique username for yor account"
-                      label="Username:"
+                      label="Username"
                       label-for="username"
                     >
                       <b-form-input
@@ -38,7 +38,7 @@
                     <b-form-group
                       id="accountNameFormGroup"
                       description="Name linked to your account"
-                      label="Account name:"
+                      label="Account name"
                       label-for="accountName"
                     >
                       <b-form-input
@@ -68,7 +68,7 @@
                   <b-col class="avatar-content">
                     <b-form-group
                       id="avatarFormGroup"
-                      label="Avatar:"
+                      label="Avatar"
                       label-for="avatar"
                     >
                       <div v-if="!hasProfilePicture">
@@ -202,7 +202,7 @@
                   <b-col>
                     <div v-if="hasSecurityEnabled">
                       <b-button
-                        variant="danger"
+                        variant="outline-danger"
                         class="mt-2 w-100"
                         @click="removeEnchancedSecurity"
                       >
@@ -222,7 +222,8 @@
                   <b-col />
                 </b-row>
                 <b-row>
-                  <b-col>
+                  <b-col />
+                  <b-col style="min-width: max-content;">
                     <div v-if="removeSec">
                       Please enter the answer for the security question !
                       <br />
@@ -231,6 +232,7 @@
                         v-model="securityAnswer1"
                         class="mt-2"
                       ></b-form-input>
+                      <br />
                       <div v-if="securityAnswer1">
                         {{ securityQuestion2 }}
                         <b-form-input
@@ -238,6 +240,7 @@
                           class="mt-2"
                         ></b-form-input>
                       </div>
+                      <br />
                       <div v-if="securityAnswer2">
                         {{ securityQuestion3 }}
                         <b-form-input
@@ -248,7 +251,7 @@
                     </div>
                     <div
                       v-if="
-                        securityAnswer1 && securityAnswer2 && securityAnswer3
+                        securityAnswer1 && securityAnswer2 && securityAnswer3 && removeSec
                       "
                       style="text-align: center"
                     >
@@ -272,6 +275,7 @@
                             v-model="firstAnswer"
                             class="mt-2"
                           ></b-form-input>
+                          <br />
                         </div>
                         <div v-if="firstAnswer">
                           <b-form-select
@@ -285,6 +289,7 @@
                             v-model="secondAnswer"
                             class="mt-2"
                           ></b-form-input>
+                          <br />
                         </div>
                         <div v-if="secondAnswer">
                           <b-form-select
@@ -334,7 +339,7 @@
                               <b-col />
                               <b-col style="text-align: right">
                                 <b-button
-                                  variant="danger"
+                                  variant="outline-danger"
                                   class="mt-2"
                                   @click="closeSecurityQuestions"
                                 >
@@ -347,6 +352,7 @@
                       </b-form-group>
                     </div>
                   </b-col>
+                  <b-col />
                 </b-row>
               </b-form>
             </b-card-body>
@@ -494,6 +500,7 @@ export default {
             this.secondAnswer = null
             this.thirdAnswer = null
             await this.$store.dispatch('user/setProfileData')
+            this.removeSec = false
           }
         } else if (response.data.errorMessage) {
           this.responseError = response.data.errorMessage

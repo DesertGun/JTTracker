@@ -32,9 +32,12 @@ public class TrackedTime {
 
     private String loggedMonth;
 
-    @ManyToMany
+    // TODO: mark Timers which are in a Project
+    private Boolean inProject;
+
+    @ElementCollection
     @JsonIgnore
-    private List<UserProject> projectList;
+    private List<UUID> projectIDs;
 
     @OneToOne
     @JsonIgnore
@@ -52,16 +55,6 @@ public class TrackedTime {
 
     public TrackedTime() {
 
-    }
-
-    public void addProject(UserProject userProject) {
-        this.projectList.add(userProject);
-        userProject.getTrackedTimeList().add(this);
-    }
-
-    public void removeProject(UserProject userProject) {
-        this.projectList.remove(userProject);
-        userProject.getTrackedTimeList().remove(this);
     }
 
 }

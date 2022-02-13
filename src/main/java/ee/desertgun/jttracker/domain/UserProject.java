@@ -6,7 +6,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -49,24 +48,5 @@ public class UserProject {
 
     public UserProject() {
 
-    }
-
-    public void addTime(TrackedTime trackedTime) {
-        this.trackedTimeList.add(trackedTime);
-        trackedTime.getProjectList().add(this);
-    }
-
-    public void removeTime(TrackedTime trackedTime) {
-        this.trackedTimeList.remove(trackedTime);
-        trackedTime.getProjectList().remove(this);
-    }
-
-    public void countDuration(List<TrackedTime> trackedTimes) {
-        projectTime = Duration.ZERO;
-        List<Duration> durationList = new ArrayList<>();
-        for (TrackedTime trackedTime : trackedTimes) {
-            durationList.add((trackedTime.getDuration()));
-        }
-        projectTime = durationList.stream().reduce(Duration.ZERO, Duration::plus);
     }
 }

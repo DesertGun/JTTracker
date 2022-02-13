@@ -59,8 +59,8 @@ public class TrackedTimeTest {
 
         TrackedTime trackedTime = new TrackedTime(user, timeID, start, end, timeDesc, duration);
 
-        ArrayList<UserProject> userProjects = new ArrayList<>();
-        trackedTime.setProjectList(userProjects);
+        ArrayList<UUID> userProjectIDs = new ArrayList<>();
+        trackedTime.setProjectIDs(userProjectIDs);
 
         trackedTime = entityManager.persistAndFlush(trackedTime);
 
@@ -152,20 +152,20 @@ public class TrackedTimeTest {
         UUID projectID = userProject.getProjectID();
 
 
-        trackedTime.addProject(userProject);
+        trackedTime.getProjectIDs().add(projectID);
 
 
-        assertSame(trackedTimeRepository.getTrackedTimeByTimeID(trackedTime.getTimeID()).getProjectList().get(0),
-                (projectRepository.getByProjectID(projectID)));
+        assertSame(trackedTimeRepository.getTrackedTimeByTimeID(trackedTime.getTimeID()).getProjectIDs().get(0),
+                (projectRepository.getByProjectID(projectID).getProjectID()));
     }
 
     @Test
     public void removeProject() {
 
-        trackedTime.removeProject(userProject);
+        trackedTime.getProjectIDs().remove(userProject.getProjectID());
 
 
-        assertTrue(trackedTimeRepository.getTrackedTimeByTimeID(trackedTime.getTimeID()).getProjectList().isEmpty());
+        assertTrue(trackedTimeRepository.getTrackedTimeByTimeID(trackedTime.getTimeID()).getProjectIDs().isEmpty());
     }
 
 }

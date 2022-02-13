@@ -44,10 +44,10 @@ public class UserProjectServiceImpl implements UserProjectService {
         UserProject userProject = projectRepository.getByProjectID(projectID);
         List<TrackedTime> trackedTimeList = trackedTimeRepository.getTrackedTimesByUser(userRepository.findByUsername(username));
         for (TrackedTime trackedTime : trackedTimeList) {
-            if (trackedTime.getProjectList().contains(userProject)) {
-                trackedTime.removeProject(userProject);
+            if (trackedTime.getProjectIDs().contains(userProject.getProjectID())) {
+                trackedTime.getProjectIDs().remove(userProject.getProjectID());
                 trackedTimeRepository.save(trackedTime);
-                userProject.removeTime(trackedTime);
+                userProject.getTrackedTimeList().remove(trackedTime);
             }
         }
         projectRepository.delete(userProject);
@@ -72,10 +72,14 @@ public class UserProjectServiceImpl implements UserProjectService {
     public void addTimeToProject(UUID projectID, List<TrackedTime> trackedTimeList, UUID trackedTimeID, Duration projectTime) {
         UserProject userProject = projectRepository.getByProjectID(projectID);
         TrackedTime trackedTimeToAdd = trackedTimeRepository.getTrackedTimeByTimeID(trackedTimeID);
-        if (trackedTimeToAdd.getProjectList().contains(userProject)) {
-            trackedTimeToAdd.getProjectList().remove(userProject);
+        if (trackedTimeToAdd.getProjectIDs().contains(userProject.getProjectID())) {
+            trackedTimeToAdd.getProjectIDs().remove(userProject.getProjectID());
+            if (trackedTimeToAdd.getProjectIDs().isEmpty()) {
+                trackedTimeToAdd.setInProject(false);
+            }
         } else {
-            trackedTimeToAdd.getProjectList().add(userProject);
+            trackedTimeToAdd.getProjectIDs().add(userProject.getProjectID());
+            trackedTimeToAdd.setInProject(true);
         }
         userProject.setTrackedTimeList(trackedTimeList);
         userProject.setProjectTime(projectTime);
