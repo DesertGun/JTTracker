@@ -132,4 +132,9 @@ public class UserServiceImpl implements UserService {
 
         userService.addSecurityQuestions(userDTO.getUsername(), securityQuestions, securityAnswers);
     }
+    @Override
+    public void deleteUser(String username) {
+        User user = userRepository.getById(username);
+        userRepository.delete(user);
+    }
 }

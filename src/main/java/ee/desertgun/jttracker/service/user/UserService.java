@@ -31,4 +31,6 @@ public interface UserService extends UserDetailsService {
     void disableEnhancedSecurity(UserDTO userDTO);
 
     void extractEnhancedSecurityDetails(@RequestBody @Valid UserDTO userDTO, PasswordEncoder passwordEncoder, UserService userService);
+
+    void deleteUser(String username);
 }

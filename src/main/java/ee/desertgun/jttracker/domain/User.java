@@ -18,6 +18,7 @@ import java.util.UUID;
 @Getter
 public class User implements UserDetails {
 
+    //TODO: Update entity to allow for cascade and orphan removal
     @Id
     @Column(unique = true)
     private String username;

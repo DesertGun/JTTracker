@@ -189,6 +189,23 @@ public class UserAccountController {
         return validationResponse;
     }
 
+    @DeleteMapping("/user/delete/{username}")
+    public ValidationResponse deleteEmployee(@PathVariable(value = "username") String username) {
+        ValidationResponse response = new ValidationResponse();
+
+        if (!userService.userExists(username)) {
+            String error = "Failed to locate your account! Please contact your admin!";
+            response.setValidated(false);
+            response.setErrorMessage(error);
+        } else {
+            userService.deleteUser(username);
+            String message = "Account deleted! Hope to see you soon! in 10 seconds your session will be terminated!";
+            response.setValidated(true);
+            response.setSuccessMessage(message);
+        }
+        return response;
+    }
+
     @GetMapping(value = "/user/picture/")
     public ResponseEntity<String> downloadImage(Principal principal) throws IOException {
         User user = userService.getUserByUsername(principal.getName());

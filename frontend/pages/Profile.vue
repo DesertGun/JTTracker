@@ -47,7 +47,13 @@
                         placeholder="None"
                         type="text"
                       />
-                      <b-form-invalid-feedback
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+                <b-row>
+                  <b-col />
+                  <b-col>
+                    <b-form-invalid-feedback
                         :state="validationaccountNameChange"
                       >
                         Your global name cannot be empty!
@@ -60,8 +66,41 @@
                       <b-form-valid-feedback
                         :state="validationaccountNameChange"
                       />
-                    </b-form-group>
                   </b-col>
+                  <b-col />
+                </b-row>
+                <b-row>
+                  <b-col />
+                  <b-col>
+                    <div
+                      v-if="
+                        validationaccountNameChange &&
+                        accountName !== username &&
+                        validationaccountNameNew
+                      "
+                      class="pb-2"
+                    >
+                      <b-button
+                        class="w-100"
+                        variant="success"
+                        @click="updateProfile"
+                      >
+                        Update profile
+                      </b-button>
+                    </div>
+                  </b-col>
+                  <b-col />
+                </b-row>
+                <b-row>
+                  <b-col />
+                  <b-col style="min-width: fit-content;max-width: min-content;">
+                    <div v-if="updated" class="mt-2" style="text-align: center">
+                      <b-alert dismissible show variant="success">
+                        Your profile was updated successfully!
+                      </b-alert>
+                    </div>
+                  </b-col>
+                  <b-col />
                 </b-row>
                 <b-row>
                   <b-col />
@@ -116,7 +155,7 @@
                       <b-col style="min-width: fit-content">
                         <div v-if="profilePictureUpload">
                           <b-button
-                            variant="secondary"
+                            variant="primary"
                             class="mt-2"
                             @click="uploadProfilePicture"
                           >
@@ -125,7 +164,7 @@
                         </div>
                         <div v-if="hasProfilePicture">
                           <b-button
-                            variant="danger"
+                            variant="outline-danger"
                             class="mt-2"
                             @click="deleteProfilePicture"
                           >
@@ -137,7 +176,7 @@
                     </b-row>
                     <b-row>
                       <b-col />
-                      <b-col cols="10">
+                      <b-col style="min-width: fit-content;max-width: min-content;">
                         <div
                           v-if="responseSuccess"
                           class="pt-2"
@@ -147,38 +186,16 @@
                             {{ responseSuccess }}
                           </b-alert>
                         </div>
+                        <div
+                          v-if="responseError" class="pt-2"
+                          style="text-align: center">
+                            <b-alert dismissible show variant="danger">
+                            {{ responseError }}
+                          </b-alert>
+                        </div>
                       </b-col>
                       <b-col />
                     </b-row>
-                  </b-col>
-                  <b-col />
-                </b-row>
-                <br />
-
-                <b-row>
-                  <b-col />
-                  <b-col>
-                    <div
-                      v-if="
-                        validationaccountNameChange &&
-                        accountName !== username &&
-                        validationaccountNameNew
-                      "
-                      class="pb-2"
-                    >
-                      <b-button
-                        class="w-100"
-                        variant="success"
-                        @click="updateProfile"
-                      >
-                        Update profile
-                      </b-button>
-                    </div>
-                    <div v-if="updated" class="pt-2" style="text-align: center">
-                      <b-alert dismissible show variant="success">
-                        Your profile was updated successfully!
-                      </b-alert>
-                    </div>
                   </b-col>
                   <b-col />
                 </b-row>
@@ -187,8 +204,8 @@
                   <b-col />
                   <b-col style="min-width: fit-content">
                     <b-button
-                      class="w-100"
-                      variant="secondary"
+                      class="w-100 mt-2"
+                      variant="outline-secondary"
                       @click="changePassword"
                     >
                       Change password
@@ -211,7 +228,7 @@
                     </div>
                     <div v-else>
                       <b-button
-                        variant="primary"
+                        variant="success"
                         class="mt-2 w-100"
                         @click="openQuestions"
                       >
@@ -223,7 +240,7 @@
                 </b-row>
                 <b-row>
                   <b-col />
-                  <b-col style="min-width: max-content;">
+                  <b-col style="min-width: max-content">
                     <div v-if="removeSec">
                       Please enter the answer for the security question !
                       <br />
@@ -251,7 +268,10 @@
                     </div>
                     <div
                       v-if="
-                        securityAnswer1 && securityAnswer2 && securityAnswer3 && removeSec
+                        securityAnswer1 &&
+                        securityAnswer2 &&
+                        securityAnswer3 &&
+                        removeSec
                       "
                       style="text-align: center"
                     >
@@ -354,6 +374,14 @@
                   </b-col>
                   <b-col />
                 </b-row>
+                <b-row class="mt-2" align-h="between">
+                              <b-col cols="4"/>
+                              <b-col cols="4" style="min-width: fit-content;text-align: end">
+                                <b-button variant="outline-danger" @click="deleteAccount()">
+                                  <b-icon icon="trash-fill" />
+                                </b-button>
+                              </b-col>
+                            </b-row>
               </b-form>
             </b-card-body>
           </b-card>
@@ -462,6 +490,9 @@ export default {
     }
   },
   methods: {
+    deleteAccount(){
+      this.$router.push('/accountDelete')
+    },
     async removeEnchancedSecurity() {
       this.removeSec = true
       try {
