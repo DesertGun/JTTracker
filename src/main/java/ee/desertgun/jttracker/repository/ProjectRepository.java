@@ -14,6 +14,8 @@ public interface ProjectRepository extends JpaRepository<UserProject, UUID> {
 
     UserProject getByProjectID(UUID projectID);
 
+    void deleteAllByUser(User user);
+
     default List<UserProject> getProjectsByProjectIDs(List<UUID> projectIDs) {
         List<UserProject> userProjects = new ArrayList<>();
         for (UUID id : projectIDs) {

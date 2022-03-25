@@ -34,7 +34,7 @@
           </b-form-group>
           <b-row cols="8">
             <b-col>
-              <b-button variant="primary" @click="submit()"> Login </b-button>
+              <b-button id="loginBtn" variant="primary" @click="submit()"> Login </b-button>
             </b-col>
             <b-col style="min-width: fit-content">
               <b-button variant="outline-danger" @click="submitRecovery()">
@@ -46,7 +46,7 @@
             <b-col />
             <b-col cols="10">
               <div v-if="error" class="pt-2" style="text-align: center">
-                <b-alert dismissible show variant="danger">
+                <b-alert id="loginError" dismissible show variant="danger">
                   Wrong password or username !
                 </b-alert>
               </div>

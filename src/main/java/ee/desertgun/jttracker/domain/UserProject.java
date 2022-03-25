@@ -26,7 +26,7 @@ public class UserProject {
 
     private Boolean status;
 
-    @ManyToOne
+    @OneToOne
     @JsonIgnore
     private User user;
 

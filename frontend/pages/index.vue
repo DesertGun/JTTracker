@@ -14,7 +14,7 @@
           <b-button nuxt-link to="/register" variant="primary">
             Register
           </b-button>
-          <b-button nuxt-link to="/login" variant="secondary"> Login </b-button>
+          <b-button id="loginBtn" nuxt-link to="/login" variant="secondary"> Login </b-button>
         </div>
       </div>
       <div v-else>

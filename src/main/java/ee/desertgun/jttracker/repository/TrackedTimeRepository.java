@@ -12,4 +12,7 @@ public interface TrackedTimeRepository extends JpaRepository<TrackedTime, UUID> 
 
     TrackedTime getTrackedTimeByTimeID(UUID timeID);
 
+    void deleteAllByUser(User user);
+
+
 }

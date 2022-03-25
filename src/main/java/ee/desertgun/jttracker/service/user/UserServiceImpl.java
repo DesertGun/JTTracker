@@ -6,6 +6,8 @@ import ee.desertgun.jttracker.domain.User;
 import ee.desertgun.jttracker.dto.UserDTO;
 import ee.desertgun.jttracker.dto.UserProfileDTO;
 import ee.desertgun.jttracker.repository.PasswordTokenRepository;
+import ee.desertgun.jttracker.repository.ProjectRepository;
+import ee.desertgun.jttracker.repository.TrackedTimeRepository;
 import ee.desertgun.jttracker.repository.UserRepository;
 import ee.desertgun.jttracker.response.ValidationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
@@ -23,11 +26,16 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordTokenRepository passwordTokenRepository;
+    private final TrackedTimeRepository trackedTimeRepository;
+    private final ProjectRepository projectRepository;
 
     @Autowired
-    public UserServiceImpl(final UserRepository userRepository, final PasswordTokenRepository passwordTokenRepository) {
+    public UserServiceImpl(final UserRepository userRepository, final PasswordTokenRepository passwordTokenRepository,
+                           final TrackedTimeRepository trackedTimeRepository, final ProjectRepository projectRepository) {
         this.userRepository = userRepository;
         this.passwordTokenRepository = passwordTokenRepository;
+        this.trackedTimeRepository = trackedTimeRepository;
+        this.projectRepository = projectRepository;
     }
 
     @Override
@@ -133,8 +141,11 @@ public class UserServiceImpl implements UserService {
         userService.addSecurityQuestions(userDTO.getUsername(), securityQuestions, securityAnswers);
     }
     @Override
+    @Transactional
     public void deleteUser(String username) {
         User user = userRepository.getById(username);
+        projectRepository.deleteAllByUser(user);
+        trackedTimeRepository.deleteAllByUser(user);
         userRepository.delete(user);
     }
 }
