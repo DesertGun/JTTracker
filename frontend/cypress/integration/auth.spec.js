@@ -8,35 +8,35 @@
 
 describe('auth test', () => {
   it('login with correct info', () => {
-    cy.visit('http://localhost:3000')
-    cy.get('#loginBtn').click()
-    cy.get('#usernameInput')
+    cy.visit('/')
+    cy.get('[data-cy=loginBtn]').click()
+    cy.get('[data-cy=usernameInput]')
       .type('main@jttracker.de')
       .should('have.value', 'main@jttracker.de')
 
-      cy.get('#passwordInput')
+      cy.get('[data-cy=passwordInput]')
       .type('password')
       .should('have.value', 'password')
 
-      cy.get('#loginBtn').click()
+      cy.get('[data-cy=loginBtn]').click()
 
       cy.url().should('eq', 'http://localhost:3000/')
   })
 
   it('login with incorrect info', () => {
-    cy.visit('http://localhost:3000')
-    cy.get('#loginBtn').click()
-    cy.get('#usernameInput')
+    cy.visit('/')
+    cy.get('[data-cy=loginBtn]').click()
+    cy.get('[data-cy=usernameInput]')
       .type('main@jttracker.de')
       .should('have.value', 'main@jttracker.de')
 
-      cy.get('#passwordInput')
+      cy.get('[data-cy=passwordInput]')
       .type('12345678')
       .should('have.value', '12345678')
 
-      cy.get('#loginBtn').click()
+      cy.get('[data-cy=loginBtn]').click()
 
-      cy.get('#loginError')
+      cy.get('[data-cy=loginError]')
 
       cy.url().should('eq', 'http://localhost:3000/login')
   })

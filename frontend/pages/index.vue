@@ -11,10 +11,10 @@
           you increase your productivity by reflecting on your time
         </h3>
         <div>
-          <b-button nuxt-link to="/register" variant="primary">
+          <b-button  data-cy="registerBtn" nuxt-link to="/register" variant="primary">
             Register
           </b-button>
-          <b-button id="loginBtn" nuxt-link to="/login" variant="secondary"> Login </b-button>
+          <b-button  data-cy="loginBtn" nuxt-link to="/login" variant="secondary"> Login </b-button>
         </div>
       </div>
       <div v-else>

@@ -16,6 +16,7 @@
             <b-form-input
               id="input-email"
               v-model="email"
+              data-cy="usernameInput"
               placeholder="Enter email"
               required
               type="email"
@@ -29,6 +30,7 @@
             <b-form-input
               id="input-accountName"
               v-model="accountName"
+              data-cy="accountNameInput"
               placeholder="Enter the name of your Account"
               required
             />
@@ -41,14 +43,15 @@
             <b-form-input
               id="input-pw1"
               v-model="pw1"
+              data-cy="pw1Input"
               placeholder="Enter password"
               required
               type="password"
             />
-            <b-form-invalid-feedback :state="validationPassword">
+            <b-form-invalid-feedback :state="validationPassword" data-cy="passwordInvalidFeedback">
               Your password needs to be at least 8 chars long!
             </b-form-invalid-feedback>
-            <b-form-valid-feedback :state="validationPassword">
+            <b-form-valid-feedback :state="validationPassword" data-cy="passwordValidFeedback">
               Looks Good.
             </b-form-valid-feedback>
           </b-form-group>
@@ -60,14 +63,15 @@
             <b-form-input
               id="input-pw2"
               v-model="pw2"
+              data-cy="pw2Input"
               placeholder="Enter the same again"
               required
               type="password"
             />
-            <b-form-invalid-feedback :state="validationPasswordEq">
+            <b-form-invalid-feedback :state="validationPasswordEq" data-cy="passwordEqInvalidFeedback">
               Your passwords dont match!
             </b-form-invalid-feedback>
-            <b-form-valid-feedback :state="validationPasswordEq">
+            <b-form-valid-feedback :state="validationPasswordEq" data-cy="passwordEqValidFeedback">
               Passwords match!
             </b-form-valid-feedback>
           </b-form-group>
@@ -80,6 +84,7 @@
               id="choice-2fa"
               v-model="enableSecurity"
               name="checkbox-1"
+              data-cy="2faChoice"
               value="true"
               unchecked-value="false"
             >
@@ -88,15 +93,17 @@
             <div v-if="enableSecurity === 'true'">
               <b-form-select
                 v-model="firstQuestion"
+                data-cy="firstQuestion"
                 :options="questions"
                 class="mt-2"
               ></b-form-select>
               <div v-if="firstQuestion">
-                <b-form-input v-model="firstAnswer" class="mt-2"></b-form-input>
+                <b-form-input v-model="firstAnswer" data-cy="firstAnswerInput" class="mt-2"></b-form-input>
               </div>
               <div v-if="firstAnswer">
                 <b-form-select
                   v-model="secondQuestion"
+                  data-cy="secondQuestion"
                   :options="questions"
                   class="mt-2"
                 ></b-form-select>
@@ -104,23 +111,25 @@
               <div v-if="secondQuestion">
                 <b-form-input
                   v-model="secondAnswer"
+                  data-cy="secondAnswerInput"
                   class="mt-2"
                 ></b-form-input>
               </div>
               <div v-if="secondAnswer">
                 <b-form-select
                   v-model="thirdQuestion"
+                  data-cy="thirdQuestion"
                   :options="questions"
                   class="mt-2"
                 ></b-form-select>
               </div>
               <div v-if="thirdQuestion">
-                <b-form-input v-model="thirdAnswer" class="mt-2"></b-form-input>
+                <b-form-input v-model="thirdAnswer" data-cy="thirdAnswerInput" class="mt-2"></b-form-input>
               </div>
-              <b-form-invalid-feedback :state="validationSecurityQuestions">
+              <b-form-invalid-feedback :state="validationSecurityQuestions" data-cy="2faInvalidFeedback">
                 You need to select 3 unique questions and answer them !
               </b-form-invalid-feedback>
-              <b-form-valid-feedback :state="validationSecurityQuestions">
+              <b-form-valid-feedback :state="validationSecurityQuestions" data-cy="2faValidFeedback">
                 Security questions are answered and valid !
               </b-form-valid-feedback>
             </div>
@@ -129,6 +138,7 @@
             <b-form-checkbox
               id="checkBoxTerms"
               v-model="statusTerms"
+              data-cy="termsBtn"
               name="checkboxTerms"
               unchecked-value="not_accepted"
               value="accepted"
@@ -138,6 +148,7 @@
             <b-form-checkbox
               id="checkBoxPrivacy"
               v-model="statusPrivacy"
+              data-cy="privacyBtn"
               name="checkboxPrivacy"
               unchecked-value="not_accepted"
               value="accepted"
@@ -167,14 +178,14 @@
                 validationSecurityQuestions)
             "
           >
-            <b-button variant="success" @click="register()">
+            <b-button variant="success" data-cy=registerSubmitBtn @click="register()">
               Register
             </b-button>
           </div>
         </b-form>
         <b-button class="mt-2" nuxt-link to="/"> Go back </b-button>
         <div v-if="responseSuccess" class="pt-2" style="text-align: center">
-          <b-alert dismissible show variant="success">
+          <b-alert dismissible data-cy="registerSuccess" show variant="success">
             {{ responseMassage }}
             <b-button class="mt-2" nuxt-link to="/login" variant="success">
               Now you can login and start tracking !
@@ -182,7 +193,7 @@
           </b-alert>
         </div>
         <div v-if="responseError" class="pt-2" style="text-align: center">
-          <b-alert dismissible show variant="danger">
+          <b-alert dismissible data-cy="registerError" show variant="danger">
             {{ responseError }}
           </b-alert>
         </div>

@@ -15,6 +15,7 @@
             <b-form-input
               id="usernameInput"
               v-model="username"
+              data-cy="usernameInput"
               placeholder="Username"
               required
               type="email"
@@ -28,13 +29,14 @@
             <b-form-input
               id="passwordInput"
               v-model="password"
+              data-cy="passwordInput"
               placeholder="Password"
               type="password"
             />
           </b-form-group>
           <b-row cols="8">
             <b-col>
-              <b-button id="loginBtn" variant="primary" @click="submit()"> Login </b-button>
+              <b-button  data-cy="loginBtn" variant="primary" @click="submit()"> Login </b-button>
             </b-col>
             <b-col style="min-width: fit-content">
               <b-button variant="outline-danger" @click="submitRecovery()">
@@ -46,7 +48,7 @@
             <b-col />
             <b-col cols="10">
               <div v-if="error" class="pt-2" style="text-align: center">
-                <b-alert id="loginError" dismissible show variant="danger">
+                <b-alert data-cy="loginError" dismissible show variant="danger">
                   Wrong password or username !
                 </b-alert>
               </div>
