@@ -187,9 +187,9 @@
         <div v-if="responseSuccess" class="pt-2" style="text-align: center">
           <b-alert dismissible data-cy="registerSuccess" show variant="success">
             {{ responseMassage }}
-            <b-button class="mt-2" nuxt-link to="/login" variant="success">
+            <nuxt-link class="mt-2" nuxt-link to="/login">
               Now you can login and start tracking !
-            </b-button>
+            </nuxt-link>
           </b-alert>
         </div>
         <div v-if="responseError" class="pt-2" style="text-align: center">

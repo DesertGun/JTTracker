@@ -1,3 +1,4 @@
+
 export default {
   /*
    ** Headers of the page
@@ -63,7 +64,7 @@ export default {
   },
   pwa: {
     manifest: {
-      name: 'JTTracker 1.1.0',
+      name: 'JTTracker 1.2.0',
       lang: 'en',
       useWebmanifestExtension: false,
     },
