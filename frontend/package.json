@@ -27,7 +27,7 @@
     "moment": "^2.29.2",
     "nuxt-edge": "latest",
     "uuid": "^8.3.2",
-    "vue": "^2.6.14",
+    "vue": "^3.2.32",
     "vue-server-renderer": "^2.6.14",
     "vue-template-compiler": "^2.6.14",
     "webpack": "^4.46.0"
