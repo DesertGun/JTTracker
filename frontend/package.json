@@ -23,7 +23,7 @@
     "@nuxtjs/pwa": "^3.3.5",
     "bootstrap": "^4.6.1",
     "bootstrap-vue": "^2.21.2",
-    "core-js": "^3.21.1",
+    "core-js": "^3.22.1",
     "moment": "^2.29.2",
     "nuxt-edge": "latest",
     "uuid": "^8.3.2",
