@@ -15,3 +15,18 @@ updates:
       prefix: fix
       prefix-development: chore
       include: scope
+  # Fetch and update latest `maven` packages
+  - package-ecosystem: "maven" 
+    directory: "/" # Location of package manifests
+    schedule:
+     interval: "daily"
+     time: '00:00'
+    open-pull-requests-limit: 10     
+    reviewers:
+     - ervin joa
+    assignees:
+     - ervin joa
+    commit-message:
+     prefix: fix
+     prefix-development: chore
+     include: scope
