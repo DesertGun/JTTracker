@@ -30,3 +30,18 @@ updates:
       prefix: fix
       prefix-development: chore
       include: scope
+  # Fetch and update latest `docker` packages
+  - package-ecosystem: docker 
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: '12:30'
+    open-pull-requests-limit: 10     
+    reviewers:
+      - ervin joa
+    assignees:
+      - ervin joa
+    commit-message:
+      prefix: fix
+      prefix-development: chore
+      include: scope
