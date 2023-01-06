@@ -47,6 +47,6 @@
     "eslint-plugin-vue": "^9.0.1",
     "jest": "^28.1.0",
     "prettier": "^2.6.2",
-    "vue-jest": "^3.0.4"
+    "vue-jest": "^4.0.1"
   }
 }
