@@ -2,8 +2,8 @@ package ee.desertgun.jttracker.dto;
 
 import lombok.Data;
 
-import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.UUID;

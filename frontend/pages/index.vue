@@ -2,45 +2,48 @@
   <div class="container">
     <div>
       <logo class="pb-3" />
-      <div v-if="!isLoggedIn">
-        <h2 class="subtitle pb-3">
-          Welcome and thank you for your interest in my App!
-        </h2>
-        <h3 class="subsubtitle pb-3">
-          JTTracker is an open source time tracking web application that helps
-          you increase your productivity by reflecting on your time
-        </h3>
-        <div>
-          <b-button  data-cy="registerBtn" nuxt-link to="/register" variant="primary">
-            Register
-          </b-button>
-          <b-button  data-cy="loginBtn" nuxt-link to="/login" variant="secondary"> Login </b-button>
-        </div>
-      </div>
-      <div v-else>
-        <h4 class="subtitle pb-3">Thank you for signing up!</h4>
-        <p class="subsubtitle">
-          To get a better overview, navigate to the Dashboard.
-        </p>
-      </div>
+      <h2 class="subtitle pb-3">
+        Welcome and thank you for your interest in my App!
+      </h2>
+      <h3 class="subsubtitle pb-3">
+        JTTracker is an open source time tracking web application that helps you
+        increase your productivity by reflecting on your time
+      </h3>
+      <!--h4 class="subtitle pb-3">Thank you for signing up!</h4-->
+      <p class="subsubtitle">
+        To get a better overview, navigate to the Dashboard.
+      </p>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import Logo from '~/components/Logo.vue'
+import Logo from '~/components/Logo.vue';
 
 export default {
   name: 'MainPage',
   components: {
     Logo,
   },
-  asyncData() {},
-  computed: {
-    ...mapGetters({ isLoggedIn: 'auth/isLoggedIn' }),
+
+  mounted() {
+    // TODO: Workaround for force Login on Entry -> either I will refactor to use Login/Register Templates or leave it that way
+    if (!this.$auth.loggedIn) {
+      this.$auth.loginWith('keycloak')
+    } else {
+      this.$store.dispatch('timer.store/setTimersAction')
+      this.$store.dispatch('project.store/setProjectsAction')
+      this.$store.dispatch('user.store/setProfileData')
+      this.$store.dispatch('user.store/setProfilePicture')
+      this.$store.dispatch('user.store/setProfileHash')
+      this.$store.dispatch('statistics.store/setStatisticsData')
+    }
   },
-  mounted() {},
+  methods: {
+    logout() {
+      this.$auth.logout()
+    },
+  },
 }
 </script>
 

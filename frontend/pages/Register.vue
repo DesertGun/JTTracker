@@ -1,4 +1,4 @@
-<template>
+<!--template>
   <b-container class="regContainer" fluid>
     <b-row>
       <b-col />
@@ -48,10 +48,16 @@
               required
               type="password"
             />
-            <b-form-invalid-feedback :state="validationPassword" data-cy="passwordInvalidFeedback">
+            <b-form-invalid-feedback
+              :state="validationPassword"
+              data-cy="passwordInvalidFeedback"
+            >
               Your password needs to be at least 8 chars long!
             </b-form-invalid-feedback>
-            <b-form-valid-feedback :state="validationPassword" data-cy="passwordValidFeedback">
+            <b-form-valid-feedback
+              :state="validationPassword"
+              data-cy="passwordValidFeedback"
+            >
               Looks Good.
             </b-form-valid-feedback>
           </b-form-group>
@@ -68,10 +74,16 @@
               required
               type="password"
             />
-            <b-form-invalid-feedback :state="validationPasswordEq" data-cy="passwordEqInvalidFeedback">
+            <b-form-invalid-feedback
+              :state="validationPasswordEq"
+              data-cy="passwordEqInvalidFeedback"
+            >
               Your passwords dont match!
             </b-form-invalid-feedback>
-            <b-form-valid-feedback :state="validationPasswordEq" data-cy="passwordEqValidFeedback">
+            <b-form-valid-feedback
+              :state="validationPasswordEq"
+              data-cy="passwordEqValidFeedback"
+            >
               Passwords match!
             </b-form-valid-feedback>
           </b-form-group>
@@ -98,7 +110,11 @@
                 class="mt-2"
               ></b-form-select>
               <div v-if="firstQuestion">
-                <b-form-input v-model="firstAnswer" data-cy="firstAnswerInput" class="mt-2"></b-form-input>
+                <b-form-input
+                  v-model="firstAnswer"
+                  data-cy="firstAnswerInput"
+                  class="mt-2"
+                ></b-form-input>
               </div>
               <div v-if="firstAnswer">
                 <b-form-select
@@ -124,12 +140,22 @@
                 ></b-form-select>
               </div>
               <div v-if="thirdQuestion">
-                <b-form-input v-model="thirdAnswer" data-cy="thirdAnswerInput" class="mt-2"></b-form-input>
+                <b-form-input
+                  v-model="thirdAnswer"
+                  data-cy="thirdAnswerInput"
+                  class="mt-2"
+                ></b-form-input>
               </div>
-              <b-form-invalid-feedback :state="validationSecurityQuestions" data-cy="2faInvalidFeedback">
+              <b-form-invalid-feedback
+                :state="validationSecurityQuestions"
+                data-cy="2faInvalidFeedback"
+              >
                 You need to select 3 unique questions and answer them !
               </b-form-invalid-feedback>
-              <b-form-valid-feedback :state="validationSecurityQuestions" data-cy="2faValidFeedback">
+              <b-form-valid-feedback
+                :state="validationSecurityQuestions"
+                data-cy="2faValidFeedback"
+              >
                 Security questions are answered and valid !
               </b-form-valid-feedback>
             </div>
@@ -178,7 +204,11 @@
                 validationSecurityQuestions)
             "
           >
-            <b-button variant="success" data-cy=registerSubmitBtn @click="register()">
+            <b-button
+              variant="success"
+              data-cy="registerSubmitBtn"
+              @click="register()"
+            >
               Register
             </b-button>
           </div>
@@ -201,12 +231,14 @@
       <b-col />
     </b-row>
   </b-container>
-</template>
+</template-->
 
 <script>
+  // TODO: Refoctor via Keycloak API
+  /*
 export default {
   name: 'RegisterPage',
-  asyncData() {
+  data() {
     return {
       email: '',
       accountName: '',
@@ -310,6 +342,8 @@ export default {
         window.location.reload()
       }
     },
+    },
   },
 }
+  */
 </script>

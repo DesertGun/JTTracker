@@ -124,30 +124,29 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
-import moment from 'moment'
+import moment from 'moment';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'StatisticsPage',
-  middleware: 'authenticated',
-  asyncData() {
+  data() {
     return {}
   },
   computed: {
     ...mapGetters({
-      getNumberOfTimers: 'statistics/getNumberOfTimers',
-      getNumberOfProjects: 'statistics/getNumberOfProjects',
-      getTotalTimeTracked: 'statistics/getTotalTimeTracked',
-      getTotalTimeTrackedInProjects: 'statistics/getTotalTimeTrackedInProjects',
-      getTimersInProjectsTotal: 'statistics/getTimersInProjectsTotal',
-      getTimersNotInProjectsTotal: 'statistics/getTimersNotInProjectsTotal',
-      getAvgTimeTracked: 'statistics/getAvgTimeTracked',
-      getMaxDuration: 'statistics/getMaxDuration',
-      getMinDuration: 'statistics/getMinDuration',
-      getMostProductiveMonth: 'statistics/getMostProductiveMonth',
-      getMostProductiveYear: 'statistics/getMostProductiveYear',
-      getProductivityLevel: 'statistics/getProductivityLevel',
-      getUsername: 'user/getUsername',
+      getNumberOfTimers: 'statistics.store/getNumberOfTimers',
+      getNumberOfProjects: 'statistics.store/getNumberOfProjects',
+      getTotalTimeTracked: 'statistics.store/getTotalTimeTracked',
+      getTotalTimeTrackedInProjects: 'statistics.store/getTotalTimeTrackedInProjects',
+      getTimersInProjectsTotal: 'statistics.store/getTimersInProjectsTotal',
+      getTimersNotInProjectsTotal: 'statistics.store/getTimersNotInProjectsTotal',
+      getAvgTimeTracked: 'statistics.store/getAvgTimeTracked',
+      getMaxDuration: 'statistics.store/getMaxDuration',
+      getMinDuration: 'statistics.store/getMinDuration',
+      getMostProductiveMonth: 'statistics.store/getMostProductiveMonth',
+      getMostProductiveYear: 'statistics.store/getMostProductiveYear',
+      getProductivityLevel: 'statistics.store/getProductivityLevel',
+      getUsername: 'user.store/getUsername',
     }),
   },
   mounted() {
@@ -163,7 +162,7 @@ export default {
     formatTotalTime(time) {
       return moment.duration(time)
     },
-    ...mapActions({ updateStatistics: 'statistics/setStatisticsData' }),
+    ...mapActions({ updateStatistics: 'statistics.store/setStatisticsData' }),
   },
 }
 </script>

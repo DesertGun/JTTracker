@@ -32,43 +32,54 @@ export const actions = {
   async setProfileData({ commit }) {
     try {
       const response = await this.$axios.get('/user')
-      const username = response.data.username
-      const accountname = response.data.accountName
-      const securityenabled = response.data.securityEnabled
-
-      const userdata = { username, accountname, securityenabled }
-      await commit('setProfileData', userdata)
+      const userdata = {
+        username: response.data.username,
+        accountname: response.data.accountName,
+        securityenabled: response.data.securityEnabled,
+      }
+      commit('setProfileData', userdata)
     } catch (e) {
-      alert(e.toString())
+      console.error('setProfileData failed', e)
     }
   },
   async setProfilePicture({ commit }) {
     try {
-      const response = await this.$axios.get('/user')
-      if (response.data.profilePictureID) {
-        const profilePictureResponse = await this.$axios
-          .get('user/picture/', {
-            responseType: 'arraybuffer',
-          })
-          .then((response) => Buffer.from(response.data, 'base64'))
+      const userResponse = await this.$axios.get('/user')
+      const pictureId = userResponse.data.profilePictureID
 
-        const profilePicture =
-          'data:image/jpeg;base64,' + profilePictureResponse
-        await commit('setProfilePicture', profilePicture)
-      }
+      if (!pictureId) return
+
+      const pictureResponse = await this.$axios.get('/user/picture/', {
+        responseType: 'arraybuffer',
+      })
+
+      const base64 = btoa(
+        new Uint8Array(pictureResponse.data).reduce(
+          (data, byte) => data + String.fromCharCode(byte),
+          ''
+        )
+      )
+
+      const profilePicture = `data:image/jpeg;base64,${base64}`
+
+      commit('setProfilePicture', profilePicture)
     } catch (e) {
-      alert(e.toString())
+      console.error('setProfilePicture failed', e)
     }
   },
   async setProfileHash({ commit }) {
     try {
       const response = await this.$axios.get('/user')
       const hash = response.data.hash
-      await commit('setProfileHash', hash)
+
+      if (hash) {
+        commit('setProfileHash', hash)
+      }
     } catch (e) {
-      alert(e.toString())
+      console.error('setProfileHash failed', e)
     }
   },
+
   deleteProfilePicture({ commit }) {
     commit('deleteProfilePicture')
   },

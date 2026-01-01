@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 services:
     database:
         privileged: false
@@ -33,7 +33,7 @@ services:
             - "3000:3000"
     greenmail:
         container_name: greenmail
-        image: greenmail/standalone:1.6.5
+        image: greenmail/standalone:latest
         environment:
                 - JAVA_OPTS=-Dgreenmail.verbose -Djava.net.preferIPv4Stack=true
                 - GREENMAIL_OPTS=-Dgreenmail.setup.test.all -Dgreenmail.api.port=8095 -Dgreenmail.hostname=0.0.0.0 -Dgreenmail.auth.disabled

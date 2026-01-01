@@ -1,4 +1,4 @@
-package ee.desertgun.jttracker.service;
+package ee.desertgun.jttracker.service.jwt;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class jwtUserService {
+public class JwtUserService {
     public JwtUserInfo getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -30,12 +30,12 @@ public class jwtUserService {
         return new JwtUserInfo(
                 jwt.getSubject(),
                 jwt.getClaimAsString("username"),
-                jwt.getClaimAsString("family_name"),
-                extractRoles(jwt)
+                jwt.getClaimAsString("accountName"),
+                extractRoles()
         );
     }
 
-    private List<String> extractRoles(Jwt jwt) {
+    private List<String> extractRoles() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null) {
@@ -62,6 +62,7 @@ public class jwtUserService {
             this.roles = roles != null ? roles : List.of();
         }
 
+        // TODO: Future Implementation, after Migration to Kotlin
         public boolean hasRole(String role) {
             return roles.contains("ROLE_" + role) || roles.contains(role);
         }

@@ -54,12 +54,11 @@
 </template>
 
 <script>
-import moment from 'moment'
-import { mapActions } from 'vuex'
+import moment from 'moment';
+import { mapActions } from 'vuex';
 
 export default {
-  middleware: 'authenticated',
-  asyncData({ from }) {
+  data({ from }) {
     return {
       timeDesc: null,
       startTime: null,
@@ -69,8 +68,7 @@ export default {
       startTimeTimer: null,
       endTimeTimer: null,
       timeID: null,
-      duration: null,
-      from,
+      duration: null
     }
   },
   async mounted() {
@@ -106,11 +104,13 @@ export default {
       })
       await this.updateProjects()
       await this.setUserTimers()
-      this.$router.push(this.from.fullPath)
+
+      const returnTo = this.$route.query.returnTo || '/timer'
+      this.$router.push(returnTo)
     },
     ...mapActions({
-      setUserTimers: 'timer/setTimersAction',
-      updateProjects: 'project/setProjectsAction',
+      setUserTimers: 'timer.store/setTimersAction',
+      updateProjects: 'project.store/setProjectsAction',
     }),
     countDuration(startTime, endTime) {
       const diffTime = endTime.diff(startTime)

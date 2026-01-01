@@ -23,7 +23,7 @@
                   </b-col>
                 </b-row>
               </b-card-text>
-              <b-button variant="primary" @click="goToTimer()">
+              <b-button variant="primary" nuxt-link to="/timer">
                 Go To Timer
               </b-button>
             </b-card>
@@ -37,7 +37,7 @@
                   </b-col>
                 </b-row>
               </b-card-text>
-              <b-button variant="primary" @click="goToProject()">
+              <b-button variant="primary" nuxt-link to="/project">
                 Go To Project
               </b-button>
             </b-card>
@@ -50,7 +50,7 @@
                   </b-col>
                 </b-row>
               </b-card-text>
-              <b-button variant="primary"> Go To Stats </b-button>
+              <b-button variant="primary" nuxt-link to="/statistics"> Go To Stats </b-button>
             </b-card>
           </b-card-group>
         </b-col>
@@ -193,13 +193,12 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
-import moment from 'moment'
+import moment from 'moment';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'DashboardPage',
-  middleware: 'authenticated',
-  asyncData() {
+  data() {
     return {
       timesUser: [],
       projectsUser: [],
@@ -207,9 +206,9 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getUserTimers: 'timer/timers',
-      getUserProjects: 'project/projects',
-      getProductivityLevel: 'statistics/getProductivityLevel',
+      getUserTimers: 'timer.store/timers',
+      getUserProjects: 'project.store/projects',
+      getProductivityLevel: 'statistics.store/getProductivityLevel',
     }),
   },
   mounted() {
@@ -245,16 +244,22 @@ export default {
   },
   methods: {
     editProject(projectID) {
-      this.$router.push(`projectEdit?projectID=${projectID}`)
+      this.$router.push({
+        path: '/projectEdit',
+        query: {
+          projectID,
+          returnTo: this.$route.fullPath,
+        },
+      })
     },
     editTimer(timeID) {
-      this.$router.push(`timeEdit?timeID=${timeID}`)
-    },
-    goToTimer() {
-      this.$router.push('/timer')
-    },
-    goToProject() {
-      this.$router.push('/project')
+      this.$router.push({
+        path: '/timeEdit',
+        query: {
+          timeID,
+          returnTo: this.$route.fullPath,
+        },
+      })
     },
     countDuration(startTime, endTime) {
       const diffTime = endTime.diff(startTime)
@@ -270,9 +275,9 @@ export default {
       return moment.duration(time)
     },
     ...mapActions({
-      updateProjects: 'project/setProjectsAction',
-      updateTimers: 'timer/setTimersAction',
-      updateStatistics: 'statistics/setStatisticsData',
+      updateProjects: 'project.store/setProjectsAction',
+      updateTimers: 'timer.store/setTimersAction',
+      updateStatistics: 'statistics.store/setStatisticsData',
     }),
   },
 }

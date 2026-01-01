@@ -1,151 +1,151 @@
 package ee.desertgun.jttracker.service.user;
 
-import ee.desertgun.jttracker.config.UserProfileGravatarHash;
-import ee.desertgun.jttracker.domain.PasswordResetToken;
 import ee.desertgun.jttracker.domain.User;
-import ee.desertgun.jttracker.dto.UserDTO;
 import ee.desertgun.jttracker.dto.UserProfileDTO;
-import ee.desertgun.jttracker.repository.PasswordTokenRepository;
 import ee.desertgun.jttracker.repository.ProjectRepository;
 import ee.desertgun.jttracker.repository.TrackedTimeRepository;
 import ee.desertgun.jttracker.repository.UserRepository;
-import ee.desertgun.jttracker.response.ValidationResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
+    Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserRepository userRepository;
-    private final PasswordTokenRepository passwordTokenRepository;
     private final TrackedTimeRepository trackedTimeRepository;
     private final ProjectRepository projectRepository;
 
-    @Autowired
-    public UserServiceImpl(final UserRepository userRepository, final PasswordTokenRepository passwordTokenRepository,
-                           final TrackedTimeRepository trackedTimeRepository, final ProjectRepository projectRepository) {
+    public UserServiceImpl(UserRepository userRepository, TrackedTimeRepository trackedTimeRepository, ProjectRepository projectRepository) {
         this.userRepository = userRepository;
-        this.passwordTokenRepository = passwordTokenRepository;
         this.trackedTimeRepository = trackedTimeRepository;
         this.projectRepository = projectRepository;
     }
 
+    // Since using Keycloak, now I have to sync user via Service
     @Override
-    public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
-        return userRepository.findById(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User name " + username + " not found."));
+    @Transactional
+    public User getOrCreateUser(String keycloakUserId, String username, String email) {
+        return userRepository.findById(keycloakUserId)
+                .map(existingUser -> {
+                    // Update username if changed in Keycloak
+                    if (!existingUser.getUsername().equals(username)) {
+                        existingUser.setUsername(username);
+                        logger.info("Updated username for user {}: {} -> {}",
+                                keycloakUserId, existingUser.getUsername(), username);
+                    }
+                    return userRepository.save(existingUser);
+                })
+                .orElseGet(() -> {
+                    User newUser = new User();
+                    newUser.setKeycloakUserId(keycloakUserId);
+                    newUser.setUsername(username);
+                    newUser.setAccountName(username); // Default display name
+                    newUser.setRoles(new ArrayList<>());
+
+                    User saved = userRepository.save(newUser);
+                    logger.info("Created new user profile for Keycloak user: {}", keycloakUserId);
+                    return saved;
+                });
     }
 
     @Override
-    public User createUser(String username, String displayName, String password, Boolean securityEnabled, String... roles) {
-        String hash = UserProfileGravatarHash.md5Hex(username);
-        final User user = new User(username, displayName, password, hash, securityEnabled);
-        for (final String role : roles) {
-            user.addRole(role);
-        }
-
-        return userRepository.save(user);
+    @Transactional(readOnly = true)
+    public User getUserByKeycloakId(String keycloakUserId) throws Exception {
+        return userRepository.findById(keycloakUserId)
+                .orElseThrow(() -> new Exception(
+                        "User not found with Keycloak ID: " + keycloakUserId
+                ));
     }
 
     @Override
-    public boolean userExists(String username) {
-        return userRepository.existsUserByUsername(username);
-    }
-
-    @Override
-    public void createPasswordResetTokenForUser(@Valid UserDTO userDTO, String token) {
-        User user = userRepository.findByUsername(userDTO.getUsername());
-        PasswordResetToken myToken = new PasswordResetToken(token, user);
-        passwordTokenRepository.save(myToken);
-    }
-
-    @Override
+    @Transactional(readOnly = true)
     public User getUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
     @Override
-    public void updateUserPassword(User user, String password) {
-        user.setPassword(password);
-        userRepository.save(user);
+    @Transactional(readOnly = true)
+    public boolean userExists(String keycloakUserId) {
+        return userRepository.existsByKeycloakUserId(keycloakUserId);
     }
 
-    @Override
-    public void updateUserProfile(User user, UserProfileDTO userProfileDTO) {
-        user.setAccountName(userProfileDTO.getAccountName());
-        userRepository.save(user);
-    }
-
-    @Override
-    public ValidationResponse validateOldUserPassword(String userPassword, String oldPassword) {
-        ValidationResponse validationResponse = new ValidationResponse();
-        if (userPassword.equals(oldPassword)) {
-            validationResponse.setValidated(true);
-            return validationResponse;
-        } else {
-            validationResponse.setValidated(false);
-        }
-        return validationResponse;
-    }
-
-    @Override
-    public void addSecurityQuestions(String username, List<String> securityQuestions, List<String> securityAnswers) {
-        User user = userRepository.findByUsername(username);
-
-        user.setSecurityQuestion1(securityQuestions.get(0));
-        user.setSecurityQuestion2(securityQuestions.get(1));
-        user.setSecurityQuestion3(securityQuestions.get(2));
-
-        user.setSecurityAnswer1(securityAnswers.get(0));
-        user.setSecurityAnswer2(securityAnswers.get(1));
-        user.setSecurityAnswer3(securityAnswers.get(2));
-
-        user.setSecurityEnabled(true);
-
-        userRepository.save(user);
-    }
-
-    @Override
-    public void disableEnhancedSecurity(UserDTO userDTO) {
-        final User user = userRepository.getById(userDTO.getUsername());
-        user.setSecurityEnabled(false);
-        user.setSecurityQuestion1(null);
-        user.setSecurityQuestion2(null);
-        user.setSecurityQuestion3(null);
-        user.setSecurityAnswer1(null);
-        user.setSecurityAnswer2(null);
-        user.setSecurityAnswer3(null);
-        userRepository.save(user);
-    }
-
-    @Override
-    public void extractEnhancedSecurityDetails(@RequestBody @Valid UserDTO userDTO, PasswordEncoder passwordEncoder, UserService userService) {
-        List<String> securityQuestions = new ArrayList<>();
-        securityQuestions.add(userDTO.getSecurityQuestion1());
-        securityQuestions.add(userDTO.getSecurityQuestion2());
-        securityQuestions.add(userDTO.getSecurityQuestion3());
-
-        List<String> securityAnswers = new ArrayList<>();
-        securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer1()));
-        securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer2()));
-        securityAnswers.add(passwordEncoder.encode(userDTO.getSecurityAnswer3()));
-
-        userService.addSecurityQuestions(userDTO.getUsername(), securityQuestions, securityAnswers);
-    }
     @Override
     @Transactional
-    public void deleteUser(String username) {
-        User user = userRepository.getById(username);
+    public void updateUserProfile(String keycloakUserId, UserProfileDTO userProfileDTO) throws Exception {
+        User user = getUserByKeycloakId(keycloakUserId);
+
+        if (userProfileDTO.getAccountName() != null) {
+            user.setAccountName(userProfileDTO.getAccountName());
+        }
+
+        userRepository.save(user);
+        logger.info("Updated profile for user: {}", keycloakUserId);
+    }
+
+    @Override
+    @Transactional
+    public void addRoleToUser(String keycloakUserId, String role) throws Exception {
+        User user = getUserByKeycloakId(keycloakUserId);
+
+        if (user.getRoles() == null) {
+            user.setRoles(new ArrayList<>());
+        }
+
+        if (!user.getRoles().contains(role)) {
+            user.getRoles().add(role);
+            userRepository.save(user);
+            logger.info("Added role {} to user {}", role, keycloakUserId);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void removeRoleFromUser(String keycloakUserId, String role) throws Exception {
+        User user = getUserByKeycloakId(keycloakUserId);
+
+        if (user.getRoles() != null && user.getRoles().contains(role)) {
+            user.getRoles().remove(role);
+            userRepository.save(user);
+            logger.info("Removed role {} from user {}", role, keycloakUserId);
+        }
+    }
+
+    /**
+     * TODO: Find a way to sync User Removal from keycloak
+     */
+    @Override
+    @Transactional
+    public void deleteUserData(String keycloakUserId) throws Exception {
+        User user = getUserByKeycloakId(keycloakUserId);
+
+        logger.info("Starting deletion of all data for user: {}", keycloakUserId);
+
+        // Delete all user's projects
         projectRepository.deleteAllByUser(user);
+        logger.debug("Deleted projects for user: {}", keycloakUserId);
+
+        // Delete all user's tracked times
         trackedTimeRepository.deleteAllByUser(user);
+        logger.debug("Deleted tracked times for user: {}", keycloakUserId);
+
+        // Delete user profile
         userRepository.delete(user);
+        logger.info("Completed deletion of all data for user: {}", keycloakUserId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public long getUserCount() {
+        return userRepository.count();
     }
 }

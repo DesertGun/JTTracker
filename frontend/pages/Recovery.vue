@@ -84,7 +84,7 @@
 <script>
 export default {
   name: 'RecoveryPage',
-  asyncData() {
+  data() {
     return {
       recoveryEmail: '',
       responseSuccess: '',

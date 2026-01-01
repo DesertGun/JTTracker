@@ -25,7 +25,7 @@ export const actions = {
   },
   async setTimersAction({ commit }) {
     try {
-      const response = await this.$axios.get('/timer')
+      const response = await this.$axios.get('/timers')
       const timers = response.data.map((timerJson) => {
         const startTime = moment(timerJson.startTime)
         const endTime = moment(timerJson.endTime)

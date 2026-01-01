@@ -1,36 +1,26 @@
 package ee.desertgun.jttracker.service.user;
 
 import ee.desertgun.jttracker.domain.User;
-import ee.desertgun.jttracker.dto.UserDTO;
 import ee.desertgun.jttracker.dto.UserProfileDTO;
-import ee.desertgun.jttracker.response.ValidationResponse;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import javax.validation.Valid;
 import java.util.List;
 
-public interface UserService extends UserDetailsService {
-    User createUser(String username, String displayName, String password, Boolean securityEnabled, String... roles);
+public interface UserService{
 
-    boolean userExists(String username);
+    User getOrCreateUser(String keycloakUserId, String username, String email);
 
-    void createPasswordResetTokenForUser(@Valid UserDTO userDTO, String token);
+    User getUserByKeycloakId(String keycloakUserId) throws Exception;
 
-    User getUserByUsername(String username);
+    User getUserByUsername(String username) throws Exception;
 
-    void updateUserPassword(User user, String password);
+    boolean userExists(String keycloakUserId);
 
-    void updateUserProfile(User user, UserProfileDTO userProfileDTO);
+    void updateUserProfile(String keycloakUserId, UserProfileDTO userProfileDTO) throws Exception;
 
-    ValidationResponse validateOldUserPassword(String user, String oldPassword);
+    void addRoleToUser(String keycloakUserId, String role) throws Exception;
 
-    void addSecurityQuestions(String username, List<String> securityQuestions, List<String> securityAnswers);
+    void removeRoleFromUser(String keycloakUserId, String role) throws Exception;
 
-    void disableEnhancedSecurity(UserDTO userDTO);
+    void deleteUserData(String keycloakUserId) throws Exception;
 
-    void extractEnhancedSecurityDetails(@RequestBody @Valid UserDTO userDTO, PasswordEncoder passwordEncoder, UserService userService);
-
-    void deleteUser(String username);
+    List<User> getAllUsers();
 }

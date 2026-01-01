@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-JTTrackerApplication<jttracker>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "ee.desertgun.jttracker.JTTrackerApplication",
+            "projectName": "jttracker",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

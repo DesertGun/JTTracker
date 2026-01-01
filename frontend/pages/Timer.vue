@@ -141,16 +141,16 @@
 </template>
 
 <script>
-import moment from 'moment'
-import { mapGetters, mapActions } from 'vuex'
-import { v4 as uuidv4 } from 'uuid'
-import Clock from '@/components/Clock.vue'
+// eslint-disable-next-line import/order
+import Clock from '@/components/Clock.vue';
+import moment from 'moment';
+import { v4 as uuidv4 } from 'uuid';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'TimerPage',
   components: { Clock },
-  middleware: 'authenticated',
-  asyncData() {
+  data() {
     return {
       fields: [
         { key: 'timeDesc', label: 'Description' },
@@ -174,7 +174,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({ getTimers: 'timer/timers' }),
+    ...mapGetters({ getTimers: 'timer.store/timers' }),
     rows() {
       return this.items.length
     },
@@ -185,13 +185,19 @@ export default {
   },
   methods: {
     editRecord(timeID) {
-      this.$router.push(`timeEdit?timeID=${timeID}`)
+      this.$router.push({
+        path: '/timeEdit',
+        query: {
+          timeID,
+          returnTo: this.$route.fullPath,
+        },
+      })
     },
     ...mapActions({
-      updateTimers: 'timer/setTimersAction',
-      updateProjects: 'project/setProjectsAction',
-      addTimer: 'timer/addTimerAction',
-      deleteTimer: 'timer/deleteTimerAction',
+      updateTimers: 'timer.store/setTimersAction',
+      updateProjects: 'project.store/setProjectsAction',
+      addTimer: 'timer.store/addTimerAction',
+      deleteTimer: 'timer.store/deleteTimerAction',
     }),
     rec() {
       this.isTracked = true

@@ -1,4 +1,3 @@
-
 export default {
   /*
    ** Headers of the page
@@ -24,7 +23,11 @@ export default {
    ** Global CSS
    */
   css: [],
-  target: 'server',
+  target: 'static',
+  ssr: false,
+  generate: {
+    fallback: true
+  },
   /*
    ** Plugins to load before mounting the App
    */
@@ -48,7 +51,7 @@ export default {
       },
     ],
     '@nuxtjs/axios',
-    '@nuxtjs/pwa',
+    '@nuxtjs/auth-next'
   ],
   /*
    ** Build configuration
@@ -57,23 +60,52 @@ export default {
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {},
+    extend(config, ctx) {
+      config.output.publicPath = '/_nuxt/'
+    },
   },
   axios: {
     baseURL: 'http://localhost:8080',
   },
-  pwa: {
-    manifest: {
-      name: 'JTTracker 1.2.0',
-      lang: 'en',
-      useWebmanifestExtension: false,
-    },
-    meta: {
-      title: 'JTTracker',
-      author: 'DesertGun',
-    },
-    icon: {
-      fileName: 'icon.png',
-    },
+  publicRuntimeConfig: {
+    keycloakUrl: process.env.KEYCLOAK_URL || 'http://localhost:9090',
+    keycloakRealm: process.env.KEYCLOAK_REALM || 'jttracker-realm',
+    keycloakClientId: process.env.KEYCLOAK_CLIENT_ID || 'jttracker-frontend',
   },
+  
+  auth: {
+    redirect: {
+      login: '/Callback',
+      logout: '/',
+      callback: '/Callback',
+      home: '/'
+    },
+    strategies: {
+      keycloak: {
+        scheme: 'oauth2',
+        endpoints: {
+          authorization: `${process.env.KEYCLOAK_URL || 'http://localhost:9090'}/realms/${process.env.KEYCLOAK_REALM || 'jttracker-realm'}/protocol/openid-connect/auth`,
+          token: `${process.env.KEYCLOAK_URL || 'http://localhost:9090'}/realms/${process.env.KEYCLOAK_REALM || 'jttracker-realm'}/protocol/openid-connect/token`,
+          userInfo: `${process.env.KEYCLOAK_URL || 'http://localhost:9090'}/realms/${process.env.KEYCLOAK_REALM || 'jttracker-realm'}/protocol/openid-connect/userinfo`,
+          logout: `${process.env.KEYCLOAK_URL || 'http://localhost:9090'}/realms/${process.env.KEYCLOAK_REALM || 'jttracker-realm'}/protocol/openid-connect/logout?redirect_uri=${encodeURIComponent(process.env.BASE_URL || 'http://localhost:3000')}`
+        },
+        token: {
+          property: 'access_token',
+          type: 'Bearer',
+          maxAge: 300
+        },
+        refreshToken: {
+          property: 'refresh_token',
+          maxAge: 1800
+        },
+        responseType: 'code',
+        grantType: 'authorization_code',
+        clientId: process.env.KEYCLOAK_CLIENT_ID || 'jttracker-frontend',
+        scope: ['openid', 'profile', 'email'],
+        codeChallengeMethod: 'S256'
+      }
+    },
+    watchLoggedIn: true,
+    rewriteRedirects: true
+  }
 }

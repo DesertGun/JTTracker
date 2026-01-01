@@ -214,12 +214,11 @@
 </template>
 
 <script>
-import moment from 'moment'
-import { mapGetters, mapActions } from 'vuex'
+import moment from 'moment';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
-  middleware: 'authenticated',
-  asyncData({ from }) {
+  data() {
     return {
       fields: [
         { key: 'timeDesc', label: 'Description' },
@@ -244,15 +243,14 @@ export default {
       assigned: false,
       projectTime: null,
       perPage: 12,
-      currentPage: 1,
-      from,
+      currentPage: 1
     }
   },
   computed: {
     validationPriority() {
       return this.priority != null
     },
-    ...mapGetters({ getProjects: 'project/projects' }),
+    ...mapGetters({ getProjects: 'project.store/projects' }),
     rows() {
       return this.timesUser.length
     },
@@ -278,7 +276,7 @@ export default {
         }
       })
 
-      const userTimeresponse = await this.$axios.get('/timer/')
+      const userTimeresponse = await this.$axios.get('/timers')
 
       this.timesUser = userTimeresponse.data.map((timerJson) => {
         const startTime = moment(timerJson.startTime)
@@ -307,7 +305,7 @@ export default {
       return moment.duration(diffTime)
     },
     ...mapActions({
-      updateProjects: 'project/setProjectsAction',
+      updateProjects: 'project.store/setProjectsAction',
     }),
     formatTime(time) {
       return time.format('HH:mm:ss')
@@ -327,7 +325,8 @@ export default {
         priority: this.priority,
       })
       await this.updateProjects()
-      this.$router.push(this.from.fullPath)
+      const returnTo = this.$route.query.returnTo || '/project'
+      this.$router.push(returnTo)
     },
     async addTimeToProject(time) {
       const found = this.timesProject.some(

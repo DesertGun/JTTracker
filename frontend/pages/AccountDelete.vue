@@ -1,4 +1,4 @@
-<template>
+<!--template>
   <div class="accountDeleteMain">
     <b-container class="accountDeleteContainer" fluid>
       <b-row>
@@ -60,15 +60,16 @@
       </b-row>
     </b-container>
   </div>
-</template>
+</template-->
 
 <script>
-import { mapGetters } from 'vuex'
+  // TODO: Refactor via Keycloak API
+  /*
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'AccountDeletionPage',
-  middleware: 'authenticated',
-  asyncData() {
+  data() {
     return {
       username: '',
       responseSuccess: null,
@@ -103,6 +104,5 @@ export default {
     },
   },
 }
+  */
 </script>
-
-<style></style>

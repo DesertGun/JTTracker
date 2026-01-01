@@ -1,4 +1,4 @@
-<template>
+<!--template>
   <div class="main">
     <b-container fluid>
       <b-row>
@@ -90,12 +90,13 @@
       </b-row>
     </b-container>
   </div>
-</template>
+</template-->
 
 <script>
+  // TODO: Recator via Keycloak API or complete removal
+  /*
 export default {
-  middleware: 'authenticated',
-  asyncData() {
+  data() {
     return {
       passwordCurrent: '',
       passwordNew: '',
@@ -129,4 +130,5 @@ export default {
     },
   },
 }
+  */
 </script>

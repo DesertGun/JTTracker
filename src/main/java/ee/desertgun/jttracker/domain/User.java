@@ -1,112 +1,81 @@
 package ee.desertgun.jttracker.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.UserDetails;
+import jakarta.persistence.*;
+import lombok.Data;
 
-import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Setter
-@Getter
-public class User implements UserDetails {
+@Data
+@Table(name = "users")
+public class User{
 
-    //TODO: Update entity to allow for cascade and orphan removal
     @Id
-    @Column(unique = true)
+    @Column(name = "keycloak_user_id", nullable = false)
+    private String keycloakUserId;
+
+    @Column(nullable = false)
     private String username;
 
     private String accountName;
-
-    @JsonIgnore
-    private String password;
 
     private String hash;
 
     private UUID profilePictureID;
 
     @JsonIgnore
-    private String securityQuestion1;
-
-    @JsonIgnore
-    private String securityQuestion2;
-
-    @JsonIgnore
-    private String securityQuestion3;
-
-    @JsonIgnore
-    private String securityAnswer1;
-
-    @JsonIgnore
-    private String securityAnswer2;
-
-    @JsonIgnore
-    private String securityAnswer3;
-
-    private Boolean securityEnabled;
-
-    @JsonIgnore
     @ElementCollection(fetch = FetchType.EAGER)
-    private List<String> roles;
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "keycloak_user_id"))
+    @Column(name = "role")
+    private List<String> roles = new ArrayList<>();
 
-    protected User() {
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @Column(name = "last_login")
+    private LocalDateTime lastLogin;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 
-    public User(String test) {
-
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
     }
 
-    public User(final String username, final String accountName, final String password, final String hash, final Boolean securityEnabled) {
+    public User() {
+        this.roles = new ArrayList<>();
+    }
+
+    public User(String keycloakUserId, String username) {
+        this.keycloakUserId = keycloakUserId;
         this.username = username;
-        this.accountName = accountName;
-        this.password = password;
-        this.hash = hash;
-        this.securityEnabled = securityEnabled;
-    }
-
-    @JsonIgnore
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return AuthorityUtils.createAuthorityList(roles.toArray(new String[0]));
-    }
-
-    @JsonIgnore
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @JsonIgnore
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @JsonIgnore
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @JsonIgnore
-    @Override
-    public boolean isEnabled() {
-        return true;
+        this.accountName = username;
+        this.roles = new ArrayList<>();
     }
 
     public void addRole(String role) {
-        if (roles == null) {
+        if (this.roles == null) {
             this.roles = new ArrayList<>();
         }
+        if (!this.roles.contains(role)) {
+            this.roles.add(role);
+        }
+    }
 
-        this.roles.add(role);
+    public void removeRole(String role) {
+        if (this.roles != null) {
+            this.roles.remove(role);
+        }
     }
 }

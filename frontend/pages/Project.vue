@@ -146,14 +146,13 @@
 </template>
 
 <script>
-import moment from 'moment'
-import { mapGetters, mapActions } from 'vuex'
-import { v4 as uuidv4 } from 'uuid'
+import moment from 'moment';
+import { v4 as uuidv4 } from 'uuid';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'ProjectPage',
-  middleware: 'authenticated',
-  asyncData() {
+  data() {
     return {
       fields: [
         { key: 'projectName', label: 'Name' },
@@ -186,18 +185,24 @@ export default {
     rows() {
       return this.items.length
     },
-    ...mapGetters({ getProjects: 'project/projects' }),
+    ...mapGetters({ getProjects: 'project.store/projects' }),
   },
   mounted() {
     this.items = this.getProjects
   },
   methods: {
     editRecord(projectID) {
-      this.$router.push(`projectEdit?projectID=${projectID}`)
+      this.$router.push({
+        path: '/projectEdit',
+        query: {
+          projectID,
+          returnTo: this.$route.fullPath,
+        },
+      })
     },
     ...mapActions({
-      updateProjects: 'project/setProjectsAction',
-      deleteProjectAction: 'project/deleteProjectAction',
+      updateProjects: 'project.store/setProjectsAction',
+      deleteProjectAction: 'project.store/deleteProjectAction',
     }),
     formatTime(time) {
       return moment.duration(time)
@@ -212,7 +217,7 @@ export default {
           projectDesc: this.projectDesc,
           status: this.status,
         }
-        await this.$store.dispatch('project/addProjectAction', project)
+        await this.$store.dispatch('project.store/addProjectAction', project)
         this.items = this.getProjects
       } else {
         alert('Invalid-Data')

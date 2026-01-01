@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+// TODO: Possible future Implementation for a more custom JWT Validation (debatable)
 @CrossOrigin
 @RestController
 @RequestMapping("/api/auth")

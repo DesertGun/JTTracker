@@ -1,4 +1,4 @@
-<template>
+<!--template>
   <b-container fluid>
     <b-row>
       <b-col />
@@ -54,12 +54,14 @@
       <b-col />
     </b-row>
   </b-container>
-</template>
+</template-->
 
 <script>
+// TODO: Refactor via Keycloak-API or remove
+/*
 export default {
   name: 'ResetPage',
-  asyncData() {
+  data() {
     return {
       token: '',
       user: '',
@@ -119,4 +121,5 @@ export default {
     },
   },
 }
+  */
 </script>

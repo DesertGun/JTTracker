@@ -1,4 +1,4 @@
-<template>
+<!--template>
   <b-container class="loginContainer" fluid>
     <b-form>
       <b-row>
@@ -36,7 +36,7 @@
           </b-form-group>
           <b-row cols="8">
             <b-col>
-              <b-button  data-cy="loginBtn" variant="primary" @click="submit()"> Login </b-button>
+              <b-button data-cy="loginBtn" variant="primary" @click="submit()">
             </b-col>
             <b-col style="min-width: fit-content">
               <b-button variant="outline-danger" @click="submitRecovery()">
@@ -60,13 +60,15 @@
       </b-row>
     </b-form>
   </b-container>
-</template>
+</template-->
 
 <script>
-import { mapActions } from 'vuex'
+// TODO: Rewrite Login Form for Keykloak API Call
+/*
+// import { mapActions } from 'vuex';
 export default {
   name: 'LoginPage',
-  asyncData() {
+  data() {
     return {
       password: null,
       username: null,
@@ -74,12 +76,9 @@ export default {
     }
   },
   methods: {
+  
     async submit() {
-      try {
-        const response = await this.$axios.post('/login', {
-          username: this.username,
-          password: this.password,
-        })
+
         if (response.data.jwtToken) {
           const auth = { jwtToken: response.data.jwtToken }
           this.$store.dispatch('auth/setAuthAction', auth)
@@ -96,7 +95,7 @@ export default {
       } catch (e) {
         alert(e.toString())
       }
-    },
+  },
     ...mapActions({
       setUserTimers: 'timer/setTimersAction',
       setUserProjects: 'project/setProjectsAction',
@@ -104,6 +103,6 @@ export default {
     submitRecovery() {
       this.$router.push('/recovery')
     },
-  },
 }
+*/
 </script>

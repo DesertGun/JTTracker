@@ -17,11 +17,13 @@ import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import javax.mail.MessagingException;
+import jakarta.mail.MessagingException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 
+// TODO: Refactor based on new Auth with Tests
+/*
 @Service
 @AutoConfigureBefore
 public class InitializeDatabase implements InitializingBean {
@@ -129,4 +131,6 @@ public class InitializeDatabase implements InitializingBean {
             emailService.sendComplexMail(testMail, "init");
         }
     }
+
 }
+*/

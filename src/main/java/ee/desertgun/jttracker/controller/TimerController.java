@@ -6,7 +6,7 @@ import ee.desertgun.jttracker.dto.TrackedTimeDTO;
 import ee.desertgun.jttracker.service.timer.TrackedTimeService;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +22,7 @@ public class TimerController {
         this.trackedTimeService = trackedTimeService;
     }
 
-    @GetMapping("/timer")
+    @GetMapping("/timers")
     public List<TrackedTime> getTimesOfUser(Principal principal) {
         return trackedTimeService.getTimesForUser(principal.getName());
     }

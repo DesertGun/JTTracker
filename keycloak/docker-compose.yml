@@ -1,97 +1,18 @@
 version: '3.9'
 services:
-    database:
-        privileged: false
-        container_name: database
-        image: mariadb
-        command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci --innodb-flush-log-at-trx-commit=0
-        environment:
-            MYSQL_ROOT_PASSWORD: password
-            MYSQL_DATABASE: jttrackerdb
-            MYSQL_USER: test
-            MYSQL_PASSWORD: password
-        expose:
-            - 3306
+    keycloak:
+        container_name: keycloak_dev
+        image: quay.io/keycloak/keycloak:latest
         ports:
-            - "3306:3306"
+            - 9090:8080
+        environment:
+            KEYCLOAK_ADMIN: admin
+            KEYCLOAK_ADMIN_PASSWORD: admin
         volumes:
-            - ./init:/docker-entrypoint-initdb.d
-    nuxtjs:
-        user: frontenduser
-        privileged: false
-        container_name: nuxtjs
-        working_dir: /usr/src/jttracker
-        build:
-            context: ./frontend
-            dockerfile: Dockerfile
-        command: [ "npm", "run", "start" ]
-        depends_on:
-            - database
-        expose:
-            - 3000
-        ports:
-            - "3000:3000"
-    greenmail:
-        container_name: greenmail
-        image: greenmail/standalone:latest
-        environment:
-                - JAVA_OPTS=-Dgreenmail.verbose -Djava.net.preferIPv4Stack=true
-                - GREENMAIL_OPTS=-Dgreenmail.setup.test.all -Dgreenmail.api.port=8095 -Dgreenmail.hostname=0.0.0.0 -Dgreenmail.auth.disabled
-        depends_on:
-            - springboot
-            - database
-        expose:
-            - 3025
-            - 3143
-            - 3110
-            - 8095
-            - 3465
-            - 3993
-            - 3995
-        ports:
-            - "3025:3025" # SMTP
-            - "3110:3110" # POP3
-            - "3143:3143" # IMAP
-            - "3465:3465" # SMTPS
-            - "3993:3993" # IMAPS
-            - "3995:3995" # POP3S
-            - "8095:8095" # API
-    roundcube:
-        container_name: roundcube
-        image: roundcube/roundcubemail:latest
-        depends_on:
-            - greenmail
-        expose:
-            - 8000
-        ports:
-            - "8000:80"
-        environment:
-            - ROUNDCUBEMAIL_DEFAULT_HOST=greenmail
-            - ROUNDCUBEMAIL_DEFAULT_PORT=3143
-            - ROUNDCUBEMAIL_SMTP_SERVER=greenmail
-            - ROUNDCUBEMAIL_SMTP_PORT=3025
+            - keycloak_data:/opt/keycloak/data
+        command:
+            - 'start-dev'
+        restart: unless-stopped
 
-        # The integration was done thanks to the outstanding example from Jens Knipper
-        # Original source: https://github.com/JensKnipper/greenmail-example/blob/main/docker-compose.yml
-    springboot:
-        user: backenduser
-        privileged: false
-        container_name: springboot
-        working_dir: /application
-        depends_on:
-            - database
-            - nuxtjs
-        expose:
-            - 8080
-        ports:
-            - "8080:8080"
-        build:
-            context: ./
-            dockerfile: Dockerfile
-        command: ["java", "-jar", "application.jar"]
-        volumes:
-            -  profile-pictures:/application/profile-pictures
-        restart: on-failure
 volumes:
-    jttrackerdb:
-    profile-pictures:
+    keycloak_data:

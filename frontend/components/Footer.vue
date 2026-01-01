@@ -5,14 +5,11 @@
         <b-col style="max-width: fit-content">
           <b-nav vertical>
             <h5>Pages</h5>
-            <div v-if="$store.state.auth.jwtToken">
               <b-nav-item nuxt-link to="/dashboard"> Dashboard </b-nav-item>
-            </div>
             <b-nav-item nuxt-link to="/about"> About </b-nav-item>
             <b-nav-item nuxt-link to="/help"> Help </b-nav-item>
           </b-nav>
         </b-col>
-        <div v-if="$store.state.auth.jwtToken">
           <b-col />
           <b-col>
             <b-nav vertical>
@@ -23,10 +20,6 @@
             </b-nav>
           </b-col>
           <b-col />
-        </div>
-        <div v-else>
-          <b-col />
-        </div>
         <b-col style="max-width: fit-content">
           <b-nav vertical>
             <h5>Terms</h5>
