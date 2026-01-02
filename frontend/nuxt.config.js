@@ -101,7 +101,7 @@ export default {
         responseType: 'code',
         grantType: 'authorization_code',
         clientId: process.env.KEYCLOAK_CLIENT_ID || 'jttracker-frontend',
-        scope: ['openid', 'profile', 'email'],
+        scope: ['openid', 'profile', 'email', 'jttracker-frontend-dedicated'],
         codeChallengeMethod: 'S256'
       }
     },

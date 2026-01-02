@@ -8,6 +8,10 @@ import ee.desertgun.jttracker.service.email.EmailService;
 import ee.desertgun.jttracker.service.jwt.JwtUserService;
 import ee.desertgun.jttracker.service.profilepicture.FileLocationService;
 import ee.desertgun.jttracker.service.user.UserService;
+import ee.desertgun.jttracker.service.user.UserServiceImpl;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +31,7 @@ import java.util.Map;
 @CrossOrigin
 public class UserAccountController {
 
+    Logger logger = LoggerFactory.getLogger(UserAccountController.class);
     private static final String FRONTEND_PORT = "3000";
     private static final String USER_NAME_TEMPLATE = "userName";
     private static final String ACCOUNT_NAME_TEMPLATE = "accountName";

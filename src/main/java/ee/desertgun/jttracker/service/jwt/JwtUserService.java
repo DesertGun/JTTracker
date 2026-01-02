@@ -29,7 +29,7 @@ public class JwtUserService {
     public JwtUserInfo extractUserInfo(Jwt jwt) {
         return new JwtUserInfo(
                 jwt.getSubject(),
-                jwt.getClaimAsString("username"),
+                jwt.getClaimAsString("preferred_username"),
                 jwt.getClaimAsString("accountName"),
                 extractRoles()
         );
@@ -67,7 +67,7 @@ public class JwtUserService {
             return roles.contains("ROLE_" + role) || roles.contains(role);
         }
 
-        public String getDisplayName() {
+        public String getAccountName() {
             if (accountName != null) {
                 return accountName;
             }

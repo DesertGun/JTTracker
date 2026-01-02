@@ -57,10 +57,10 @@ public class User{
         this.roles = new ArrayList<>();
     }
 
-    public User(String keycloakUserId, String username) {
+    public User(String keycloakUserId, String username, String accountName) {
         this.keycloakUserId = keycloakUserId;
         this.username = username;
-        this.accountName = username;
+        this.accountName = accountName;
         this.roles = new ArrayList<>();
     }
 
